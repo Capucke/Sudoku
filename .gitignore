@@ -19,3 +19,4 @@ Sokoban
 *.settings
 *.classpath
 *.metadata
+*.recommenders
