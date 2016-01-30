@@ -1,6 +1,6 @@
 package gameStructures;
 
-public class GameMatrix {
+public class GrilleSudo {
 
 	public final int DIMENSION;
 	public final int DIM_UNIT;
@@ -8,7 +8,7 @@ public class GameMatrix {
 
 	private Case[][] matrix;
 
-	public GameMatrix(int dimension) {
+	public GrilleSudo(int dimension) {
 		try {
 
 			this.DIMENSION = dimension;

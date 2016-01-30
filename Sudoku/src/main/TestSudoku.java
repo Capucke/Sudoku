@@ -1,9 +1,9 @@
 package main;
 
-import gameStructures.GameMatrix;
+import gameStructures.GrilleSudo;
 
 public class TestSudoku {
 
-	GameMatrix sudo = new GameMatrix(9);
+	GrilleSudo sudo = new GrilleSudo(9);
 
 }
