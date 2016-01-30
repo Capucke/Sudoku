@@ -4,6 +4,6 @@ import gameStructures.GameMatrix;
 
 public class TestSudoku {
 
-	GameMatrix sudo = new GameMatrix();
+	GameMatrix sudo = new GameMatrix(9);
 
 }

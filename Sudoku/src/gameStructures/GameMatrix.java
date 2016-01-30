@@ -2,14 +2,60 @@ package gameStructures;
 
 public class GameMatrix {
 
-	public static final int DIMENSION = 9;
-	public static final int DIM_UNIT = 3;
+	public final int DIMENSION;
+	public final int DIM_UNIT;
 	// on doit avoir : DIM_UNIT = sqrt(DIMENSION)
 
 	private Case[][] matrix;
 
-	public GameMatrix() {
-		this.matrix = new Case[DIMENSION][DIMENSION];
+	/**
+	 * Fonction sqrt pour les entiers.
+	 * 
+	 * @param nb
+	 *            entier correspondant au carré d'un nombre entier ; doit être
+	 *            compris entre 0 et 36
+	 * @return la racine entière du paramètre nb
+	 */
+	static public int intSqrt(int nb) {
+		switch (nb) {
+			case 0:
+				return 0;
+			case 1:
+				return 1;
+			case 4:
+				return 2;
+			case 9:
+				return 3;
+			case 16:
+				return 4;
+			case 25:
+				return 5;
+			case 36:
+				return 6;
+			default:
+				throw new IllegalArgumentException(
+						"Argument illegal pour la fonction intSqrt. "
+								+ "Le nombre donné en paramètre n'est pas "
+								+ "compris 0 et 36 ou ne correpond pas au "
+								+ "carré d'un entier.\n"
+								+ "Rappel : le nombre que vous avez donné "
+								+ "en paramètre est : " + nb);
+		}
+	}
+
+	public GameMatrix(int dimension) {
+		try {
+
+			this.DIMENSION = dimension;
+			this.DIM_UNIT = intSqrt(dimension);
+
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(
+					"Création de la grille de jeu impossible =>\n"
+							+ e.getStackTrace());
+		}
+
+		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
 	}
 
 	public Case[][] getMatrix() {
@@ -39,44 +85,53 @@ public class GameMatrix {
 	}
 
 	public Case[] getCarre(int indice) {
-		if (indice < 0 || indice >= DIMENSION) {
-			throw new IllegalArgumentException("La dimension de la grille de jeu vaut : " + DIMENSION
-					+ ". Il n'y a donc que " + DIMENSION + " \"sous-grilles\" de jeu, indicées entre 0 et "
-					+ (DIMENSION - 1) + ".\n Vous avez demandé la \"sous-grilles\" de jeu d'indice " + indice);
+		if (indice < 0 || indice >= this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"La dimension de la grille de jeu vaut : " + this.DIMENSION
+							+ ". Il n'y a donc que " + this.DIMENSION
+							+ " \"sous-grilles\" de jeu, indicées entre 0 et "
+							+ (this.DIMENSION - 1)
+							+ ".\n Vous avez demandé la \"sous-grilles\" de jeu d'indice "
+							+ indice);
 		}
 
-		Case[] carre = new Case[DIMENSION];
+		Case[] carre = new Case[this.DIMENSION];
 
-		int firstLigne = indice / DIM_UNIT;
-		int firstCol = DIM_UNIT * (indice % DIM_UNIT);
+		int firstLigne = indice / this.DIM_UNIT;
+		int firstCol = this.DIM_UNIT * (indice % this.DIM_UNIT);
 
 		int k = 0;
 
-		for (int ligne = firstLigne; ligne < firstLigne + DIM_UNIT; ligne++) {
-			for (int col = firstCol; col < firstCol + DIM_UNIT; col++) {
+		for (int ligne = firstLigne; ligne < firstLigne + this.DIM_UNIT; ligne++) {
+			for (int col = firstCol; col < firstCol + this.DIM_UNIT; col++) {
 				carre[k] = this.getCase(ligne, col);
 				k++;
 			}
 		}
 
-		if (k != DIMENSION) {
-			throw new InternalError("Mauvaise initialisation de DIMENSION (=" + DIMENSION + ") et DIM_UNIT (="
-					+ DIM_UNIT + ").\n" + "On doit avoir : DIM_UNIT = sqrt(DIMENSION)");
+		if (k != this.DIMENSION) {
+			throw new InternalError("Mauvaise initialisation de DIMENSION (="
+					+ this.DIMENSION + ") et DIM_UNIT (=" + this.DIM_UNIT
+					+ ").\n" + "On doit avoir : DIM_UNIT = sqrt(DIMENSION)");
 		}
 
 		return carre;
 	}
 
 	public Case[] getCol(int indice) {
-		if (indice < 0 || indice >= DIMENSION) {
-			throw new IllegalArgumentException("La dimension de la grille de jeu vaut : " + DIMENSION
-					+ ". Il n'y a donc que " + DIMENSION + " colonnes dans la grille, indicées entre 0 et "
-					+ (DIMENSION - 1) + ".\n Vous avez demandé la colonne d'indice " + indice);
+		if (indice < 0 || indice >= this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"La dimension de la grille de jeu vaut : " + this.DIMENSION
+							+ ". Il n'y a donc que " + this.DIMENSION
+							+ " colonnes dans la grille, indicées entre 0 et "
+							+ (this.DIMENSION - 1)
+							+ ".\n Vous avez demandé la colonne d'indice "
+							+ indice);
 		}
 
-		Case[] col = new Case[DIMENSION];
+		Case[] col = new Case[this.DIMENSION];
 
-		for (int ligne = 0; ligne < DIMENSION; ligne++) {
+		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
 			col[ligne] = this.getCase(ligne, indice);
 		}
 
@@ -84,15 +139,19 @@ public class GameMatrix {
 	}
 
 	public Case[] getLine(int indice) {
-		if (indice < 0 || indice >= DIMENSION) {
-			throw new IllegalArgumentException("La dimension de la grille de jeu vaut : " + DIMENSION
-					+ ". Il n'y a donc que " + DIMENSION + " lignes dans la grille, indicées entre 0 et "
-					+ (DIMENSION - 1) + ".\n Vous avez demandé la ligne d'indice " + indice);
+		if (indice < 0 || indice >= this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"La dimension de la grille de jeu vaut : " + this.DIMENSION
+							+ ". Il n'y a donc que " + this.DIMENSION
+							+ " lignes dans la grille, indicées entre 0 et "
+							+ (this.DIMENSION - 1)
+							+ ".\n Vous avez demandé la ligne d'indice "
+							+ indice);
 		}
 
-		Case[] ligne = new Case[DIMENSION];
+		Case[] ligne = new Case[this.DIMENSION];
 
-		for (int col = 0; col < DIMENSION; col++) {
+		for (int col = 0; col < this.DIMENSION; col++) {
 			ligne[col] = this.getCase(indice, col);
 		}
 
@@ -104,7 +163,7 @@ public class GameMatrix {
 		boolean curUnitOk;
 
 		// vérif des lignes
-		for (int ligne = 0; ligne < DIMENSION; ligne++) {
+		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
 			curUnitOk = this.verif(this.getLine(ligne));
 			if (!curUnitOk) {
 				grilleOK = false;
@@ -113,7 +172,7 @@ public class GameMatrix {
 		}
 
 		// vérif des colonnes
-		for (int col = 0; col < DIMENSION; col++) {
+		for (int col = 0; col < this.DIMENSION; col++) {
 			curUnitOk = this.verif(this.getCol(col));
 			if (!curUnitOk) {
 				grilleOK = false;
@@ -122,7 +181,7 @@ public class GameMatrix {
 		}
 
 		// vérif des carrés
-		for (int carre = 0; carre < DIMENSION; carre++) {
+		for (int carre = 0; carre < this.DIMENSION; carre++) {
 			curUnitOk = this.verif(this.getCarre(carre));
 			if (!curUnitOk) {
 				grilleOK = false;
@@ -146,28 +205,31 @@ public class GameMatrix {
 	 *            "unité de jeu"
 	 */
 	private boolean verif(Case[] uniteJeu) {
-		if (uniteJeu.length != DIMENSION) {
-			throw new InternalError("Le paramètre passé à verif est mauvais : c'est un tableau de taille "
-					+ uniteJeu.length + " alors que la dimension de la grille de jeu est " + DIMENSION);
+		if (uniteJeu.length != this.DIMENSION) {
+			throw new InternalError(
+					"Le paramètre passé à verif est mauvais : c'est un tableau de taille "
+							+ uniteJeu.length
+							+ " alors que la dimension de la grille de jeu est "
+							+ this.DIMENSION);
 		}
 
 		boolean unitOk = true;
 
-		boolean[] vu1fois = new boolean[DIMENSION];
-		boolean[] vuPlusieursFois = new boolean[DIMENSION];
+		boolean[] vu1fois = new boolean[this.DIMENSION];
+		boolean[] vuPlusieursFois = new boolean[this.DIMENSION];
 
 		int k;
 		int indiceMark;
 
 		// initialisation des tableaux de "déjà vu" à false
-		for (k = 0; k < DIMENSION; k++) {
+		for (k = 0; k < this.DIMENSION; k++) {
 			vu1fois[k] = false;
 			vuPlusieursFois[k] = false;
 		}
 
 		// passe 1 :
 		// on "compte" le nombre de fois où on voit chaque numéro non nul
-		for (k = 0; k < DIMENSION; k++) {
+		for (k = 0; k < this.DIMENSION; k++) {
 			indiceMark = uniteJeu[k].getNum() - 1;
 
 			if (indiceMark == -1) {
@@ -191,7 +253,7 @@ public class GameMatrix {
 		// passe 2 :
 		// les cases dont le numéro a été vu plusieurs fois sont marquées
 		// comme "problème", les autres sont marquées comme ok
-		for (k = 0; k < DIMENSION; k++) {
+		for (k = 0; k < this.DIMENSION; k++) {
 			indiceMark = uniteJeu[k].getNum() - 1;
 
 			// (indiceMark == -1) correspondrait au cas où
