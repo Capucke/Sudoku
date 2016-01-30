@@ -8,41 +8,6 @@ public class GameMatrix {
 
 	private Case[][] matrix;
 
-	/**
-	 * Fonction sqrt pour les entiers.
-	 * 
-	 * @param nb
-	 *            entier correspondant au carré d'un nombre entier ; doit être
-	 *            compris entre 4 et 16
-	 * @return la racine entière du paramètre nb
-	 */
-	static public int intSqrt(int nb) {
-		switch (nb) {
-			// case 0:
-			// return 0;
-			// case 1:
-			// return 1;
-			case 4:
-				return 2;
-			case 9:
-				return 3;
-			case 16:
-				return 4;
-			// case 25:
-			// return 5;
-			// case 36:
-			// return 6;
-			default:
-				throw new IllegalArgumentException(
-						"Argument illegal pour la fonction intSqrt. "
-								+ "Le nombre donné en paramètre n'est pas "
-								+ "compris 4 et 16 ou ne correpond pas au "
-								+ "carré d'un entier.\n"
-								+ "Rappel : le nombre que vous avez donné "
-								+ "en paramètre est : " + nb);
-		}
-	}
-
 	public GameMatrix(int dimension) {
 		try {
 
@@ -270,6 +235,42 @@ public class GameMatrix {
 
 		return unitOk;
 
+	}
+
+
+	/**
+	 * Fonction sqrt pour les entiers.
+	 * 
+	 * @param nb
+	 *            entier correspondant au carré d'un nombre entier ; doit être
+	 *            compris entre 4 et 16
+	 * @return la racine entière du paramètre nb
+	 */
+	static public int intSqrt(int nb) {
+		switch (nb) {
+			// case 0:
+			// return 0;
+			// case 1:
+			// return 1;
+			case 4:
+				return 2;
+			case 9:
+				return 3;
+			case 16:
+				return 4;
+			// case 25:
+			// return 5;
+			// case 36:
+			// return 6;
+			default:
+				throw new IllegalArgumentException(
+						"Argument illegal pour la fonction intSqrt. "
+								+ "Le nombre donné en paramètre n'est pas "
+								+ "compris 4 et 16 ou ne correpond pas au "
+								+ "carré d'un entier.\n"
+								+ "Rappel : le nombre que vous avez donné "
+								+ "en paramètre est : " + nb);
+		}
 	}
 
 }
