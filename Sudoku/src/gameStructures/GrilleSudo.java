@@ -15,9 +15,9 @@ public class GrilleSudo {
 			this.DIM_UNIT = intSqrt(dimension);
 
 		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(
-					"Création de la grille de jeu impossible =>\n"
-							+ e.getStackTrace());
+			System.err.println("Création de la grille de jeu impossible =>");
+			e.printStackTrace();
+			throw new IllegalArgumentException();
 		}
 
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
@@ -67,7 +67,8 @@ public class GrilleSudo {
 
 		int k = 0;
 
-		for (int ligne = firstLigne; ligne < firstLigne + this.DIM_UNIT; ligne++) {
+		for (int ligne = firstLigne; ligne < firstLigne
+				+ this.DIM_UNIT; ligne++) {
 			for (int col = firstCol; col < firstCol + this.DIM_UNIT; col++) {
 				carre[k] = this.getCase(ligne, col);
 				k++;
@@ -237,7 +238,6 @@ public class GrilleSudo {
 
 	}
 
-
 	/**
 	 * Fonction sqrt pour les entiers.
 	 * 
@@ -264,7 +264,7 @@ public class GrilleSudo {
 			// return 6;
 			default:
 				throw new IllegalArgumentException(
-						"Argument illegal pour la fonction intSqrt. "
+						"Argument illegal pour la fonction intSqrt.\n"
 								+ "Le nombre donné en paramètre n'est pas "
 								+ "compris 4 et 16 ou ne correpond pas au "
 								+ "carré d'un entier.\n"

@@ -4,6 +4,9 @@ import gameStructures.GrilleSudo;
 
 public class TestSudoku {
 
-	GrilleSudo sudo = new GrilleSudo(9);
+	public static void main(String[] args) {
+		GrilleSudo sudo = new GrilleSudo(9);
+	}
+
 
 }
