@@ -1,5 +1,8 @@
 package gameStructures;
 
+import java.util.HashSet;
+
+
 public class GrilleSudo {
 
 	public final int DIMENSION;
@@ -7,6 +10,10 @@ public class GrilleSudo {
 	// on doit avoir : DIM_UNIT = sqrt(DIMENSION)
 
 	private Case[][] matrix;
+
+	private HashSet<Case> conflits; // stocke les conflitsSuiv au tour actuel
+	private HashSet<Case> conflitsSuiv; // stocke les conflits après avoir joué
+										// le tour actuel
 
 	public GrilleSudo(int dimension) {
 		try {
@@ -21,6 +28,8 @@ public class GrilleSudo {
 		}
 
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
+		this.conflits = new HashSet<Case>(this.DIMENSION);
+		this.conflitsSuiv = new HashSet<Case>(this.DIMENSION);
 	}
 
 	public Case[][] getMatrix() {
@@ -42,6 +51,15 @@ public class GrilleSudo {
 	public void markOK(int ligne, int col) {
 		this.matrix[ligne][col].markOK();
 		;
+	}
+
+	public void updateConflit() {
+		this.conflits = new HashSet<Case>(this.conflitsSuiv);
+		this.conflitsSuiv.clear();
+	}
+
+	public HashSet<Case> getConflits() {
+		return this.conflits;
 	}
 
 	public void markPb(int ligne, int col) {
@@ -124,13 +142,152 @@ public class GrilleSudo {
 		return ligne;
 	}
 
+	/**
+	 * Vérifie les problèmes pour la case d'indice [ligne][col], et met à jour
+	 * tous les conflits possibles (selon les cases qui étaient ancienneent en
+	 * conflit). Utile pour vérifier seulement la dernière case modifiée dans la
+	 * grille.
+	 * 
+	 * @param ligne
+	 * @param col
+	 */
+	public void fullVerifCase(int ligne, int col) {
+		Case curCase = this.getCase(ligne, col);
+
+		// suppression temporaire de tous les anciens conflits
+		// pour permettre la revérification
+		this.conflitsSuiv.clear();
+		curCase.markOK();
+		for (Case curConflit : this.conflits) {
+			curConflit.markOK();
+		}
+
+		// vérification des conflits vis-à-vis de la case courante
+		this.verifCase(curCase);
+
+		// vérification des anciens conflits
+		for (Case curConflit : this.conflits) {
+			this.verifCase(curConflit);
+		}
+
+		// mise à jour des conflits
+		this.updateConflit();
+
+	}
+
+	/**
+	 * Vérifie les problèmes pour la case curCase. Utile pour vérifier seulement
+	 * la dernière case modifiée dans la grille.
+	 * 
+	 * @param curCase
+	 *            case à vérifier
+	 */
+	private void verifCase(Case curCase) {
+		this.verifCase(curCase.LIGNE, curCase.COL);
+	}
+
+	/**
+	 * Vérifie les problèmes pour la case d'indice [ligne][col]. Utile pour
+	 * vérifier seulement la dernière case modifiée dans la grille.
+	 * 
+	 * @param ligne
+	 * @param col
+	 */
+	private void verifCase(int ligne, int col) {
+		Case curCase = this.getCase(ligne, col);
+
+		int indCarre =
+				this.DIM_UNIT * (ligne / this.DIM_UNIT) + (col / this.DIM_UNIT);
+
+		this.verifCase(this.getLine(ligne), curCase);
+		this.verifCase(this.getCol(col), curCase);
+		this.verifCase(this.getCarre(indCarre), curCase);
+	}
+
+
+	/**
+	 * Méthode intermédiaire qui permet de vérifier qu'il n'y a pas de conflit
+	 * dans une "unité de jeu" vis-à-vis d'une certaine case. Par "unité de jeu"
+	 * , on entend : une ligne, une colonne, ou un carré de taille DIMENSION.
+	 * 
+	 * @param uniteJeu
+	 *            tableau de cases de taille DIMENSION représentant une
+	 *            "unité de jeu"
+	 */
+	private void verifCase(Case[] uniteJeu, Case curCase) {
+
+		if (uniteJeu.length != this.DIMENSION) {
+			throw new InternalError(
+					"Le paramètre passé à verif est mauvais : c'est un tableau de taille "
+							+ uniteJeu.length
+							+ " alors que la dimension de la grille de jeu est "
+							+ this.DIMENSION);
+		}
+
+		int k = 0;
+		Case[] casesAcomparer = new Case[this.DIMENSION - 1];
+
+		for (Case c : uniteJeu) {
+			if (c == curCase) {
+				// rien à faire
+			} else if (k < this.DIMENSION - 1) {
+				// condition équivalente à "il reste encore au moins une
+				// place vide dans le tableau casesAcomparer
+				casesAcomparer[k] = c;
+				k++;
+			} else {
+				// cas : on a parcouru toute l'unité de jeu (de longueur
+				// DIMENSION) et parmi toutes les cases qui en faisaient
+				// partie, aucune ne correspond à la case entrée en 2eme
+				// paramètre
+				throw new IllegalArgumentException(
+						"La case passée en 2e paramètre de la methode "
+								+ "verifCase n'est pas dans l'unité de "
+								+ "jeu passée en 1er paramètre");
+			}
+		}
+
+		// en arrivant ici, on a un tableau de Cases, casesAcomparer qui
+		// correspond à l'ensemble des cases auxquelles on doit comparer la case
+		// curCase
+		// si on trouve une case qui a la même valeur, alors ces deux cases sont
+		// en conflit
+
+		int numCase = curCase.getNum();
+
+		for (Case c : casesAcomparer) {
+			if (c.getNum() == numCase) {
+				this.conflitsSuiv.add(curCase);
+				this.conflitsSuiv.add(c);
+				curCase.markPb();
+				c.markPb();
+			}
+		}
+
+	}
+
+	/**
+	 * Vérifie entièrement la grille (vérification lente)
+	 * 
+	 * @return
+	 */
 	public boolean verifGrille() {
 		boolean grilleOK = true;
 		boolean curUnitOk;
 
+		// marquage de toutes les Cases à "ok"
+		for (Case[] tabCase : this.matrix) {
+			for (Case c : tabCase) {
+				c.markOK();
+			}
+		}
+
+		// "nettoyage" de la liste des conflits suivants
+		this.conflitsSuiv.clear();
+
 		// vérif des lignes
 		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
-			curUnitOk = this.verif(this.getLine(ligne));
+			curUnitOk = this.fullVerif(this.getLine(ligne));
 			if (!curUnitOk) {
 				grilleOK = false;
 			}
@@ -139,7 +296,7 @@ public class GrilleSudo {
 
 		// vérif des colonnes
 		for (int col = 0; col < this.DIMENSION; col++) {
-			curUnitOk = this.verif(this.getCol(col));
+			curUnitOk = this.fullVerif(this.getCol(col));
 			if (!curUnitOk) {
 				grilleOK = false;
 			}
@@ -148,12 +305,15 @@ public class GrilleSudo {
 
 		// vérif des carrés
 		for (int carre = 0; carre < this.DIMENSION; carre++) {
-			curUnitOk = this.verif(this.getCarre(carre));
+			curUnitOk = this.fullVerif(this.getCarre(carre));
 			if (!curUnitOk) {
 				grilleOK = false;
 			}
 
 		}
+
+		// mise à jour de la liste des conflits
+		this.updateConflit();
 
 		return grilleOK;
 	}
@@ -166,11 +326,14 @@ public class GrilleSudo {
 	 * en conséquence. On renvoie, de plus, un booléen unitOk qui vaut true si
 	 * l'unité de jeu est entièrement et correctement remplie.
 	 * 
+	 * /!\ Avant d'appeler cette méthode, tous les marqueurs de Case doivent
+	 * être passés à false
+	 * 
 	 * @param uniteJeu
 	 *            tableau de cases de taille DIMENSION représentant une
 	 *            "unité de jeu"
 	 */
-	private boolean verif(Case[] uniteJeu) {
+	private boolean fullVerif(Case[] uniteJeu) {
 		if (uniteJeu.length != this.DIMENSION) {
 			throw new InternalError(
 					"Le paramètre passé à verif est mauvais : c'est un tableau de taille "
@@ -228,8 +391,7 @@ public class GrilleSudo {
 
 			if (indiceMark != -1 && vuPlusieursFois[indiceMark] == true) {
 				uniteJeu[k].markPb();
-			} else {
-				uniteJeu[k].markOK();
+				this.conflitsSuiv.add(uniteJeu[k]);
 			}
 
 		}
