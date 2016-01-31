@@ -44,15 +44,6 @@ public class GrilleSudo {
 		return this.matrix[ligne][col].getNum();
 	}
 
-	public boolean getMark(int ligne, int col) {
-		return this.matrix[ligne][col].getMark();
-	}
-
-	public void markOK(int ligne, int col) {
-		this.matrix[ligne][col].markOK();
-		;
-	}
-
 	public void updateConflit() {
 		this.conflits = new HashSet<Case>(this.conflitsSuiv);
 		this.conflitsSuiv.clear();
@@ -60,11 +51,6 @@ public class GrilleSudo {
 
 	public HashSet<Case> getConflits() {
 		return this.conflits;
-	}
-
-	public void markPb(int ligne, int col) {
-		this.matrix[ligne][col].markPb();
-		;
 	}
 
 	public Case[] getCarre(int indice) {
@@ -157,10 +143,6 @@ public class GrilleSudo {
 		// suppression temporaire de tous les anciens conflits
 		// pour permettre la revérification
 		this.conflitsSuiv.clear();
-		curCase.markOK();
-		for (Case curConflit : this.conflits) {
-			curConflit.markOK();
-		}
 
 		// vérification des conflits vis-à-vis de la case courante
 		this.verifCase(curCase);
@@ -259,8 +241,6 @@ public class GrilleSudo {
 			if (c.getNum() == numCase) {
 				this.conflitsSuiv.add(curCase);
 				this.conflitsSuiv.add(c);
-				curCase.markPb();
-				c.markPb();
 			}
 		}
 
@@ -274,13 +254,6 @@ public class GrilleSudo {
 	public boolean verifGrille() {
 		boolean grilleOK = true;
 		boolean curUnitOk;
-
-		// marquage de toutes les Cases à "ok"
-		for (Case[] tabCase : this.matrix) {
-			for (Case c : tabCase) {
-				c.markOK();
-			}
-		}
 
 		// "nettoyage" de la liste des conflits suivants
 		this.conflitsSuiv.clear();
@@ -390,7 +363,6 @@ public class GrilleSudo {
 			// autrement dit, où l'utilisateur n'a pas encore rempli la case
 
 			if (indiceMark != -1 && vuPlusieursFois[indiceMark] == true) {
-				uniteJeu[k].markPb();
 				this.conflitsSuiv.add(uniteJeu[k]);
 			}
 

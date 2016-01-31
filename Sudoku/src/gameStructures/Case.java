@@ -8,11 +8,6 @@ public class Case {
 	public final int LIGNE;
 	public final int COL;
 
-	private boolean mark = false;
-	// ce booléen sera utilisé pour marquer s'il y a un problème sur une case
-	// par exemple, si deux cases de la même colonnes portent le même numéro,
-	// ces deux cases seront marquées à true
-
 	public final static int MIN_NUM = 0;
 	public final static int MAX_NUM = 9;
 
@@ -36,26 +31,9 @@ public class Case {
 	public void setNum(int newNum) {
 		this.curNum = newNum;
 	}
-	
-	public void setMark(boolean bool){
-		this.mark = bool;
-	}
-	
-	public void markOK(){
-		// ok = pas de problème
-		this.mark = false;
-	}
-	
-	public void markPb(){
-		this.mark = true;
-	}
 
 	public int getNum() {
 		return this.curNum;
-	}
-	
-	public boolean getMark(){
-		return this.mark;
 	}
 
 	public boolean canBeChanged() {
