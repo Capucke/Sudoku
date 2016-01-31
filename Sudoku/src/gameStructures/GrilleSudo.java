@@ -11,9 +11,11 @@ public class GrilleSudo {
 
 	private Case[][] matrix;
 
-	private HashSet<Case> conflits; // stocke les conflitsSuiv au tour actuel
-	private HashSet<Case> conflitsSuiv; // stocke les conflits après avoir joué
-										// le tour actuel
+	private HashSet<Case> conflits; // stocke les conflits au tour actuel
+
+	private HashSet<Case> conflitTemp; // sert à stocker temporairement les
+									   // conflits au tour actuel lors du calcul
+	// dans un attribut pour faciliter la mise à jour de l'attribut conflits
 
 	public GrilleSudo(int dimension) {
 		try {
@@ -29,7 +31,7 @@ public class GrilleSudo {
 
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
 		this.conflits = new HashSet<Case>(this.DIMENSION);
-		this.conflitsSuiv = new HashSet<Case>(this.DIMENSION);
+		this.conflitTemp = new HashSet<Case>(this.DIMENSION);
 	}
 
 	public Case[][] getMatrix() {
@@ -45,8 +47,8 @@ public class GrilleSudo {
 	}
 
 	public void updateConflit() {
-		this.conflits = new HashSet<Case>(this.conflitsSuiv);
-		this.conflitsSuiv.clear();
+		this.conflits = new HashSet<Case>(this.conflitTemp);
+		this.conflitTemp.clear();
 	}
 
 	public HashSet<Case> getConflits() {
@@ -142,7 +144,7 @@ public class GrilleSudo {
 
 		// suppression temporaire de tous les anciens conflits
 		// pour permettre la revérification
-		this.conflitsSuiv.clear();
+		this.conflitTemp.clear();
 
 		// vérification des conflits vis-à-vis de la case courante
 		this.verifCase(curCase);
@@ -239,8 +241,8 @@ public class GrilleSudo {
 
 		for (Case c : casesAcomparer) {
 			if (c.getNum() == numCase) {
-				this.conflitsSuiv.add(curCase);
-				this.conflitsSuiv.add(c);
+				this.conflitTemp.add(curCase);
+				this.conflitTemp.add(c);
 			}
 		}
 
@@ -256,7 +258,7 @@ public class GrilleSudo {
 		boolean curUnitOk;
 
 		// "nettoyage" de la liste des conflits suivants
-		this.conflitsSuiv.clear();
+		this.conflitTemp.clear();
 
 		// vérif des lignes
 		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
@@ -363,7 +365,7 @@ public class GrilleSudo {
 			// autrement dit, où l'utilisateur n'a pas encore rempli la case
 
 			if (indiceMark != -1 && vuPlusieursFois[indiceMark] == true) {
-				this.conflitsSuiv.add(uniteJeu[k]);
+				this.conflitTemp.add(uniteJeu[k]);
 			}
 
 		}
