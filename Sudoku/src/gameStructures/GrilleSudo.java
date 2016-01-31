@@ -112,6 +112,10 @@ public class GrilleSudo {
 		return this.conflits;
 	}
 
+	public boolean isComplete() {
+		return ((this.nbCasesVides == 0) && (this.conflits.isEmpty()));
+	}
+
 	public Case[] getCarre(int indice) {
 		if (indice < 0 || indice >= this.DIMENSION) {
 			throw new IllegalArgumentException(
