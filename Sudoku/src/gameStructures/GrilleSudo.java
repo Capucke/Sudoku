@@ -10,6 +10,7 @@ public class GrilleSudo {
 	// on doit avoir : DIM_UNIT = sqrt(DIMENSION)
 
 	private Case[][] matrix;
+	private int nbCasesVides = 0;
 
 	private HashSet<Case> conflits; // stocke les conflits au tour actuel
 
@@ -32,6 +33,62 @@ public class GrilleSudo {
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
 		this.conflits = new HashSet<Case>(this.DIMENSION);
 		this.conflitTemp = new HashSet<Case>(this.DIMENSION);
+	}
+
+	/**
+	 * Méthode appelée lorsque l'utilisateur change le numéro de la case située
+	 * à la ligne *ligne* et à la colonne *col*. Cette méthode met à jour le
+	 * nombre de cases vides restantes, et recalcule les conflits si le numéro
+	 * de la case est modifié.
+	 * 
+	 * @param ligne
+	 * @param col
+	 * @param newNum
+	 *            noueau numéro de la case
+	 */
+	public void setCase(int ligne, int col, int newNum) {
+		int oldNum = this.getNum(ligne, col);
+
+		if (oldNum != newNum) {
+			// sinon, rien à faire car le numéro de la case ne change pas
+			// autrement dit rien n'est modifié dans la grille
+			this.matrix[ligne][col].setNum(newNum);
+
+			if ((oldNum == 0) && (newNum != 0)) {
+				this.nbCasesVides--;
+			} else if ((oldNum != 0) && (newNum == 0)) {
+				this.nbCasesVides++;
+			}
+
+			if (this.nbCasesVides < 0
+					|| this.nbCasesVides > (this.DIMENSION * this.DIMENSION)) {
+				throw new InternalError(
+						"Mauvaise gestion du nombre de cases vides");
+			}
+
+			this.fullVerifCase(ligne, col);
+
+		}
+	}
+
+	/**
+	 * Méthode qui devra être appelée une UNIQUE fois pour chaque case de la
+	 * grille, lors de l'initialisation de la grille de jeu
+	 * 
+	 * @param ligne
+	 * @param col
+	 * @param num
+	 *            numéro initial de la case
+	 */
+	public void initCase(int ligne, int col, int num) {
+		this.matrix[ligne][col] = new Case(ligne, col, num);
+		if (num == 0) {
+			this.nbCasesVides++;
+		}
+	}
+
+	public void initCase(int ligne, int col) {
+		this.initCase(ligne, col, 0);
 	}
 
 	public Case[][] getMatrix() {
@@ -187,7 +244,6 @@ public class GrilleSudo {
 		this.verifCase(this.getCol(col), curCase);
 		this.verifCase(this.getCarre(indCarre), curCase);
 	}
-
 
 	/**
 	 * Méthode intermédiaire qui permet de vérifier qu'il n'y a pas de conflit
