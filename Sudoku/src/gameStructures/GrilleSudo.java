@@ -195,24 +195,29 @@ public class GrilleSudo {
 	 * 
 	 * @param ligne
 	 * @param col
+	 * @return un booléen qui vaut true si on a trouvé un conflit
 	 */
-	public void fullVerifCase(int ligne, int col) {
+	public boolean fullVerifCase(int ligne, int col) {
 		Case curCase = this.getCase(ligne, col);
+
+		boolean conflitTrouve = false;
 
 		// suppression temporaire de tous les anciens conflits
 		// pour permettre la revérification
 		this.conflitTemp.clear();
 
 		// vérification des conflits vis-à-vis de la case courante
-		this.verifCase(curCase);
+		conflitTrouve = conflitTrouve || this.verifCase(curCase);
 
 		// vérification des anciens conflits
 		for (Case curConflit : this.conflits) {
-			this.verifCase(curConflit);
+			conflitTrouve = conflitTrouve || this.verifCase(curConflit);
 		}
 
 		// mise à jour des conflits
 		this.updateConflit();
+
+		return conflitTrouve;
 
 	}
 
@@ -222,9 +227,10 @@ public class GrilleSudo {
 	 * 
 	 * @param curCase
 	 *            case à vérifier
+	 * @return un booléen qui vaut true si on a trouvé un conflit
 	 */
-	private void verifCase(Case curCase) {
-		this.verifCase(curCase.LIGNE, curCase.COL);
+	private boolean verifCase(Case curCase) {
+		return this.verifCase(curCase.LIGNE, curCase.COL);
 	}
 
 	/**
@@ -233,16 +239,24 @@ public class GrilleSudo {
 	 * 
 	 * @param ligne
 	 * @param col
+	 * @return un booléen qui vaut true si on a trouvé un conflit
 	 */
-	private void verifCase(int ligne, int col) {
+	private boolean verifCase(int ligne, int col) {
 		Case curCase = this.getCase(ligne, col);
+
+		boolean conflitTrouve = false;
 
 		int indCarre =
 				this.DIM_UNIT * (ligne / this.DIM_UNIT) + (col / this.DIM_UNIT);
 
-		this.verifCase(this.getLine(ligne), curCase);
-		this.verifCase(this.getCol(col), curCase);
-		this.verifCase(this.getCarre(indCarre), curCase);
+		conflitTrouve =
+				conflitTrouve || this.verifCase(this.getLine(ligne), curCase);
+		conflitTrouve =
+				conflitTrouve || this.verifCase(this.getCol(col), curCase);
+		conflitTrouve = conflitTrouve
+				|| this.verifCase(this.getCarre(indCarre), curCase);
+
+		return conflitTrouve;
 	}
 
 	/**
@@ -253,8 +267,9 @@ public class GrilleSudo {
 	 * @param uniteJeu
 	 *            tableau de cases de taille DIMENSION représentant une
 	 *            "unité de jeu"
+	 * @return un booléen qui vaut true si on a trouvé un conflit
 	 */
-	private void verifCase(Case[] uniteJeu, Case curCase) {
+	private boolean verifCase(Case[] uniteJeu, Case curCase) {
 
 		if (uniteJeu.length != this.DIMENSION) {
 			throw new InternalError(
@@ -294,59 +309,57 @@ public class GrilleSudo {
 		// en conflit
 
 		int numCase = curCase.getNum();
+		if (numCase == 0) {
+			// les cases vides ne doivent pas générer de conflit
+			return false;
+		}
+
+		boolean conflitTrouve = false;
 
 		for (Case c : casesAcomparer) {
 			if (c.getNum() == numCase) {
 				this.conflitTemp.add(curCase);
 				this.conflitTemp.add(c);
+				conflitTrouve = true;
 			}
 		}
+
+		return conflitTrouve;
 
 	}
 
 	/**
 	 * Vérifie entièrement la grille (vérification lente)
 	 * 
-	 * @return
+	 * @return un boolean qui vaut true si on a trouvé des conflits
 	 */
 	public boolean verifGrille() {
-		boolean grilleOK = true;
-		boolean curUnitOk;
+		boolean conflitTrouve = false;
 
 		// "nettoyage" de la liste des conflits suivants
 		this.conflitTemp.clear();
 
 		// vérif des lignes
 		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
-			curUnitOk = this.fullVerif(this.getLine(ligne));
-			if (!curUnitOk) {
-				grilleOK = false;
-			}
-
+			conflitTrouve =
+					conflitTrouve || this.fullVerif(this.getLine(ligne));
 		}
 
 		// vérif des colonnes
 		for (int col = 0; col < this.DIMENSION; col++) {
-			curUnitOk = this.fullVerif(this.getCol(col));
-			if (!curUnitOk) {
-				grilleOK = false;
-			}
-
+			conflitTrouve = conflitTrouve || this.fullVerif(this.getCol(col));
 		}
 
 		// vérif des carrés
 		for (int carre = 0; carre < this.DIMENSION; carre++) {
-			curUnitOk = this.fullVerif(this.getCarre(carre));
-			if (!curUnitOk) {
-				grilleOK = false;
-			}
-
+			conflitTrouve =
+					conflitTrouve || this.fullVerif(this.getCarre(carre));
 		}
 
 		// mise à jour de la liste des conflits
 		this.updateConflit();
 
-		return grilleOK;
+		return conflitTrouve;
 	}
 
 	/**
@@ -363,6 +376,7 @@ public class GrilleSudo {
 	 * @param uniteJeu
 	 *            tableau de cases de taille DIMENSION représentant une
 	 *            "unité de jeu"
+	 * @return un boolean qui vaut true si on a trouvé des conflits
 	 */
 	private boolean fullVerif(Case[] uniteJeu) {
 		if (uniteJeu.length != this.DIMENSION) {
@@ -373,7 +387,7 @@ public class GrilleSudo {
 							+ this.DIMENSION);
 		}
 
-		boolean unitOk = true;
+		boolean conflitTrouve = false;
 
 		boolean[] vu1fois = new boolean[this.DIMENSION];
 		boolean[] vuPlusieursFois = new boolean[this.DIMENSION];
@@ -396,14 +410,11 @@ public class GrilleSudo {
 				// l'égalité à -1 correspondrait au cas où
 				// le numéro de la case est 0
 				// autrement dit, où l'utilisateur n'a pas encore rempli la case
-
-				unitOk = false;
-
 			} else {
 
 				if (vu1fois[indiceMark] == true) {
 					vuPlusieursFois[indiceMark] = true;
-					unitOk = false;
+					conflitTrouve = true;
 				} else {
 					vu1fois[indiceMark] = true;
 				}
@@ -426,7 +437,7 @@ public class GrilleSudo {
 
 		}
 
-		return unitOk;
+		return conflitTrouve;
 
 	}
 
