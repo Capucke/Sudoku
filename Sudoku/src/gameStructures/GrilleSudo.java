@@ -13,6 +13,10 @@ import java.util.HashSet;
  */
 public abstract class GrilleSudo {
 
+	public static final int FACILE = 0;
+	public static final int MOYEN = 1;
+	public static final int DIFFICILE = 2;
+
 	public final int DIMENSION;
 	public final int DIM_UNIT;
 	// on doit avoir : DIM_UNIT = sqrt(DIMENSION)
@@ -162,6 +166,17 @@ public abstract class GrilleSudo {
 	 * @return un boolean qui vaut true si on a trouvé des conflits
 	 */
 	public abstract boolean verifGrille();
+
+
+	/**
+	 * Initialise la grille de sudoku
+	 * 
+	 * @param niveau
+	 *            correspond au niveau de difficulté souhaité ; doit être
+	 *            compris entre FACILE et DIFFICILE
+	 */
+	public abstract void initGrille(int niveau);
+
 
 	/**
 	 * Fonction sqrt pour les entiers.
