@@ -116,7 +116,21 @@ public class GrilleSudo {
 		return ((this.nbCasesVides == 0) && (this.conflits.isEmpty()));
 	}
 
-	public Case[] getCarre(int indice) {
+
+	/**
+	 * Renvoie l'indice du carré sur lequel se trouve la case(ligne, col)
+	 * 
+	 * @param ligne
+	 * @param col
+	 * @return
+	 */
+	protected int getIndiceCarre(int ligne, int col) {
+		return (this.DIM_UNIT * (ligne / this.DIM_UNIT)
+				+ (col / this.DIM_UNIT));
+	}
+
+
+	private Case[] getCarre(int indice) {
 		if (indice < 0 || indice >= this.DIMENSION) {
 			throw new IllegalArgumentException(
 					"La dimension de la grille de jeu vaut : " + this.DIMENSION
@@ -151,7 +165,7 @@ public class GrilleSudo {
 		return carre;
 	}
 
-	public Case[] getCol(int indice) {
+	private Case[] getCol(int indice) {
 		if (indice < 0 || indice >= this.DIMENSION) {
 			throw new IllegalArgumentException(
 					"La dimension de la grille de jeu vaut : " + this.DIMENSION
@@ -171,7 +185,7 @@ public class GrilleSudo {
 		return col;
 	}
 
-	public Case[] getLine(int indice) {
+	private Case[] getLine(int indice) {
 		if (indice < 0 || indice >= this.DIMENSION) {
 			throw new IllegalArgumentException(
 					"La dimension de la grille de jeu vaut : " + this.DIMENSION
@@ -237,6 +251,7 @@ public class GrilleSudo {
 		return this.verifCase(curCase.LIGNE, curCase.COL);
 	}
 
+
 	/**
 	 * Vérifie les problèmes pour la case d'indice [ligne][col]. Utile pour
 	 * vérifier seulement la dernière case modifiée dans la grille.
@@ -250,8 +265,7 @@ public class GrilleSudo {
 
 		boolean conflitTrouve = false;
 
-		int indCarre =
-				this.DIM_UNIT * (ligne / this.DIM_UNIT) + (col / this.DIM_UNIT);
+		int indCarre = this.getIndiceCarre(ligne, col);
 
 		conflitTrouve =
 				conflitTrouve || this.verifCase(this.getLine(ligne), curCase);
