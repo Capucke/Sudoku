@@ -12,6 +12,8 @@ import java.util.HashSet;
  */
 public class GrilleSudo {
 
+	public final static int MAX_DIMENSION = 16;
+
 	public final int DIMENSION;
 	public final int DIM_UNIT;
 	// on doit avoir : DIM_UNIT = sqrt(DIMENSION)
@@ -39,6 +41,30 @@ public class GrilleSudo {
 
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
 		this.conflits = new HashSet<Case>(this.DIMENSION);
+		this.conflitTemp = new HashSet<Case>(this.DIMENSION);
+	}
+
+	/**
+	 * Constructeur par recopie
+	 * 
+	 * @param grille
+	 */
+	public GrilleSudo(GrilleSudo grille) {
+		this.DIMENSION = grille.DIMENSION;
+		this.DIM_UNIT = grille.DIM_UNIT;
+
+		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
+		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
+			for (int col = 0; col < this.DIMENSION; col++) {
+				this.initCase(ligne, col, grille.getCase(ligne, col));
+			}
+		}
+		
+		this.conflits = new HashSet<Case>(this.DIMENSION);
+		for (Case c : grille.getConflits()){
+			this.conflits.add(this.getCase(c.LIGNE, c.COL));
+		}
+		
 		this.conflitTemp = new HashSet<Case>(this.DIMENSION);
 	}
 
@@ -80,8 +106,30 @@ public class GrilleSudo {
 						"Mauvaise gestion du nombre de cases vides");
 			}
 
-			// this.fullVerifCase(ligne, col);
+		}
+	}
 
+	/**
+	 * Initialisation par recopie d'une case
+	 * 
+	 * @param ligne
+	 * @param col
+	 * @param c
+	 *            case à recopier
+	 */
+	public void initCase(int ligne, int col, Case c) {
+		int oldCaseNum = c.getNum();
+
+		if (oldCaseNum < 0 || oldCaseNum > this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"Le numéro d'une case doit toujours être compris entre " + 0
+						+ " et " + this.DIMENSION
+						+ "\n(erreur lors d'une création de case)");
+		}
+
+		this.matrix[ligne][col] = new Case(c);
+		if (oldCaseNum == 0) {
+			this.nbCasesVides++;
 		}
 	}
 
@@ -321,6 +369,23 @@ public class GrilleSudo {
 		}
 
 		return col;
+	}
+	
+	
+	Case[] getZonePrive(Case c) {
+		Case[] zone = new Case[3*(this.DIMENSION - 1)];
+
+		Case[] carrePrive = this.getCarrePrive(c);
+		Case[] lignePrivee = this.getLinePrive(c);
+		Case[] colPrivee = this.getColPrive(c);
+		
+		for (int k = 0; k < this.DIMENSION; k++){
+			zone[3*k] = carrePrive[k];
+			zone[3*k+1] = lignePrivee[k];
+			zone[3*k+2] = colPrivee[k];
+		}
+		
+		return zone;
 	}
 
 
