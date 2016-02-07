@@ -28,8 +28,10 @@ public class SudokuGame {
 	}
 
 	public void setCase(int ligne, int col, int newNum) {
-		this.grille.setCase(ligne, col, newNum);
-		SudoValidator.fullVerifCase(this.grille, ligne, col);
+		if (this.grille.getCase(ligne, col).canBeChanged()) {
+			this.grille.setCase(ligne, col, newNum);
+			SudoValidator.fullVerifCase(this.grille, ligne, col);
+		}
 	}
 
 	public HashSet<Case> getConflits() {
