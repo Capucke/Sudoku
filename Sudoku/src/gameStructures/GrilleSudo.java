@@ -5,17 +5,12 @@ import java.util.HashSet;
 
 /**
  * Grille de Sudoku. Ici sont définies tous les attributs d'une grille de sudoku
- * ansi que les méthodes de base pour accéder à ces attributs. Sont également
- * définies les méthodes abstraites qui seront utiles pour jouer au Sudoku.
+ * ansi que les méthodes de base pour accéder à ces attributs.
  * 
  * @author deborah
  *
  */
-public abstract class GrilleSudo {
-
-	public static final int FACILE = 0;
-	public static final int MOYEN = 1;
-	public static final int DIFFICILE = 2;
+public class GrilleSudo {
 
 	public final int DIMENSION;
 	public final int DIM_UNIT;
@@ -59,6 +54,13 @@ public abstract class GrilleSudo {
 	 *            noueau numéro de la case
 	 */
 	public void setCase(int ligne, int col, int newNum) {
+		if (newNum < 0 || newNum > this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"Le numéro d'une case doit toujours être compris entre " + 0
+						+ " et " + this.DIMENSION
+						+ "\n(erreur lors d'un changement de numéro)");
+		}
+
 		int oldNum = this.getNum(ligne, col);
 
 		if (oldNum != newNum) {
@@ -78,7 +80,7 @@ public abstract class GrilleSudo {
 						"Mauvaise gestion du nombre de cases vides");
 			}
 
-			this.fullVerifCase(ligne, col);
+			// this.fullVerifCase(ligne, col);
 
 		}
 	}
@@ -93,6 +95,13 @@ public abstract class GrilleSudo {
 	 *            numéro initial de la case
 	 */
 	public void initCase(int ligne, int col, int num) {
+		if (num < 0 || num > this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"Le numéro d'une case doit toujours être compris entre " + 0
+						+ " et " + this.DIMENSION
+						+ "\n(erreur lors d'une création de case)");
+		}
+
 		this.matrix[ligne][col] = new Case(ligne, col, num);
 		if (num == 0) {
 			this.nbCasesVides++;
@@ -143,39 +152,176 @@ public abstract class GrilleSudo {
 	 * @param col
 	 * @return
 	 */
-	protected int getIndiceCarre(int ligne, int col) {
+	int getIndiceCarre(int ligne, int col) {
 		return (this.DIM_UNIT * (ligne / this.DIM_UNIT)
 				+ (col / this.DIM_UNIT));
 	}
 
-	/**
-	 * Vérifie les problèmes pour la case d'indice [ligne][col], et met à jour
-	 * tous les conflits possibles (selon les cases qui étaient ancienneent en
-	 * conflit). Utile pour vérifier seulement la dernière case modifiée dans la
-	 * grille.
-	 * 
-	 * @param ligne
-	 * @param col
-	 * @return un booléen qui vaut true si on a trouvé un conflit
-	 */
-	public abstract boolean fullVerifCase(int ligne, int col);
+	Case[] getCarre(int indice) {
+		if (indice < 0 || indice >= this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"La dimension de la grille de jeu vaut : " + this.DIMENSION
+						+ ". Il n'y a donc que " + this.DIMENSION
+						+ " \"sous-grilles\" de jeu, indicées entre 0 et "
+						+ (this.DIMENSION - 1)
+						+ ".\n Vous avez demandé la \"sous-grilles\" de jeu "
+						+ "d'indice " + indice);
+		}
+
+		Case[] carre = new Case[this.DIMENSION];
+
+		int firstLigne = indice / this.DIM_UNIT;
+		int firstCol = this.DIM_UNIT * (indice % this.DIM_UNIT);
+
+		int k = 0;
+
+		for (int ligne = firstLigne; ligne < firstLigne
+			+ this.DIM_UNIT; ligne++) {
+			for (int col = firstCol; col < firstCol + this.DIM_UNIT; col++) {
+				carre[k] = this.getCase(ligne, col);
+				k++;
+			}
+		}
+
+		if (k != this.DIMENSION) {
+			throw new InternalError("Mauvaise initialisation de DIMENSION (="
+				+ this.DIMENSION + ") et DIM_UNIT (=" + this.DIM_UNIT + ").\n"
+				+ "On doit avoir : DIM_UNIT = sqrt(DIMENSION)");
+		}
+
+		return carre;
+	}
+
+	Case[] getCol(int indice) {
+		if (indice < 0 || indice >= this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"La dimension de la grille de jeu vaut : " + this.DIMENSION
+						+ ". Il n'y a donc que " + this.DIMENSION
+						+ " colonnes dans la grille, indicées entre 0 et "
+						+ (this.DIMENSION - 1)
+						+ ".\n Vous avez demandé la colonne d'indice "
+						+ indice);
+		}
+
+		Case[] col = new Case[this.DIMENSION];
+
+		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
+			col[ligne] = this.getCase(ligne, indice);
+		}
+
+		return col;
+	}
+
+	Case[] getLine(int indice) {
+		if (indice < 0 || indice >= this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"La dimension de la grille de jeu vaut : " + this.DIMENSION
+						+ ". Il n'y a donc que " + this.DIMENSION
+						+ " lignes dans la grille, indicées entre 0 et "
+						+ (this.DIMENSION - 1)
+						+ ".\n Vous avez demandé la ligne d'indice " + indice);
+		}
+
+		Case[] ligne = new Case[this.DIMENSION];
+
+		for (int col = 0; col < this.DIMENSION; col++) {
+			ligne[col] = this.getCase(indice, col);
+		}
+
+		return ligne;
+	}
+
 
 	/**
-	 * Vérifie entièrement la grille (vérification lente)
+	 * Renvoie un tableau de cases correspondant au carré où se trouve la case
+	 * c. /!\ La case c ne se trouvera pas dans le tableau retourné
 	 * 
-	 * @return un boolean qui vaut true si on a trouvé des conflits
+	 * @param c
+	 * @return
 	 */
-	public abstract boolean verifGrille();
+	Case[] getCarrePrive(Case c) {
+		int indice = this.getIndiceCarre(c.LIGNE, c.COL);
 
+		Case[] carre = new Case[this.DIMENSION - 1];
+
+		int firstLigne = indice / this.DIM_UNIT;
+		int firstCol = this.DIM_UNIT * (indice % this.DIM_UNIT);
+
+		int k = 0;
+
+		for (int ligne = firstLigne; ligne < firstLigne
+			+ this.DIM_UNIT; ligne++) {
+			for (int col = firstCol; col < firstCol + this.DIM_UNIT; col++) {
+				if (ligne == c.LIGNE && col == c.COL) {
+					// rien car on ne souhaite pas mettre la case courante dans
+					// la "zone" de jeu retournée
+				} else {
+					carre[k] = this.getCase(ligne, col);
+					k++;
+				}
+			}
+		}
+
+		if (k != this.DIMENSION - 1) {
+			throw new InternalError("Mauvaise initialisation de DIMENSION (="
+				+ this.DIMENSION + ") et DIM_UNIT (=" + this.DIM_UNIT + ").\n"
+				+ "On doit avoir : DIM_UNIT = sqrt(DIMENSION)");
+		}
+
+		return carre;
+	}
 
 	/**
-	 * Initialise la grille de sudoku
+	 * Renvoie un tableau de cases correspondant à la ligne où se trouve la case
+	 * c. /!\ La case c ne se trouvera pas dans le tableau retourné
 	 * 
-	 * @param niveau
-	 *            correspond au niveau de difficulté souhaité ; doit être
-	 *            compris entre FACILE et DIFFICILE
+	 * @param c
+	 * @return
 	 */
-	public abstract void initGrille(int niveau);
+	Case[] getLinePrive(Case c) {
+
+		Case[] ligne = new Case[this.DIMENSION - 1];
+
+		int k = 0;
+
+		for (int col = 0; col < this.DIMENSION; col++) {
+			if (col == c.COL) {
+				// rien car on ne souhaite pas mettre la case courante dans
+				// la "zone" de jeu retournée
+			} else {
+				ligne[k] = this.getCase(c.LIGNE, col);
+				k++;
+			}
+		}
+
+		return ligne;
+	}
+
+	/**
+	 * Renvoie un tableau de cases correspondant à la colonne où se trouve la
+	 * case c. /!\ La case c ne se trouvera pas dans le tableau retourné
+	 * 
+	 * @param c
+	 * @return
+	 */
+	Case[] getColPrive(Case c) {
+
+		Case[] col = new Case[this.DIMENSION - 1];
+
+		int k = 0;
+
+		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
+			if (ligne == c.LIGNE) {
+				// rien car on ne souhaite pas mettre la case courante dans
+				// la "zone" de jeu retournée
+			} else {
+				col[k] = this.getCase(ligne, c.COL);
+				k++;
+			}
+		}
+
+		return col;
+	}
 
 
 	/**
