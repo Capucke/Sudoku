@@ -19,7 +19,8 @@ public class GrilleSudo {
 	// on doit avoir : DIM_UNIT = sqrt(DIMENSION)
 
 	private Case[][] matrix;
-	private int nbCasesVides = 0;
+
+	private HashSet<Case> casesVides;
 
 	private HashSet<Case> conflits; // stocke les conflits au tour actuel
 
@@ -40,6 +41,7 @@ public class GrilleSudo {
 		}
 
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
+		this.casesVides = new HashSet<Case>(this.DIMENSION);
 		this.conflits = new HashSet<Case>(this.DIMENSION);
 		this.conflitTemp = new HashSet<Case>(this.DIMENSION);
 	}
@@ -53,13 +55,18 @@ public class GrilleSudo {
 		this.DIMENSION = grille.DIMENSION;
 		this.DIM_UNIT = grille.DIM_UNIT;
 
+		this.casesVides = new HashSet<Case>(this.DIMENSION);
+		// l'initialisation de ce hashSet se fait par l'appel du initCase
+		// lors de la recopie de la grille
+
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
+
 		for (int ligne = 0; ligne < this.DIMENSION; ligne++) {
 			for (int col = 0; col < this.DIMENSION; col++) {
 				this.initCase(ligne, col, grille.getCase(ligne, col));
 			}
 		}
-		
+
 		this.conflits = new HashSet<Case>(this.DIMENSION);
 		for (Case c : grille.getConflits()){
 			this.conflits.add(this.getCase(c.LIGNE, c.COL));
@@ -67,6 +74,7 @@ public class GrilleSudo {
 		
 		this.conflitTemp = new HashSet<Case>(this.DIMENSION);
 	}
+
 
 	/**
 	 * Méthode appelée lorsque l'utilisateur change le numéro de la case située
@@ -89,24 +97,19 @@ public class GrilleSudo {
 
 		int oldNum = this.getNum(ligne, col);
 
-		if (oldNum != newNum) {
-			// sinon, rien à faire car le numéro de la case ne change pas
-			// autrement dit rien n'est modifié dans la grille
-			this.matrix[ligne][col].setNum(newNum);
+		this.matrix[ligne][col].setNum(newNum);
 
-			if ((oldNum == 0) && (newNum != 0)) {
-				this.nbCasesVides--;
-			} else if ((oldNum != 0) && (newNum == 0)) {
-				this.nbCasesVides++;
-			}
-
-			if (this.nbCasesVides < 0
-					|| this.nbCasesVides > (this.DIMENSION * this.DIMENSION)) {
-				throw new InternalError(
-						"Mauvaise gestion du nombre de cases vides");
-			}
-
+		if (oldNum == 0) {
+			this.removeCaseVide(ligne, col);
+		} else if (newNum == 0) {
+			this.addCaseVide(ligne, col);
 		}
+
+		if (this.getCasesVides().size() > (this.DIMENSION * this.DIMENSION)) {
+			throw new InternalError(
+					"Mauvaise gestion du nombre de cases vides");
+		}
+
 	}
 
 	/**
@@ -129,7 +132,7 @@ public class GrilleSudo {
 
 		this.matrix[ligne][col] = new Case(c);
 		if (oldCaseNum == 0) {
-			this.nbCasesVides++;
+			this.addCaseVide(ligne, col);
 		}
 	}
 
@@ -152,7 +155,7 @@ public class GrilleSudo {
 
 		this.matrix[ligne][col] = new Case(ligne, col, num);
 		if (num == 0) {
-			this.nbCasesVides++;
+			this.addCaseVide(ligne, col);
 		}
 	}
 
@@ -189,8 +192,28 @@ public class GrilleSudo {
 		return this.conflits;
 	}
 
+	public HashSet<Case> getCasesVides() {
+		return this.casesVides;
+	}
+
+	public void removeCaseVide(int ligne, int col) {
+		this.removeCaseVide(this.getCase(ligne, col));
+	}
+
+	public void removeCaseVide(Case c) {
+		this.removeCaseVide(c.LIGNE, c.COL);
+	}
+
+	public void addCaseVide(Case c) {
+		this.casesVides.add(c);
+	}
+
+	public void addCaseVide(int ligne, int col) {
+		this.casesVides.add(this.getCase(ligne, col));
+	}
+
 	public boolean isComplete() {
-		return ((this.nbCasesVides == 0) && (this.conflits.isEmpty()));
+		return ((this.getCasesVides().isEmpty()) && (this.conflits.isEmpty()));
 	}
 
 	/**

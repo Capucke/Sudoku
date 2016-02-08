@@ -37,7 +37,12 @@ public class Case implements Comparable<Case> {
 	}
 
 	public Case(Case c) {
-		this.INIT_NUM = c.INIT_NUM;
+		// Choix :
+		// lors de la construction par recopie d'une case
+		// c'est seulement la valeur courante de la case qui nous intéresse
+		// et c'est également cette valeur qu'on souhaitera avoir en tant que
+		// valeur initiale de la case construite par recopie
+		this.INIT_NUM = c.getNum();
 		this.curNum = c.getNum();
 		this.LIGNE = c.LIGNE;
 		this.COL = c.COL;

@@ -6,6 +6,7 @@ import gameStructures.Case;
 import gameStructures.GrilleSudo;
 import gameStructures.Niveau;
 import gameStructures.SudoInitializer;
+import gameStructures.SudoSolveur;
 import gameStructures.SudoValidator;
 
 
@@ -29,7 +30,7 @@ public class SudokuGame {
 
 	public void setCase(int ligne, int col, int newNum) {
 		if (this.grille.getCase(ligne, col).canBeChanged()) {
-			SudoInitializer.setCase(this.grille, ligne, col, newNum);
+			SudoSolveur.setCase(this.grille, ligne, col, newNum);
 			SudoValidator.fullVerifCase(this.grille, ligne, col);
 		}
 	}
