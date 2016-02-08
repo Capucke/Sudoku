@@ -29,7 +29,7 @@ public class SudokuGame {
 
 	public void setCase(int ligne, int col, int newNum) {
 		if (this.grille.getCase(ligne, col).canBeChanged()) {
-			this.grille.setCase(ligne, col, newNum);
+			SudoInitializer.setCase(this.grille, ligne, col, newNum);
 			SudoValidator.fullVerifCase(this.grille, ligne, col);
 		}
 	}
