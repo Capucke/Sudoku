@@ -15,17 +15,23 @@ public class SudoInitializer {
 	 * @param niveau
 	 *            correspond au niveau de difficulté souhaité
 	 */
-	public static void initGrille(GrilleSudo grille, Niveau niveau) {
+	public static GrilleSudo createGrille(int dimension, Niveau niveau) {
+		GrilleSudo grille = SudoInitializer
+				.grilleRandom(SudoInitializer.grilleVide(dimension, niveau));
 
+		// TODO : ECRIRE CODE POUR RETIRER LE MAXIMUM DE CASES POSSIBLES SELON
+		// LA DIFFICULTÉ DU SUDOKU
+
+		SudoInitializer.initPossibilites(grille);
+		return grille;
 	}
-
 
 	/**
 	 * Initialise les listes de possibilites pour toutes les cases de la grille.
 	 * /!\ Cette méthode doit être appelée directement après l'initialisation de
 	 * la grille.
 	 */
-	private static void initPossibiites(GrilleSudo grille) {
+	private static void initPossibilites(GrilleSudo grille) {
 		for (Case[] tabCase : grille.getMatrix()) {
 			for (Case curCase : tabCase) {
 				if (curCase.getNum() != curCase.INIT_NUM) {
@@ -51,8 +57,8 @@ public class SudoInitializer {
 		}
 	}
 
-	private static GrilleSudo grilleVide(int dimension) {
-		GrilleSudo grille = new GrilleSudo(dimension);
+	private static GrilleSudo grilleVide(int dimension, Niveau niveau) {
+		GrilleSudo grille = new GrilleSudo(dimension, niveau);
 
 		for (int ligne = 0; ligne < dimension; ligne++) {
 			for (int col = 0; col < dimension; col++) {

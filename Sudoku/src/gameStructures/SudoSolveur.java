@@ -71,6 +71,30 @@ public class SudoSolveur {
 	}
 
 	/**
+	 * Tente de résoudre la case c de la grille selon la difficulté demandée.
+	 * 
+	 * @param grille
+	 * @param c
+	 * @param result
+	 * @param niveau
+	 * @return
+	 */
+	static boolean solve(GrilleSudo grille, Case c, AtomicInteger result) {
+		switch (grille.NIVEAU) {
+			case FACILE:
+				return resoutFacile(grille, c, result);
+			case MOYEN:
+				return resoutMoyen(grille, c, result);
+			case DIFFICILE:
+				return resoutDifficile(grille, c, result);
+			default:
+				throw new IllegalArgumentException(
+						"Le niveau de la grille n'est ni FACILE, ni MOYEN, "
+							+ "ni DIFFICILE");
+		}
+	}
+
+	/**
 	 * Tente de trouver la valeur de la case c avec une méthode de résolution
 	 * facile. Si on peut résoudre cette case, l'integer result servira à
 	 * stocker ce résultat et on renverra true ; sinon on renverra false.
@@ -81,7 +105,7 @@ public class SudoSolveur {
 	 * @param result
 	 * @return
 	 */
-	static boolean resoutFacile(GrilleSudo grille, Case c,
+	private static boolean resoutFacile(GrilleSudo grille, Case c,
 			AtomicInteger result) {
 		ArrayList<Integer> possibilites =
 				new ArrayList<Integer>(c.getNumPossibles());
@@ -104,7 +128,7 @@ public class SudoSolveur {
 	 * @param result
 	 * @return
 	 */
-	static boolean resoutMoyen(GrilleSudo grille, Case c,
+	private static boolean resoutMoyen(GrilleSudo grille, Case c,
 			AtomicInteger result) {
 
 		boolean resolvable;
@@ -186,7 +210,8 @@ public class SudoSolveur {
 	 * @param result
 	 * @return
 	 */
-	boolean resoutDifficile(GrilleSudo grille, Case c, AtomicInteger result) {
+	private static boolean resoutDifficile(GrilleSudo grille, Case c,
+			AtomicInteger result) {
 
 		boolean resolvable;
 

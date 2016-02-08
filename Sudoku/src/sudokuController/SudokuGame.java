@@ -13,19 +13,13 @@ import gameStructures.SudoValidator;
 public class SudokuGame {
 
 	private GrilleSudo grille;
-	private Niveau niveau;
 
 	public SudokuGame(GrilleSudo sudoGrille) {
 		this.grille = sudoGrille;
 	}
 
 	public SudokuGame(int dimension, Niveau niveauJeu) {
-		this.grille = new GrilleSudo(dimension);
-		this.niveau = niveauJeu;
-	}
-
-	public void initGame() {
-		SudoInitializer.initGrille(this.grille, this.niveau);
+		this.grille = SudoInitializer.createGrille(dimension, niveauJeu);
 	}
 
 	public void setCase(int ligne, int col, int newNum) {
@@ -33,6 +27,10 @@ public class SudokuGame {
 			SudoSolveur.setCase(this.grille, ligne, col, newNum);
 			SudoValidator.fullVerifCase(this.grille, ligne, col);
 		}
+	}
+
+	public boolean isComplete() {
+		return this.grille.isComplete();
 	}
 
 	public HashSet<Case> getConflits() {

@@ -17,6 +17,7 @@ public class GrilleSudo {
 	public final int DIMENSION;
 	public final int DIM_UNIT;
 	// on doit avoir : DIM_UNIT = sqrt(DIMENSION)
+	public final Niveau NIVEAU;
 
 	private Case[][] matrix;
 
@@ -28,7 +29,7 @@ public class GrilleSudo {
 									   // conflits au tour actuel lors du calcul
 	// dans un attribut pour faciliter la mise à jour de l'attribut conflits
 
-	public GrilleSudo(int dimension) {
+	public GrilleSudo(int dimension, Niveau level) {
 		try {
 
 			this.DIMENSION = dimension;
@@ -39,6 +40,7 @@ public class GrilleSudo {
 			e.printStackTrace();
 			throw new IllegalArgumentException();
 		}
+		this.NIVEAU = level;
 
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
 		this.casesVides = new HashSet<Case>(this.DIMENSION);
@@ -54,6 +56,7 @@ public class GrilleSudo {
 	public GrilleSudo(GrilleSudo grille) {
 		this.DIMENSION = grille.DIMENSION;
 		this.DIM_UNIT = grille.DIM_UNIT;
+		this.NIVEAU = grille.NIVEAU;
 
 		this.casesVides = new HashSet<Case>(this.DIMENSION);
 		// l'initialisation de ce hashSet se fait par l'appel du initCase
