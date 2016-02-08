@@ -218,6 +218,14 @@ public class SudoInitializer {
 	 */
 	static boolean resoutMoyen(GrilleSudo grille, Case c,
 			AtomicInteger result) {
+
+		boolean resolvable;
+
+		resolvable = SudoInitializer.resoutFacile(grille, c, result);
+		if (resolvable) {
+			return true;
+		}
+
 		ArrayList<Integer> possibilites =
 				new ArrayList<Integer>(c.getNumPossibles());
 
@@ -291,6 +299,14 @@ public class SudoInitializer {
 	 * @return
 	 */
 	boolean resoutDifficile(GrilleSudo grille, Case c, AtomicInteger result) {
+
+		boolean resolvable;
+
+		resolvable = SudoInitializer.resoutMoyen(grille, c, result);
+		if (resolvable) {
+			return true;
+		}
+
 		ArrayList<Integer> possibilites =
 				new ArrayList<Integer>(c.getNumPossibles());
 
@@ -510,13 +526,6 @@ public class SudoInitializer {
 
 			}
 
-		}
-
-		boolean resolvable;
-
-		resolvable = SudoInitializer.resoutFacile(grille, c, result);
-		if (resolvable) {
-			return true;
 		}
 
 		resolvable = SudoInitializer.resoutMoyen(grille, c, result);
