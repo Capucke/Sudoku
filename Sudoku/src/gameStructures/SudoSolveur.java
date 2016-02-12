@@ -1,6 +1,8 @@
 package gameStructures;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -68,6 +70,39 @@ public class SudoSolveur {
 			}
 		}
 
+	}
+
+	static boolean isSolvable(GrilleSudo grille) {
+		GrilleSudo copieGrille = new GrilleSudo(grille);
+		SudoInitializer.initPossibilites(copieGrille);
+
+		boolean caseSolvableTrouvee;
+		AtomicInteger myInt = new AtomicInteger(0);
+		HashSet<Case> copieCasesVides = copieGrille.getCasesVides();
+
+		Iterator<Case> iter;
+		Case curCase;
+
+		while (!copieCasesVides.isEmpty()) {
+			caseSolvableTrouvee = false;
+
+			iter = copieCasesVides.iterator();
+
+			while (iter.hasNext() & !caseSolvableTrouvee) {
+				curCase = iter.next();
+				caseSolvableTrouvee =
+						SudoSolveur.solve(copieGrille, curCase, myInt);
+				if (caseSolvableTrouvee) {
+					SudoSolveur.setCase(copieGrille, curCase, myInt.intValue());
+				}
+			}
+
+			if (!caseSolvableTrouvee) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
