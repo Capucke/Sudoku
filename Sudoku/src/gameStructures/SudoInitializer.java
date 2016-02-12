@@ -2,6 +2,7 @@ package gameStructures;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.TreeSet;
 
 
@@ -19,11 +20,57 @@ public class SudoInitializer {
 		GrilleSudo grille = SudoInitializer
 				.grilleRandom(SudoInitializer.grilleVide(dimension, niveau));
 
-		// TODO : ECRIRE CODE POUR RETIRER LE MAXIMUM DE CASES POSSIBLES SELON
-		// LA DIFFICULTÉ DU SUDOKU
+		SudoInitializer.retirerCases(grille);
 
 		SudoInitializer.initPossibilites(grille);
 		return grille;
+	}
+
+	private static void retirerCases(GrilleSudo grille) {
+		int taille = Math.round(grille.DIMENSION * grille.DIMENSION / 0.80f);
+		HashSet<Case> casesRempliesTestees = new HashSet<>(taille / 2, 0.85f);
+		HashSet<Case> casesVides = new HashSet<>(taille / 2, 0.85f);
+		ArrayList<Case> casesATester = new ArrayList<>(taille);
+
+		for (Case[] tabCase : grille.getMatrix()) {
+			for (Case c : tabCase) {
+				casesATester.add(c);
+			}
+		}
+		Collections.shuffle(casesATester);
+
+		while (!casesATester.isEmpty()) {
+			SudoInitializer.essaiRetirerUneCase(grille, casesRempliesTestees,
+					casesVides, casesATester);
+		}
+
+		if ((casesVides.size()
+			+ casesRempliesTestees.size()) != (grille.DIMENSION
+				* grille.DIMENSION)) {
+			throw new InternalError(
+					"Erreur : toutes les cases de la grille de sudoku "
+						+ "n'ont pas été testées");
+		}
+
+	}
+
+	private static void essaiRetirerUneCase(GrilleSudo grille,
+			HashSet<Case> casesRempliesTestees, HashSet<Case> casesVides,
+			ArrayList<Case> casesATester) {
+		Case c = casesATester.get(0);
+		casesATester.remove(0);
+
+		int oldNum = c.getNum();
+		SudoSolveur.setCase(grille, c, 0);
+
+		if (SudoSolveur.isSolvable(grille)) {
+			casesVides.add(c);
+
+		} else {
+			casesRempliesTestees.add(c);
+			SudoSolveur.setCase(grille, c, oldNum);
+
+		}
 	}
 
 	/**
@@ -31,7 +78,7 @@ public class SudoInitializer {
 	 * /!\ Cette méthode doit être appelée directement après l'initialisation de
 	 * la grille.
 	 */
-	private static void initPossibilites(GrilleSudo grille) {
+	static void initPossibilites(GrilleSudo grille) {
 		for (Case[] tabCase : grille.getMatrix()) {
 			for (Case curCase : tabCase) {
 				if (curCase.getNum() != curCase.INIT_NUM) {
