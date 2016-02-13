@@ -22,8 +22,10 @@ public class SudoInitializer {
 
 		SudoInitializer.retirerCases(grille);
 
-		SudoInitializer.initPossibilites(grille);
-		return grille;
+		GrilleSudo grilleInitialisee = new GrilleSudo(grille);
+
+		SudoInitializer.initPossibilites(grilleInitialisee);
+		return grilleInitialisee;
 	}
 
 	private static void retirerCases(GrilleSudo grille) {
@@ -110,6 +112,7 @@ public class SudoInitializer {
 		for (int ligne = 0; ligne < dimension; ligne++) {
 			for (int col = 0; col < dimension; col++) {
 				grille.initCase(ligne, col);
+				grille.getCase(ligne, col).fillPossibilites(dimension);
 			}
 		}
 

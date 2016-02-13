@@ -12,6 +12,8 @@ import gameStructures.SudoValidator;
 
 public class SudokuGame {
 
+	// dafont
+
 	private GrilleSudo grille;
 
 	public SudokuGame(GrilleSudo sudoGrille) {
@@ -29,12 +31,32 @@ public class SudokuGame {
 		}
 	}
 
+	public void restart() {
+		for (int ligne = 0; ligne < this.grille.DIMENSION; ligne++) {
+			for (int col = 0; col < this.grille.DIMENSION; col++) {
+				this.setCase(ligne, col, this.getCase(ligne, col).INIT_NUM);
+			}
+		}
+	}
+
+	public Case getCase(int ligne, int col) {
+		return this.grille.getCase(ligne, col);
+	}
+
+	public int getNum(int ligne, int col) {
+		return this.grille.getNum(ligne, col);
+	}
+
 	public boolean isComplete() {
 		return this.grille.isComplete();
 	}
 
 	public HashSet<Case> getConflits() {
 		return this.grille.getConflits();
+	}
+
+	public int getDimension() {
+		return this.grille.DIMENSION;
 	}
 
 }

@@ -200,7 +200,7 @@ public class GrilleSudo {
 	}
 
 	public void removeCaseVide(int ligne, int col) {
-		this.removeCaseVide(this.getCase(ligne, col));
+		this.casesVides.remove(this.getCase(ligne, col));
 	}
 
 	public void removeCaseVide(Case c) {
@@ -318,7 +318,7 @@ public class GrilleSudo {
 
 		Case[] carre = new Case[this.DIMENSION - 1];
 
-		int firstLigne = indice / this.DIM_UNIT;
+		int firstLigne = this.DIM_UNIT * (indice / this.DIM_UNIT);
 		int firstCol = this.DIM_UNIT * (indice % this.DIM_UNIT);
 
 		int k = 0;
@@ -326,10 +326,7 @@ public class GrilleSudo {
 		for (int ligne = firstLigne; ligne < firstLigne
 			+ this.DIM_UNIT; ligne++) {
 			for (int col = firstCol; col < firstCol + this.DIM_UNIT; col++) {
-				if (ligne == c.LIGNE && col == c.COL) {
-					// rien car on ne souhaite pas mettre la case courante dans
-					// la "zone" de jeu retournée
-				} else {
+				if (!(ligne == c.LIGNE && col == c.COL)) {
 					carre[k] = this.getCase(ligne, col);
 					k++;
 				}
@@ -405,7 +402,7 @@ public class GrilleSudo {
 		Case[] lignePrivee = this.getLinePrive(c);
 		Case[] colPrivee = this.getColPrive(c);
 		
-		for (int k = 0; k < this.DIMENSION; k++){
+		for (int k = 0; k < this.DIMENSION - 1; k++) {
 			zone[3*k] = carrePrive[k];
 			zone[3*k+1] = lignePrivee[k];
 			zone[3*k+2] = colPrivee[k];
