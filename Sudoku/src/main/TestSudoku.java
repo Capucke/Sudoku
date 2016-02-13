@@ -1,12 +1,12 @@
 package main;
 
-import gameStructures.GrilleSudo;
 import gameStructures.Niveau;
+import sudokuController.SudokuGame;
 
 public class TestSudoku {
 
 	public static void main(String[] args) {
-		GrilleSudo sudo = new GrilleSudo(9, Niveau.FACILE);
+		SudokuGame sudo = new SudokuGame(9, Niveau.DIFFICILE);
 	}
 
 
