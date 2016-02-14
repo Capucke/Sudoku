@@ -125,12 +125,17 @@ public class Case implements Comparable<Case> {
 		if (tailleThis < tailleC) {
 			return -1;
 		}
-
 		if (tailleThis > tailleC) {
 			return 1;
 		}
 
+		if (this.hashCode() < c.hashCode()) {
+			return -1;
+		} else if (this.hashCode() > c.hashCode()) {
+			return 1;
+		}
 		return 0;
+
 	}
 
 }

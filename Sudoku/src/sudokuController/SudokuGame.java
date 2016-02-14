@@ -59,4 +59,8 @@ public class SudokuGame {
 		return this.grille.DIMENSION;
 	}
 
+	public int getDimUnit() {
+		return this.grille.DIM_UNIT;
+	}
+
 }

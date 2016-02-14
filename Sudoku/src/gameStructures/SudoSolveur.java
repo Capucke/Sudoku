@@ -297,8 +297,12 @@ public class SudoSolveur {
 		boolean aValeurCommune;
 		boolean succesfulRemoval;
 
+
 		// Traitement du carré :
-		for (Case caseCarre : casesCandidatsCarre) {
+		Case caseCarre;
+		Iterator<Case> iterCarre = casesCandidatsCarre.iterator();
+		while (iterCarre.hasNext()) {
+			caseCarre = iterCarre.next();
 			aValeurCommune = false;
 
 			for (int i = 0; i < possibilites.size(); i++) {
@@ -316,18 +320,20 @@ public class SudoSolveur {
 			}
 
 			if (!aValeurCommune) {
-				succesfulRemoval = casesCandidatsCarre.remove(caseCarre);
-				if (!succesfulRemoval) {
-					throw new InternalError("On a tenté de retirer une Case "
-						+ "du HashSet casesCandidatsCarre, or cette "
-						+ "case n'était pas dans le HashSet");
-				}
+				iterCarre.remove();
+				// succesfulRemoval = casesCandidatsCarre.remove(caseCarre);
+				// if (!succesfulRemoval) {
+				// throw new InternalError("On a tenté de retirer une Case "
+				// + "du HashSet casesCandidatsCarre, or cette "
+				// + "case n'était pas dans le HashSet");
+				// }
 			}
 
 		}
 
-		for (Case caseCarre_1 : casesCandidatsCarre) {
-			casesCandidatsCarre.remove(caseCarre_1);
+		Case caseCarre_1;
+		while (!casesCandidatsCarre.isEmpty()) {
+			caseCarre_1 = casesCandidatsCarre.pollFirst();
 			currPossibilites = new ArrayList<>(caseCarre_1.getNumPossibles());
 
 			// on retire caseCarre_1 du TreeSet et on compare la liste de
@@ -352,16 +358,18 @@ public class SudoSolveur {
 
 		}
 
-		casesCandidatsCarre.clear();
-
-		for (Case caseCarre : carrePrive) {
-			if (caseCarre.nbPossibilites() == 2) {
-				casesCandidatsCarre.add(caseCarre);
-			}
-		}
+		// casesCandidatsCarre.clear();
+		// for (Case caseCarre : carrePrive) {
+		// if (caseCarre.nbPossibilites() == 2) {
+		// casesCandidatsCarre.add(caseCarre);
+		// }
+		// }
 
 		// Traitement de la ligne :
-		for (Case caseLigne : casesCandidatsLigne) {
+		Case caseLigne;
+		Iterator<Case> iterLigne = casesCandidatsLigne.iterator();
+		while (iterLigne.hasNext()) {
+			caseLigne = iterLigne.next();
 			aValeurCommune = false;
 
 			for (int i = 0; i < possibilites.size(); i++) {
@@ -379,24 +387,25 @@ public class SudoSolveur {
 			}
 
 			if (!aValeurCommune) {
-				succesfulRemoval = casesCandidatsLigne.remove(caseLigne);
-				if (!succesfulRemoval) {
-					throw new InternalError("On a tenté de retirer une Case "
-						+ "du HashSet casesCandidatsLigne, or cette "
-						+ "case n'était pas dans le HashSet");
-				}
+				iterLigne.remove();
+				// succesfulRemoval = casesCandidatsLigne.remove(caseLigne);
+				// if (!succesfulRemoval) {
+				// throw new InternalError("On a tenté de retirer une Case "
+				// + "du HashSet casesCandidatsLigne, or cette "
+				// + "case n'était pas dans le HashSet");
+				// }
 			}
 
 		}
 
-		for (Case caseLigne_1 : casesCandidatsLigne) {
-			casesCandidatsLigne.remove(caseLigne_1);
+		Case caseLigne_1;
+		while (!casesCandidatsLigne.isEmpty()) {
+			caseLigne_1 = casesCandidatsLigne.pollFirst();
 			currPossibilites = new ArrayList<>(caseLigne_1.getNumPossibles());
 
 			// on retire caseLigne_1 du TreeSet et on compare la liste de
 			// possibilités de toutes les cases suivantes du TreeSet à celle
-			// de
-			// caseLigne_1 à l'aide d'une 2eme boucle for
+			// de caseLigne_1 à l'aide d'une 2eme boucle for
 			for (Case caseLigne_2 : casesCandidatsLigne) {
 				if (caseLigne_2.getNumPossibles()
 						.containsAll(currPossibilites)) {
@@ -415,15 +424,18 @@ public class SudoSolveur {
 
 		}
 
-		casesCandidatsLigne.clear();
-		for (Case caseLigne : lignePrivee) {
-			if (caseLigne.nbPossibilites() == 2) {
-				casesCandidatsLigne.add(caseLigne);
-			}
-		}
+		// casesCandidatsLigne.clear();
+		// for (Case caseLignePrivee : lignePrivee) {
+		// if (caseLignePrivee.nbPossibilites() == 2) {
+		// casesCandidatsLigne.add(caseLignePrivee);
+		// }
+		// }
 
 		// Traitement de la colonne :
-		for (Case caseCol : casesCandidatsCol) {
+		Case caseCol;
+		Iterator<Case> iterCol = casesCandidatsCol.iterator();
+		while (iterCol.hasNext()) {
+			caseCol = iterCol.next();
 			aValeurCommune = false;
 
 			for (int i = 0; i < possibilites.size(); i++) {
@@ -441,18 +453,20 @@ public class SudoSolveur {
 			}
 
 			if (!aValeurCommune) {
-				succesfulRemoval = casesCandidatsCol.remove(caseCol);
-				if (!succesfulRemoval) {
-					throw new InternalError("On a tenté de retirer une Case "
-						+ "du HashSet casesCandidatsCol, or cette "
-						+ "case n'était pas dans le HashSet");
-				}
+				iterCol.remove();
+				// succesfulRemoval = casesCandidatsCol.remove(caseCol);
+				// if (!succesfulRemoval) {
+				// throw new InternalError("On a tenté de retirer une Case "
+				// + "du HashSet casesCandidatsCol, or cette "
+				// + "case n'était pas dans le HashSet");
+				// }
 			}
 
 		}
 
-		for (Case caseCol_1 : casesCandidatsCol) {
-			casesCandidatsCol.remove(caseCol_1);
+		Case caseCol_1;
+		while (!casesCandidatsCol.isEmpty()) {
+			caseCol_1 = casesCandidatsCol.pollFirst();
 			currPossibilites = new ArrayList<>(caseCol_1.getNumPossibles());
 
 			// on retire caseCol_1 du TreeSet et on compare la liste de
