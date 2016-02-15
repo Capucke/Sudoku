@@ -7,6 +7,7 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+
 public class SudoSolveur {
 
 	public static void setCase(GrilleSudo grille, Case c, int newNum) {
@@ -119,13 +120,14 @@ public class SudoSolveur {
 			case FACILE:
 				return resoutFacile(grille, c, result);
 			case MOYEN:
-				return resoutMoyen(grille, c, result);
 			case DIFFICILE:
-				return resoutDifficile(grille, c, result);
+				return resoutMoyen(grille, c, result);
+			case EXTREME:
+				return resoutExtreme(grille, c, result);
 			default:
 				throw new IllegalArgumentException(
 						"Le niveau de la grille n'est ni FACILE, ni MOYEN, "
-							+ "ni DIFFICILE");
+							+ "ni DIFFICILE, ni EXTREME");
 		}
 	}
 
@@ -245,7 +247,7 @@ public class SudoSolveur {
 	 * @param result
 	 * @return
 	 */
-	private static boolean resoutDifficile(GrilleSudo grille, Case c,
+	private static boolean resoutExtreme(GrilleSudo grille, Case c,
 			AtomicInteger result) {
 
 		boolean resolvable;

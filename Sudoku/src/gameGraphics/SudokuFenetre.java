@@ -13,6 +13,7 @@ import gameStructures.Niveau;
 import sudokuController.SudokuGame;
 
 
+
 public class SudokuFenetre extends JFrame {
 	private static final long serialVersionUID = 2L;
 	private SudokuGamePanel sudokuGamePanel;
@@ -29,9 +30,10 @@ public class SudokuFenetre extends JFrame {
 	}
 
 	public SudokuFenetre(int width, int height, Color bgColor) {
-		super("Sudokuban - Judith ;)");
-		this.fenWidth = width;
-		this.fenHeight = height;
+		super("Sudoku - Maman ;)");
+		this.setSize(width, height);
+		// this.fenWidth = width;
+		// this.fenHeight = height;
 
 		// this.frontMenu = new FrontMenu(width, height, bgColor, this);
 		// this.levelMenu = new FullLevelMenu(bgColor, this);
@@ -52,7 +54,7 @@ public class SudokuFenetre extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 
 		// this.displayFrontMenu();
-		this.displayGame(9, Niveau.DIFFICILE);
+		this.displayGame(9, Niveau.MOYEN);
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -61,7 +63,8 @@ public class SudokuFenetre extends JFrame {
 		// this.sudokuGamePanel.setSize(this.sudokuGamePanel.getWidth(),
 		// this.sudokuGamePanel.getHeight());
 
-		// this.pack();
+		this.pack();
+		this.validate();
 		this.setVisible(true);
 	}
 

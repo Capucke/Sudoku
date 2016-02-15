@@ -3,11 +3,12 @@ package gameStructures;
 import java.util.HashSet;
 
 
+
 public class Case implements Comparable<Case> {
 
 	public final int INIT_NUM;
 	private int curNum;
-	
+
 	public final int LIGNE;
 	public final int COL;
 
@@ -111,9 +112,9 @@ public class Case implements Comparable<Case> {
 	@Override
 	public String toString() {
 		String s = new String("Case : ");
-		s += new String("(" + this.LIGNE + " ," + this.COL + ")");
+		s += new String("(" + this.LIGNE + " ," + this.COL + ")\n");
 		s += new String("       num : " + this.getNum() + " (init : "
-				+ this.INIT_NUM + ")");
+			+ this.INIT_NUM + ")\n");
 		return s;
 	}
 

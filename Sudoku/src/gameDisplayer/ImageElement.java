@@ -9,9 +9,10 @@ import java.net.URL;
 import gameStructures.GrilleSudo;
 
 
+
 public class ImageElement {
 
-	// POLICE : LIBERATION SERIF : EN GRAS
+	// LM ROMAN 12 - GRAS - TAILLE 28
 
 	private int x;
 	private int y;
@@ -30,24 +31,42 @@ public class ImageElement {
 				ImageElement.chargeImg(ImageElement.IMG_FOLDER + "etoiles.png");
 	}
 
-	public static String getFolderChiffre(int size) {
-		return "chiffres_" + Integer.toString(size) + "px/";
-	}
 
 	public static String getGrillePath(int size) {
 		return ImageElement.IMG_FOLDER + "grille_" + Integer.toString(size)
 			+ "px.png";
 	}
 
-	public static String getChiffrePath(int chiffre, int size) {
+	public static String getFolderChiffre(int size) {
+		return "chiffres_" + Integer.toString(size) + "px/";
+	}
+
+	public static String getChiffreDefPath(int chiffre, int size) {
 		if (chiffre < 0 || chiffre >= GrilleSudo.MAX_DIMENSION) {
 			throw new IllegalArgumentException(
 					"Les chiffres à afficher doivent toujours être compris "
 						+ "entre 0 et " + (GrilleSudo.MAX_DIMENSION - 1));
 		}
+		String folder = ImageElement.IMG_FOLDER
+			+ ImageElement.getFolderChiffre(size) + "definitifs/";
+		return folder + Integer.toString(chiffre) + ".png";
+	}
+
+	public static String getChiffreModifPath(int chiffre, int size) {
+		if (chiffre < 0 || chiffre >= GrilleSudo.MAX_DIMENSION) {
+			throw new IllegalArgumentException(
+					"Les chiffres à afficher doivent toujours être compris "
+						+ "entre 0 et " + (GrilleSudo.MAX_DIMENSION - 1));
+		}
+		String folder = ImageElement.IMG_FOLDER
+			+ ImageElement.getFolderChiffre(size) + "modifiables/";
+		return folder + Integer.toString(chiffre) + ".png";
+	}
+
+	public static String getInvalidPath(int size) {
 		String folder =
 				ImageElement.IMG_FOLDER + ImageElement.getFolderChiffre(size);
-		return folder + Integer.toString(chiffre) + ".png";
+		return folder + "invalid.png";
 	}
 
 	public ImageElement(int theX, int theY, Image img, ImageObserver obs) {
@@ -63,8 +82,12 @@ public class ImageElement {
 		return img;
 	}
 
-	public static Image chargeImg(int chiffre, int size) {
-		return chargeImg(ImageElement.getChiffrePath(chiffre, size));
+	public static Image chargeImgDef(int chiffre, int size) {
+		return chargeImg(ImageElement.getChiffreDefPath(chiffre, size));
+	}
+
+	public static Image chargeImgModif(int chiffre, int size) {
+		return chargeImg(ImageElement.getChiffreModifPath(chiffre, size));
 	}
 
 	public void paint(Graphics2D g2d) {

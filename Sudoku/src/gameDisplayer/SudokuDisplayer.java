@@ -3,7 +3,10 @@ package gameDisplayer;
 import java.awt.Image;
 
 import gameGraphics.SudokuFenetre;
+import gameStructures.Case;
 import sudokuController.SudokuGame;
+
+
 
 public class SudokuDisplayer {
 
@@ -13,6 +16,13 @@ public class SudokuDisplayer {
 	private int xGrille;
 	private int yGrille;
 	private int tailleImg;
+
+	private int ratioWidth = 1;
+	// on aura *ratioWidth* fois plus de place à gauche de la grille qu'à droite
+	// de la grille
+	private int ratioHeight = 3;
+	// on aura *ratioHeight* fois plus de place en haut de la grille qu'en bas
+	// de la grille
 
 	public static final int TRAIT_FIN = 2;
 	public static final int TRAIT_MOY = 5;
@@ -29,8 +39,8 @@ public class SudokuDisplayer {
 		this.sudoku = game;
 		this.setTailleImg();
 	}
-	
-	private void setTailleImg(){
+
+	private void setTailleImg() {
 		int maxWidth = this.fen.getSudokuGamePanel().getWidth()
 			/ (this.sudoku.getDimension() + 2);
 		int maxHeight = this.fen.getSudokuGamePanel().getHeight()
@@ -58,13 +68,23 @@ public class SudokuDisplayer {
 		return this.fen;
 	}
 
+	public int getTailleGrille(int tailleCase) {
+		int taille = 0;
+		taille += (2 * TRAIT_GROS);
+		taille += ((this.sudoku.getDimUnit() - 1) * TRAIT_MOY);
+		taille += (this.sudoku.getDimUnit() * (this.sudoku.getDimUnit() - 1)
+			* TRAIT_FIN);
+		taille += (this.sudoku.getDimension() * this.tailleImg);
+		return taille;
+	}
+
 	public void calculOffSet(SudokuGame game) {
-		// this.xGrille = (this.fen.getSudokuGamePanel().getWidth() / 2)
-		// - (this.tailleImg * game.getDimension() / 2);
-		// this.yGrille = (this.fen.getSudokuGamePanel().getHeight() / 2)
-		// - (this.tailleImg * game.getDimension() / 2);
-		this.xGrille = 10;
-		this.yGrille = 10;
+		int tailleGrille = this.getTailleGrille(this.tailleImg);
+
+		this.xGrille = (this.fen.getWidth() - tailleGrille) * this.ratioWidth
+			/ (this.ratioWidth + 1);
+		this.yGrille = (this.fen.getHeight() - tailleGrille) * this.ratioHeight
+			/ (this.ratioHeight + 1);
 	}
 
 	public void setCase(int ligne, int col, int newNum) {
@@ -118,7 +138,7 @@ public class SudokuDisplayer {
 		}
 
 		this.fen.addImageElement(new ImageElement(xImg, yImg, img,
-						this.fen.getSudokuGamePanel()));
+				this.fen.getSudokuGamePanel()));
 	}
 
 	private void addTxtFin() {
@@ -146,29 +166,48 @@ public class SudokuDisplayer {
 		this.fen.addImageElement(new ImageElement(xTxt, yTxt,
 				ImageElement.TXT_COMPLETE, this.fen.getSudokuGamePanel()));
 	}
-	
-	private Image chargeImg(int chiffre) {
-		return ImageElement.chargeImg(chiffre, this.tailleImg);
+
+	private Image chargeImgDef(int chiffre) {
+		return ImageElement.chargeImgDef(chiffre, this.tailleImg);
+	}
+
+	private Image chargeImgModif(int chiffre) {
+		return ImageElement.chargeImgModif(chiffre, this.tailleImg);
 	}
 
 	private void drawGame(SudokuGame game, boolean jeuTermine) {
 		this.calculOffSet(game);
-		
+
+		Case currCase;
 		int curNum;
+		Image currImg;
 		int dimension = game.getDimension();
 
 		this.addImgGrille();
 
-		Image[] tabImages = new Image[dimension + 1];
+		Image[] tabImagesDef = new Image[dimension + 1];
 		for (int k = 0; k <= dimension; k++) {
-			tabImages[k] = this.chargeImg(k);
+			tabImagesDef[k] = this.chargeImgDef(k);
 		}
-				
+		Image[] tabImagesModif = new Image[dimension + 1];
+		for (int k = 0; k <= dimension; k++) {
+			tabImagesModif[k] = this.chargeImgModif(k);
+		}
+		Image invalid = ImageElement
+				.chargeImg(ImageElement.getInvalidPath(this.tailleImg));
+
 		for (int i = 0; i < dimension; i++) {
 			for (int j = 0; j < dimension; j++) {
-				curNum = game.getNum(i, j);
-				this.addImg(i, j, tabImages[curNum]);
+				currCase = game.getCase(i, j);
+				curNum = currCase.getNum();
+				currImg = (currCase.INIT_NUM == 1) ? tabImagesModif[curNum]
+						: tabImagesDef[curNum];
+				this.addImg(i, j, currImg);
 			}
+		}
+
+		for (Case invalidCase : this.sudoku.getConflits()) {
+			this.addImg(invalidCase.LIGNE, invalidCase.COL, invalid);
 		}
 
 		if (jeuTermine) {
