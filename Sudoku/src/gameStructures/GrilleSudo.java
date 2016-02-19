@@ -3,6 +3,7 @@ package gameStructures;
 import java.util.HashSet;
 
 
+
 /**
  * Grille de Sudoku. Ici sont définies tous les attributs d'une grille de sudoku
  * ansi que les méthodes de base pour accéder à ces attributs.
@@ -22,6 +23,8 @@ public class GrilleSudo {
 	private Case[][] matrix;
 
 	private HashSet<Case> casesVides;
+
+	private HashSet<Case> casesIncorrectes;
 
 	private HashSet<Case> conflits; // stocke les conflits au tour actuel
 
@@ -44,6 +47,7 @@ public class GrilleSudo {
 
 		this.matrix = new Case[this.DIMENSION][this.DIMENSION];
 		this.casesVides = new HashSet<Case>(this.DIMENSION);
+		this.casesIncorrectes = new HashSet<Case>(this.DIMENSION);
 		this.conflits = new HashSet<Case>(this.DIMENSION);
 		this.conflitTemp = new HashSet<Case>(this.DIMENSION);
 	}
@@ -70,11 +74,16 @@ public class GrilleSudo {
 			}
 		}
 
+		this.casesIncorrectes = new HashSet<Case>(this.DIMENSION);
+		for (Case c : grille.getCasesIncorrectes()) {
+			this.casesIncorrectes.add(this.getCase(c.LIGNE, c.COL));
+		}
+
 		this.conflits = new HashSet<Case>(this.DIMENSION);
-		for (Case c : grille.getConflits()){
+		for (Case c : grille.getConflits()) {
 			this.conflits.add(this.getCase(c.LIGNE, c.COL));
 		}
-		
+
 		this.conflitTemp = new HashSet<Case>(this.DIMENSION);
 	}
 
@@ -112,6 +121,19 @@ public class GrilleSudo {
 			throw new InternalError(
 					"Mauvaise gestion du nombre de cases vides");
 		}
+
+	}
+
+
+	public void setFinalNum(int ligne, int col, int finalNum) {
+		if (finalNum <= 0 || finalNum > this.DIMENSION) {
+			throw new IllegalArgumentException(
+					"Le numéro final d'une case doit toujours être compris "
+						+ "entre " + 1 + " et " + this.DIMENSION
+						+ "\n(erreur lors d'un changement de numéro)");
+		}
+
+		this.matrix[ligne][col].setFinalNum(finalNum);
 
 	}
 
@@ -178,6 +200,38 @@ public class GrilleSudo {
 		return this.matrix[ligne][col].getNum();
 	}
 
+	public void clearCasesIncorrectes() {
+		this.casesIncorrectes.clear();
+	}
+
+	public boolean isIncorrect(int ligne, int col) {
+		return !(this.getCase(ligne, col).isCorrect());
+	}
+
+	public boolean isIncorrect(Case c) {
+		return this.isIncorrect(c.LIGNE, c.COL);
+	}
+
+	public void addCaseIncorrecte(int ligne, int col) {
+		this.casesIncorrectes.add(this.getCase(ligne, col));
+	}
+
+	public void addCaseIncorrecte(Case c) {
+		this.addCaseIncorrecte(c.LIGNE, c.COL);
+	}
+
+	public boolean removeCaseIncorrecte(int ligne, int col) {
+		return this.casesIncorrectes.remove(this.getCase(ligne, col));
+	}
+
+	public boolean removeCaseIncorrecte(Case c) {
+		return this.removeCaseIncorrecte(c.LIGNE, c.COL);
+	}
+
+	public HashSet<Case> getCasesIncorrectes() {
+		return this.casesIncorrectes;
+	}
+
 	protected void clearConflitTemp() {
 		this.conflitTemp.clear();
 	}
@@ -228,7 +282,7 @@ public class GrilleSudo {
 	 */
 	int getIndiceCarre(int ligne, int col) {
 		return (this.DIM_UNIT * (ligne / this.DIM_UNIT)
-				+ (col / this.DIM_UNIT));
+			+ (col / this.DIM_UNIT));
 	}
 
 	Case[] getCarre(int indice) {
@@ -393,21 +447,21 @@ public class GrilleSudo {
 
 		return col;
 	}
-	
-	
+
+
 	Case[] getZonePrive(Case c) {
-		Case[] zone = new Case[3*(this.DIMENSION - 1)];
+		Case[] zone = new Case[3 * (this.DIMENSION - 1)];
 
 		Case[] carrePrive = this.getCarrePrive(c);
 		Case[] lignePrivee = this.getLinePrive(c);
 		Case[] colPrivee = this.getColPrive(c);
-		
+
 		for (int k = 0; k < this.DIMENSION - 1; k++) {
-			zone[3*k] = carrePrive[k];
-			zone[3*k+1] = lignePrivee[k];
-			zone[3*k+2] = colPrivee[k];
+			zone[3 * k] = carrePrive[k];
+			zone[3 * k + 1] = lignePrivee[k];
+			zone[3 * k + 2] = colPrivee[k];
 		}
-		
+
 		return zone;
 	}
 
@@ -431,11 +485,11 @@ public class GrilleSudo {
 			default:
 				throw new IllegalArgumentException(
 						"Argument illegal pour la fonction intSqrt.\n"
-								+ "Le nombre donné en paramètre n'est pas "
-								+ "compris 4 et 16 ou ne correpond pas au "
-								+ "carré d'un entier.\n"
-								+ "Rappel : le nombre que vous avez donné "
-								+ "en paramètre est : " + nb);
+							+ "Le nombre donné en paramètre n'est pas "
+							+ "compris 4 et 16 ou ne correpond pas au "
+							+ "carré d'un entier.\n"
+							+ "Rappel : le nombre que vous avez donné "
+							+ "en paramètre est : " + nb);
 		}
 	}
 

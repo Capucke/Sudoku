@@ -26,6 +26,10 @@ public class SudoSolveur {
 
 	public static Case solveOneCase(GrilleSudo grille) {
 
+		if (!grille.getCasesIncorrectes().isEmpty()) {
+			return null;
+		}
+
 		boolean caseSolvableTrouvee;
 		AtomicInteger myInt = new AtomicInteger(0);
 		HashSet<Case> casesVides = grille.getCasesVides();
@@ -34,11 +38,18 @@ public class SudoSolveur {
 		Case curCase = null;
 
 		if (casesVides.isEmpty()) {
-			System.err.println("Erreur : pas de case vide dans le sudoku => "
-				+ "prière de retirer les chiffres incorrcts avant de demander "
-				+ "de l'aide");
-			return null;
+			// System.err.println("Erreur : pas de case vide dans le sudoku => "
+			// + "prière de retirer les chiffres incorrcts avant de demander "
+			// + "de l'aide");
+			// return null;
+			throw new IllegalArgumentException(
+					"Erreur : pas de case vide dans le sudoku => "
+						+ "prière de retirer les chiffres incorrcts avant de demander "
+						+ "de l'aide");
 		}
+
+		// on parcourt les cases vides pour essayer de les résoudre
+		// on s'arrête la première case résolue, et on renvoie ladite case
 
 		caseSolvableTrouvee = false;
 		iter = casesVides.iterator();
@@ -52,10 +63,14 @@ public class SudoSolveur {
 			SudoSolveur.setCase(grille, curCase, myInt.intValue());
 			return curCase;
 		} else {
-			System.err.println("Erreur : grille non solvable => "
-				+ "certains chiffres entrés par l'utilisateur sont "
-				+ "incorrects");
-			return null;
+			// System.err.println("Erreur : grille non solvable => "
+			// + "certains chiffres entrés par l'utilisateur sont "
+			// + "incorrects");
+			// return null;
+			throw new IllegalArgumentException(
+					"Erreur : grille non solvable => "
+						+ "certains chiffres entrés par l'utilisateur sont "
+						+ "incorrects");
 		}
 
 	}

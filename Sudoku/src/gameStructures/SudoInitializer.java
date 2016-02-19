@@ -45,13 +45,54 @@ public class SudoInitializer {
 		GrilleSudo grille = SudoInitializer
 				.grilleRandom(SudoInitializer.grilleVide(dimension, niveau));
 
+		GrilleSudo grilleResolue = new GrilleSudo(grille);
+
 		SudoInitializer.retirerCases(grille);
 
 		GrilleSudo grilleInitialisee = new GrilleSudo(grille);
 
 		SudoInitializer.initPossibilites(grilleInitialisee);
+		SudoInitializer.fixeFinalNums(grilleInitialisee, grilleResolue);
 		return grilleInitialisee;
 	}
+
+	public static void fixeFinalNums(GrilleSudo grille,
+			GrilleSudo grilleResolue) {
+		for (int ligne = 0; ligne < grille.DIMENSION; ligne++) {
+			for (int col = 0; col < grille.DIMENSION; col++) {
+				grille.setFinalNum(ligne, col,
+						grilleResolue.getNum(ligne, col));
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+	/////////// SOLUTION PROPRE ET COUTEUSE ////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	// public static GrilleSudo createGrille(int dimension, Niveau niveau) {
+	// GrilleSudo grille = SudoInitializer
+	// .grilleRandom(SudoInitializer.grilleVide(dimension, niveau));
+	//
+	// SudoInitializer.fixeFinalNums(grille);
+	//
+	// SudoInitializer.retirerCases(grille);
+	//
+	// GrilleSudo grilleInitialisee = new GrilleSudo(grille);
+	//
+	// SudoInitializer.initPossibilites(grilleInitialisee);
+	// return grilleInitialisee;
+	// }
+	//
+	// public static void fixeFinalNums(GrilleSudo grille) {
+	// for (int ligne = 0; ligne < grille.DIMENSION; ligne++) {
+	// for (int col = 0; col < grille.DIMENSION; col++) {
+	// grille.setFinalNum(ligne, col, grille.getNum(ligne, col));
+	// }
+	// }
+	// }
+
+	////////////////////////////////////////////////////////////////////////////////
 
 
 	public static GrilleSudo testCreateGrilleRandom(int dimension,

@@ -1,6 +1,7 @@
 package gameDisplayer;
 
 import java.awt.Image;
+import java.util.Iterator;
 
 import gameGraphics.SudokuFenetre;
 import gameStructures.Case;
@@ -253,12 +254,26 @@ public class SudokuDisplayer {
 
 	public void solveOneCase() {
 		Case caseResolue = this.sudoku.solveOneCase();
+		// if (caseResolue == null) {
+		// System.err.println("pas de case résolue");
+		// return;
+		// }
 		if (caseResolue == null) {
-			System.err.println("pas de case résolue");
-			return;
+			Iterator<Case> iter = this.sudoku.getErrorsToShow().iterator();
+			if (iter.hasNext()) {
+				Case caseIncorrecte = iter.next();
+				this.setSelectedLine(caseIncorrecte.LIGNE);
+				this.setSelectedCol(caseIncorrecte.COL);
+			} else {
+				throw new InternalError(
+						"SolveOneCase appelée : pas de case résolue et "
+							+ "pas de case incorrecte trouvée");
+			}
+
+		} else {
+			this.setSelectedLine(caseResolue.LIGNE);
+			this.setSelectedCol(caseResolue.COL);
 		}
-		this.setSelectedLine(caseResolue.LIGNE);
-		this.setSelectedCol(caseResolue.COL);
 		this.display();
 	}
 
@@ -306,6 +321,10 @@ public class SudokuDisplayer {
 		this.addImg(this.selectedLine, this.selectedCol, this.getSelectedImg());
 
 		for (Case invalidCase : this.sudoku.getConflits()) {
+			this.addImg(invalidCase.LIGNE, invalidCase.COL, invalid);
+		}
+
+		for (Case invalidCase : this.sudoku.getErrorsToShow()) {
 			this.addImg(invalidCase.LIGNE, invalidCase.COL, invalid);
 		}
 

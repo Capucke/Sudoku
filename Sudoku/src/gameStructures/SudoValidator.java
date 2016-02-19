@@ -27,12 +27,21 @@ public class SudoValidator {
 		// pour permettre la revérification
 		grille.clearConflitTemp();
 
+		// test pour savoir si la valeur dans la case est correcte, et mise à
+		// jour de la liste grille.casesIncorrectes en fonction
+		if ((grille.getNum(ligne, col) != 0)
+			&& (grille.isIncorrect(ligne, col))) {
+			grille.addCaseIncorrecte(ligne, col);
+		} else {
+			grille.removeCaseIncorrecte(ligne, col);
+		}
+
 		// vérification des conflits vis-à-vis de la case courante
-		conflitTrouve = SudoValidator.verifCase(grille, curCase);
+		conflitTrouve = SudoValidator.verifConflitCase(grille, curCase);
 
 		// vérification des anciens conflits
 		for (Case curConflit : grille.getConflits()) {
-			conflitTrouve = SudoValidator.verifCase(grille, curConflit)
+			conflitTrouve = SudoValidator.verifConflitCase(grille, curConflit)
 				|| conflitTrouve;
 		}
 
@@ -51,8 +60,9 @@ public class SudoValidator {
 	 *            case à vérifier
 	 * @return un booléen qui vaut true si on a trouvé un conflit
 	 */
-	private static boolean verifCase(GrilleSudo grille, Case curCase) {
-		return SudoValidator.verifCase(grille, curCase.LIGNE, curCase.COL);
+	private static boolean verifConflitCase(GrilleSudo grille, Case curCase) {
+		return SudoValidator.verifConflitCase(grille, curCase.LIGNE,
+				curCase.COL);
 	}
 
 	/**
@@ -63,12 +73,13 @@ public class SudoValidator {
 	 * @param col
 	 * @return un booléen qui vaut true si on a trouvé un conflit
 	 */
-	private static boolean verifCase(GrilleSudo grille, int ligne, int col) {
+	private static boolean verifConflitCase(GrilleSudo grille, int ligne,
+			int col) {
 		Case curCase = grille.getCase(ligne, col);
 
 		boolean conflitTrouve;
 
-		conflitTrouve = SudoValidator.verifCase(grille,
+		conflitTrouve = SudoValidator.verifConflitCase(grille,
 				grille.getZonePrive(curCase), curCase);
 
 		return conflitTrouve;
@@ -85,8 +96,8 @@ public class SudoValidator {
 	 *            "unité de jeu"
 	 * @return un booléen qui vaut true si on a trouvé un conflit
 	 */
-	private static boolean verifCase(GrilleSudo grille, Case[] casesAcomparer,
-			Case curCase) {
+	private static boolean verifConflitCase(GrilleSudo grille,
+			Case[] casesAcomparer, Case curCase) {
 
 		if (casesAcomparer.length != 3 * (grille.DIMENSION - 1)) {
 			throw new InternalError(
@@ -135,7 +146,7 @@ public class SudoValidator {
 	 *            la grille de sudoku à vérifier
 	 * @return un boolean qui vaut true si on a trouvé des conflits
 	 */
-	public static boolean verifGrille(GrilleSudo grille) {
+	public static boolean verifConflitGrille(GrilleSudo grille) {
 		boolean conflitTrouve = false;
 
 		// "nettoyage" de la liste des conflits suivants
@@ -143,20 +154,20 @@ public class SudoValidator {
 
 		// vérif des lignes
 		for (int ligne = 0; ligne < grille.DIMENSION; ligne++) {
-			conflitTrouve = conflitTrouve
-				|| SudoValidator.fullVerif(grille, grille.getLine(ligne));
+			conflitTrouve = conflitTrouve || SudoValidator
+					.fullVerifConflit(grille, grille.getLine(ligne));
 		}
 
 		// vérif des colonnes
 		for (int col = 0; col < grille.DIMENSION; col++) {
 			conflitTrouve = conflitTrouve
-				|| SudoValidator.fullVerif(grille, grille.getCol(col));
+				|| SudoValidator.fullVerifConflit(grille, grille.getCol(col));
 		}
 
 		// vérif des carrés
 		for (int carre = 0; carre < grille.DIMENSION; carre++) {
-			conflitTrouve = conflitTrouve
-				|| SudoValidator.fullVerif(grille, grille.getCarre(carre));
+			conflitTrouve = conflitTrouve || SudoValidator
+					.fullVerifConflit(grille, grille.getCarre(carre));
 		}
 
 		// mise à jour de la liste des conflits
@@ -181,7 +192,8 @@ public class SudoValidator {
 	 *            "unité de jeu"
 	 * @return un boolean qui vaut true si on a trouvé des conflits
 	 */
-	private static boolean fullVerif(GrilleSudo grille, Case[] uniteJeu) {
+	private static boolean fullVerifConflit(GrilleSudo grille,
+			Case[] uniteJeu) {
 		if (uniteJeu.length != grille.DIMENSION) {
 			throw new InternalError(
 					"Le paramètre passé à verif est mauvais : c'est un tableau de taille "

@@ -8,6 +8,7 @@ public class Case implements Comparable<Case> {
 
 	public final int INIT_NUM;
 	private int curNum;
+	private int finalNum;
 
 	public final int LIGNE;
 	public final int COL;
@@ -26,6 +27,7 @@ public class Case implements Comparable<Case> {
 	public Case(int ligne, int col, int num) {
 		this.INIT_NUM = num;
 		this.curNum = num;
+		this.finalNum = num;
 
 		this.LIGNE = ligne;
 		this.COL = col;
@@ -45,17 +47,31 @@ public class Case implements Comparable<Case> {
 		// valeur initiale de la case construite par recopie
 		this.INIT_NUM = c.getNum();
 		this.curNum = c.getNum();
+		// this.finalNum = c.getNum();
+		this.finalNum = c.getFinalNum();
 		this.LIGNE = c.LIGNE;
 		this.COL = c.COL;
 		this.numPossibles = new HashSet<>(c.getNumPossibles());
+	}
+
+	public void setFinalNum(int num) {
+		this.finalNum = num;
 	}
 
 	public void setNum(int newNum) {
 		this.curNum = newNum;
 	}
 
+	public int getFinalNum() {
+		return this.finalNum;
+	}
+
 	public int getNum() {
 		return this.curNum;
+	}
+
+	public boolean isCorrect() {
+		return (this.curNum == this.finalNum);
 	}
 
 	public boolean canBeChanged() {
