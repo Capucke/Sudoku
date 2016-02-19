@@ -137,6 +137,10 @@ public class GrilleSudo {
 
 	}
 
+	public int getFinalNum(int ligne, int col) {
+		return this.getCase(ligne, col).getFinalNum();
+	}
+
 	/**
 	 * Initialisation par recopie d'une case
 	 * 

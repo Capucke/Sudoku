@@ -15,22 +15,22 @@ public class SudoInitializer {
 	private static final int BONUS_DIFFICILE = 80;
 	private static final int BONUS_EXTREME = 80;
 
-	private static int getBonus(GrilleSudo grille) {
-		switch (grille.NIVEAU) {
-			case FACILE:
-				return SudoInitializer.BONUS_FACILE;
-			case MOYEN:
-				return SudoInitializer.BONUS_MOYEN;
-			case DIFFICILE:
-				return SudoInitializer.BONUS_DIFFICILE;
-			case EXTREME:
-				return SudoInitializer.BONUS_EXTREME;
-			default:
-				throw new IllegalArgumentException(
-						"Le niveau de la grille n'est ni FACILE, ni MOYEN, "
-							+ "ni DIFFICILE, ni EXTREME");
-		}
-	}
+	// private static int getBonus(GrilleSudo grille) {
+	// switch (grille.NIVEAU) {
+	// case FACILE:
+	// return SudoInitializer.BONUS_FACILE;
+	// case MOYEN:
+	// return SudoInitializer.BONUS_MOYEN;
+	// case DIFFICILE:
+	// return SudoInitializer.BONUS_DIFFICILE;
+	// case EXTREME:
+	// return SudoInitializer.BONUS_EXTREME;
+	// default:
+	// throw new IllegalArgumentException(
+	// "Le niveau de la grille n'est ni FACILE, ni MOYEN, "
+	// + "ni DIFFICILE, ni EXTREME");
+	// }
+	// }
 
 
 	/**
@@ -48,6 +48,7 @@ public class SudoInitializer {
 		GrilleSudo grilleResolue = new GrilleSudo(grille);
 
 		SudoInitializer.retirerCases(grille);
+		SudoInitializer.ajouteCasesBonus(grille, grilleResolue);
 
 		GrilleSudo grilleInitialisee = new GrilleSudo(grille);
 
@@ -66,9 +67,176 @@ public class SudoInitializer {
 		}
 	}
 
-	////////////////////////////////////////////////////////////////////////////////
-	/////////// SOLUTION PROPRE ET COUTEUSE ////////////////////////
-	////////////////////////////////////////////////////////////////////////////////
+
+	private static void ajouteCasesBonusFacile(GrilleSudo grille,
+			GrilleSudo grilleResolue) {
+		// ajout d'une case :
+		// - sur chaque ligne
+		// - sur une colonne sur deux
+
+		// ajout d'une case sur chaque ligne
+		ArrayList<Integer> colonnesNonTestees = new ArrayList<>();
+		boolean caseAjoutee;
+
+		for (int ligne = 0; ligne < grille.DIMENSION; ligne++) {
+			caseAjoutee = false;
+			colonnesNonTestees.clear();
+			for (int colonne = 0; colonne < grille.DIMENSION; colonne++) {
+				colonnesNonTestees.add(new Integer(colonne));
+			}
+			Collections.shuffle(colonnesNonTestees);
+
+			while (!caseAjoutee && !colonnesNonTestees.isEmpty()) {
+				int col = colonnesNonTestees.get(0).intValue();
+				colonnesNonTestees.remove(0);
+				if (grille.getNum(ligne, col) == 0) {
+					boolean caseResolvable = SudoSolveur.solve(grille,
+							grille.getCase(ligne, col), new AtomicInteger(0));
+					if (!caseResolvable) {
+						grille.setCase(ligne, col,
+								grilleResolue.getNum(ligne, col));
+						caseAjoutee = true;
+					}
+				}
+			}
+
+		}
+
+		// ajout d'une case sur la moitié des colonnes
+		ArrayList<Integer> colonnes = new ArrayList<>();
+		for (int colonne = 0; colonne < grille.DIMENSION; colonne++) {
+			colonnes.add(new Integer(colonne));
+		}
+		Collections.shuffle(colonnes);
+
+		ArrayList<Integer> lignesNonTestees = new ArrayList<>();
+		for (int ind = 0; ind < grille.DIMENSION / 2; ind++) {
+			int col = colonnes.get(ind).intValue();
+
+			caseAjoutee = false;
+			lignesNonTestees.clear();
+			for (int numLigne = 0; numLigne < grille.DIMENSION; numLigne++) {
+				lignesNonTestees.add(new Integer(numLigne));
+			}
+			Collections.shuffle(lignesNonTestees);
+
+			while (!caseAjoutee && !lignesNonTestees.isEmpty()) {
+				int ligne = lignesNonTestees.get(0).intValue();
+				lignesNonTestees.remove(0);
+				if (grille.getNum(ligne, col) == 0) {
+					boolean caseResolvable = SudoSolveur.solve(grille,
+							grille.getCase(ligne, col), new AtomicInteger(0));
+					if (!caseResolvable) {
+						grille.setCase(ligne, col,
+								grilleResolue.getNum(ligne, col));
+						caseAjoutee = true;
+					}
+				}
+			}
+
+		}
+	}
+
+	private static void ajouteCasesBonusMoyen(GrilleSudo grille,
+			GrilleSudo grilleResolue) {
+
+		// ajout d'une case sur chaque ligne
+		ArrayList<Integer> colonnesNonTestees = new ArrayList<>();
+		boolean caseAjoutee;
+
+		for (int ligne = 0; ligne < grille.DIMENSION; ligne++) {
+			caseAjoutee = false;
+			colonnesNonTestees.clear();
+			for (int colonne = 0; colonne < grille.DIMENSION; colonne++) {
+				colonnesNonTestees.add(new Integer(colonne));
+			}
+			Collections.shuffle(colonnesNonTestees);
+
+			while (!caseAjoutee && !colonnesNonTestees.isEmpty()) {
+				int col = colonnesNonTestees.get(0).intValue();
+				colonnesNonTestees.remove(0);
+				if (grille.getNum(ligne, col) == 0) {
+					boolean caseResolvable = SudoSolveur.solve(grille,
+							grille.getCase(ligne, col), new AtomicInteger(0));
+					if (!caseResolvable) {
+						grille.setCase(ligne, col,
+								grilleResolue.getNum(ligne, col));
+						caseAjoutee = true;
+					}
+				}
+			}
+
+		}
+	}
+
+	private static void ajouteCasesBonusDifficile(GrilleSudo grille,
+			GrilleSudo grilleResolue) {
+
+		boolean caseAjoutee;
+
+		// ajout d'une case sur la moitié des colonnes
+		ArrayList<Integer> colonnes = new ArrayList<>();
+		for (int colonne = 0; colonne < grille.DIMENSION; colonne++) {
+			colonnes.add(new Integer(colonne));
+		}
+		Collections.shuffle(colonnes);
+
+		ArrayList<Integer> lignesNonTestees = new ArrayList<>();
+		for (int ind = 0; ind < grille.DIMENSION / 2; ind++) {
+			int col = colonnes.get(ind).intValue();
+
+			caseAjoutee = false;
+			lignesNonTestees.clear();
+			for (int numLigne = 0; numLigne < grille.DIMENSION; numLigne++) {
+				lignesNonTestees.add(new Integer(numLigne));
+			}
+			Collections.shuffle(lignesNonTestees);
+
+			while (!caseAjoutee && !lignesNonTestees.isEmpty()) {
+				int ligne = lignesNonTestees.get(0).intValue();
+				lignesNonTestees.remove(0);
+				if (grille.getNum(ligne, col) == 0) {
+					boolean caseResolvable = SudoSolveur.solve(grille,
+							grille.getCase(ligne, col), new AtomicInteger(0));
+					if (!caseResolvable) {
+						grille.setCase(ligne, col,
+								grilleResolue.getNum(ligne, col));
+						caseAjoutee = true;
+					}
+				}
+			}
+
+		}
+	}
+
+
+	public static void ajouteCasesBonus(GrilleSudo grille,
+			GrilleSudo grilleResolue) {
+
+		switch (grille.NIVEAU) {
+			case FACILE:
+				SudoInitializer.ajouteCasesBonusFacile(grille, grilleResolue);
+				break;
+
+			case MOYEN:
+				SudoInitializer.ajouteCasesBonusMoyen(grille, grilleResolue);
+				break;
+
+			case DIFFICILE:
+				SudoInitializer.ajouteCasesBonusDifficile(grille,
+						grilleResolue);
+				break;
+
+			default:
+				break;
+		}
+
+
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	/////////// SOLUTION RAPIDE MAIS PAS PROPRE ////////////////////////
+	//////////////////////////////////////////////////////////////////////////
 
 	// public static GrilleSudo createGrille(int dimension, Niveau niveau) {
 	// GrilleSudo grille = SudoInitializer
@@ -77,6 +245,7 @@ public class SudoInitializer {
 	// SudoInitializer.fixeFinalNums(grille);
 	//
 	// SudoInitializer.retirerCases(grille);
+	// SudoInitializer.ajouteCasesBonus(grille);
 	//
 	// GrilleSudo grilleInitialisee = new GrilleSudo(grille);
 	//
@@ -91,6 +260,167 @@ public class SudoInitializer {
 	// }
 	// }
 	// }
+
+	private static void ajouteCasesBonusFacile(GrilleSudo grille) {
+		// ajout d'une case :
+		// - sur chaque ligne
+		// - sur une colonne sur deux
+
+		// ajout d'une case sur chaque ligne
+		ArrayList<Integer> colonnesNonTestees = new ArrayList<>();
+		boolean caseAjoutee;
+
+		for (int ligne = 0; ligne < grille.DIMENSION; ligne++) {
+			caseAjoutee = false;
+			colonnesNonTestees.clear();
+			for (int colonne = 0; colonne < grille.DIMENSION; colonne++) {
+				colonnesNonTestees.add(new Integer(colonne));
+			}
+			Collections.shuffle(colonnesNonTestees);
+
+			while (!caseAjoutee && !colonnesNonTestees.isEmpty()) {
+				int col = colonnesNonTestees.get(0).intValue();
+				colonnesNonTestees.remove(0);
+				if (grille.getNum(ligne, col) == 0) {
+					boolean caseResolvable = SudoSolveur.solve(grille,
+							grille.getCase(ligne, col), new AtomicInteger(0));
+					if (!caseResolvable) {
+						grille.setCase(ligne, col,
+								grille.getFinalNum(ligne, col));
+						caseAjoutee = true;
+					}
+				}
+			}
+
+		}
+
+		// ajout d'une case sur la moitié des colonnes
+		ArrayList<Integer> colonnes = new ArrayList<>();
+		for (int colonne = 0; colonne < grille.DIMENSION; colonne++) {
+			colonnes.add(new Integer(colonne));
+		}
+		Collections.shuffle(colonnes);
+
+		ArrayList<Integer> lignesNonTestees = new ArrayList<>();
+		for (int ind = 0; ind < grille.DIMENSION / 2; ind++) {
+			int col = colonnes.get(ind).intValue();
+
+			caseAjoutee = false;
+			lignesNonTestees.clear();
+			for (int numLigne = 0; numLigne < grille.DIMENSION; numLigne++) {
+				lignesNonTestees.add(new Integer(numLigne));
+			}
+			Collections.shuffle(lignesNonTestees);
+
+			while (!caseAjoutee && !lignesNonTestees.isEmpty()) {
+				int ligne = lignesNonTestees.get(0).intValue();
+				lignesNonTestees.remove(0);
+				if (grille.getNum(ligne, col) == 0) {
+					boolean caseResolvable = SudoSolveur.solve(grille,
+							grille.getCase(ligne, col), new AtomicInteger(0));
+					if (!caseResolvable) {
+						grille.setCase(ligne, col,
+								grille.getFinalNum(ligne, col));
+						caseAjoutee = true;
+					}
+				}
+			}
+
+		}
+	}
+
+	private static void ajouteCasesBonusMoyen(GrilleSudo grille) {
+
+		// ajout d'une case sur chaque ligne
+		ArrayList<Integer> colonnesNonTestees = new ArrayList<>();
+		boolean caseAjoutee;
+
+		for (int ligne = 0; ligne < grille.DIMENSION; ligne++) {
+			caseAjoutee = false;
+			colonnesNonTestees.clear();
+			for (int colonne = 0; colonne < grille.DIMENSION; colonne++) {
+				colonnesNonTestees.add(new Integer(colonne));
+			}
+			Collections.shuffle(colonnesNonTestees);
+
+			while (!caseAjoutee && !colonnesNonTestees.isEmpty()) {
+				int col = colonnesNonTestees.get(0).intValue();
+				colonnesNonTestees.remove(0);
+				if (grille.getNum(ligne, col) == 0) {
+					boolean caseResolvable = SudoSolveur.solve(grille,
+							grille.getCase(ligne, col), new AtomicInteger(0));
+					if (!caseResolvable) {
+						grille.setCase(ligne, col,
+								grille.getFinalNum(ligne, col));
+						caseAjoutee = true;
+					}
+				}
+			}
+
+		}
+	}
+
+	private static void ajouteCasesBonusDifficile(GrilleSudo grille) {
+
+		boolean caseAjoutee;
+
+		// ajout d'une case sur la moitié des colonnes
+		ArrayList<Integer> colonnes = new ArrayList<>();
+		for (int colonne = 0; colonne < grille.DIMENSION; colonne++) {
+			colonnes.add(new Integer(colonne));
+		}
+		Collections.shuffle(colonnes);
+
+		ArrayList<Integer> lignesNonTestees = new ArrayList<>();
+		for (int ind = 0; ind < grille.DIMENSION / 2; ind++) {
+			int col = colonnes.get(ind).intValue();
+
+			caseAjoutee = false;
+			lignesNonTestees.clear();
+			for (int numLigne = 0; numLigne < grille.DIMENSION; numLigne++) {
+				lignesNonTestees.add(new Integer(numLigne));
+			}
+			Collections.shuffle(lignesNonTestees);
+
+			while (!caseAjoutee && !lignesNonTestees.isEmpty()) {
+				int ligne = lignesNonTestees.get(0).intValue();
+				lignesNonTestees.remove(0);
+				if (grille.getNum(ligne, col) == 0) {
+					boolean caseResolvable = SudoSolveur.solve(grille,
+							grille.getCase(ligne, col), new AtomicInteger(0));
+					if (!caseResolvable) {
+						grille.setCase(ligne, col,
+								grille.getFinalNum(ligne, col));
+						caseAjoutee = true;
+					}
+				}
+			}
+
+		}
+	}
+
+
+	public static void ajouteCasesBonus(GrilleSudo grille) {
+
+		switch (grille.NIVEAU) {
+			case FACILE:
+				SudoInitializer.ajouteCasesBonusFacile(grille);
+				break;
+
+			case MOYEN:
+				SudoInitializer.ajouteCasesBonusMoyen(grille);
+				break;
+
+			case DIFFICILE:
+				SudoInitializer.ajouteCasesBonusDifficile(grille);
+				break;
+
+			default:
+				break;
+		}
+
+
+	}
 
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -134,6 +464,7 @@ public class SudoInitializer {
 
 
 	private static void retirerCases(GrilleSudo grille) {
+
 		int taille = Math.round(grille.DIMENSION * grille.DIMENSION / 0.80f);
 		HashSet<Case> casesRempliesTestees = new HashSet<>(taille / 2, 0.85f);
 		HashSet<Case> casesVides = new HashSet<>(taille / 2, 0.85f);
@@ -173,15 +504,7 @@ public class SudoInitializer {
 		SudoSolveur.setCase(grille, c, 0);
 
 		if (SudoSolveur.isSolvable(grille)) {
-			int k = indexEssai.incrementAndGet();
-			if (k == SudoInitializer.getBonus(grille)) {
-				indexEssai.set(0);
-				casesRempliesTestees.add(c);
-				SudoSolveur.setCase(grille, c, oldNum);
-			} else {
-				casesVides.add(c);
-			}
-
+			casesVides.add(c);
 		} else {
 			casesRempliesTestees.add(c);
 			SudoSolveur.setCase(grille, c, oldNum);
@@ -218,103 +541,6 @@ public class SudoInitializer {
 
 			}
 		}
-	}
-
-
-	private static GrilleSudo grilleProbleme() {
-		GrilleSudo grille = SudoInitializer.grilleVide(9, Niveau.FACILE);
-
-		grille.initCase(0, 0, 7);
-		grille.initCase(0, 1, 2);
-		grille.initCase(0, 2, 8);
-		grille.initCase(0, 3, 1);
-		grille.initCase(0, 4, 5);
-		grille.initCase(0, 5, 9);
-		grille.initCase(0, 6, 4);
-		grille.initCase(0, 7, 6);
-		grille.initCase(0, 8, 3);
-
-		grille.initCase(1, 0, 4);
-		grille.initCase(1, 1, 9);
-		grille.initCase(1, 2, 6);
-		grille.initCase(1, 3, 7);
-		grille.initCase(1, 4, 8);
-		grille.initCase(1, 5, 2);
-		grille.initCase(1, 6, 0);
-		grille.initCase(1, 7, 1);
-		grille.initCase(1, 8, 5);
-
-		grille.initCase(2, 0, 1);
-		grille.initCase(2, 1, 3);
-		grille.initCase(2, 2, 5);
-		grille.initCase(2, 3, 0);
-		grille.initCase(2, 4, 4);
-		grille.initCase(2, 5, 6);
-		grille.initCase(2, 6, 9);
-		grille.initCase(2, 7, 7);
-		grille.initCase(2, 8, 2);
-
-		grille.initCase(3, 0, 9);
-		grille.initCase(3, 1, 8);
-		grille.initCase(3, 2, 2);
-		grille.initCase(3, 3, 4);
-		grille.initCase(3, 4, 7);
-		grille.initCase(3, 5, 3);
-		grille.initCase(3, 6, 6);
-		grille.initCase(3, 7, 5);
-		grille.initCase(3, 8, 1);
-
-		grille.initCase(4, 0, 5);
-		grille.initCase(4, 1, 7);
-		grille.initCase(4, 2, 1);
-		grille.initCase(4, 3, 6);
-		grille.initCase(4, 4, 9);
-		grille.initCase(4, 5, 8);
-		grille.initCase(4, 6, 2);
-		grille.initCase(4, 7, 3);
-		grille.initCase(4, 8, 4);
-
-		grille.initCase(5, 0, 6);
-		grille.initCase(5, 1, 4);
-		grille.initCase(5, 2, 3);
-		grille.initCase(5, 3, 5);
-		grille.initCase(5, 4, 2);
-		grille.initCase(5, 5, 1);
-		grille.initCase(5, 6, 8);
-		grille.initCase(5, 7, 9);
-		grille.initCase(5, 8, 7);
-
-		grille.initCase(6, 0, 2);
-		grille.initCase(6, 1, 1);
-		grille.initCase(6, 2, 7);
-		grille.initCase(6, 3, 8);
-		grille.initCase(6, 4, 6);
-		grille.initCase(6, 5, 5);
-		grille.initCase(6, 6, 3);
-		grille.initCase(6, 7, 4);
-		grille.initCase(6, 8, 9);
-
-		grille.initCase(7, 0, 8);
-		grille.initCase(7, 1, 0);
-		grille.initCase(7, 2, 0);
-		grille.initCase(7, 3, 0);
-		grille.initCase(7, 4, 3);
-		grille.initCase(7, 5, 0);
-		grille.initCase(7, 6, 0);
-		grille.initCase(7, 7, 2);
-		grille.initCase(7, 8, 0);
-
-		grille.initCase(8, 0, 3);
-		grille.initCase(8, 1, 5);
-		grille.initCase(8, 2, 9);
-		grille.initCase(8, 3, 2);
-		grille.initCase(8, 4, 1);
-		grille.initCase(8, 5, 4);
-		grille.initCase(8, 6, 7);
-		grille.initCase(8, 7, 8);
-		grille.initCase(8, 8, 6);
-
-		return grille;
 	}
 
 
