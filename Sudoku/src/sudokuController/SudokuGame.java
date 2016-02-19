@@ -10,6 +10,7 @@ import gameStructures.SudoSolveur;
 import gameStructures.SudoValidator;
 
 
+
 public class SudokuGame {
 
 	// dafont
@@ -37,6 +38,10 @@ public class SudokuGame {
 				this.setCase(ligne, col, this.getCase(ligne, col).INIT_NUM);
 			}
 		}
+	}
+
+	public Case solveOneCase() {
+		return SudoSolveur.solveOneCase(this.grille);
 	}
 
 	public Case getCase(int ligne, int col) {

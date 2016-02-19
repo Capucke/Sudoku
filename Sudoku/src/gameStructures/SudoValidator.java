@@ -28,13 +28,12 @@ public class SudoValidator {
 		grille.clearConflitTemp();
 
 		// vérification des conflits vis-à-vis de la case courante
-		conflitTrouve =
-				conflitTrouve || SudoValidator.verifCase(grille, curCase);
+		conflitTrouve = SudoValidator.verifCase(grille, curCase);
 
 		// vérification des anciens conflits
 		for (Case curConflit : grille.getConflits()) {
-			conflitTrouve = conflitTrouve
-				|| SudoValidator.verifCase(grille, curConflit);
+			conflitTrouve = SudoValidator.verifCase(grille, curConflit)
+				|| conflitTrouve;
 		}
 
 		// mise à jour des conflits
@@ -67,19 +66,14 @@ public class SudoValidator {
 	private static boolean verifCase(GrilleSudo grille, int ligne, int col) {
 		Case curCase = grille.getCase(ligne, col);
 
-		boolean conflitTrouve = false;
+		boolean conflitTrouve;
 
-		int indCarre = grille.getIndiceCarre(ligne, col);
-
-		conflitTrouve = conflitTrouve
-			|| SudoValidator.verifCase(grille, grille.getLine(ligne), curCase);
-		conflitTrouve = conflitTrouve
-			|| SudoValidator.verifCase(grille, grille.getCol(col), curCase);
-		conflitTrouve = conflitTrouve || SudoValidator.verifCase(grille,
-				grille.getCarre(indCarre), curCase);
+		conflitTrouve = SudoValidator.verifCase(grille,
+				grille.getZonePrive(curCase), curCase);
 
 		return conflitTrouve;
 	}
+
 
 	/**
 	 * Méthode intermédiaire qui permet de vérifier qu'il n'y a pas de conflit
@@ -91,38 +85,17 @@ public class SudoValidator {
 	 *            "unité de jeu"
 	 * @return un booléen qui vaut true si on a trouvé un conflit
 	 */
-	private static boolean verifCase(GrilleSudo grille, Case[] uniteJeu,
+	private static boolean verifCase(GrilleSudo grille, Case[] casesAcomparer,
 			Case curCase) {
 
-		if (uniteJeu.length != grille.DIMENSION) {
+		if (casesAcomparer.length != 3 * (grille.DIMENSION - 1)) {
 			throw new InternalError(
 					"Le paramètre passé à verif est mauvais : c'est un tableau de taille "
-						+ uniteJeu.length
+						+ casesAcomparer.length
 						+ " alors que la dimension de la grille de jeu est "
-						+ grille.DIMENSION);
-		}
-
-		int k = 0;
-		Case[] casesAcomparer = new Case[grille.DIMENSION - 1];
-
-		for (Case c : uniteJeu) {
-			if (c == curCase) {
-				// rien à faire
-			} else if (k < grille.DIMENSION - 1) {
-				// condition équivalente à "il reste encore au moins une
-				// place vide dans le tableau casesAcomparer
-				casesAcomparer[k] = c;
-				k++;
-			} else {
-				// cas : on a parcouru toute l'unité de jeu (de longueur
-				// DIMENSION) et parmi toutes les cases qui en faisaient
-				// partie, aucune ne correspond à la case entrée en 2eme
-				// paramètre
-				throw new IllegalArgumentException(
-						"La case passée en 2e paramètre de la methode "
-							+ "verifCase n'est pas dans l'unité de "
-							+ "jeu passée en 1er paramètre");
-			}
+						+ grille.DIMENSION
+						+ ", on devrait donc avoir à vérifier : "
+						+ (3 * (grille.DIMENSION - 1)) + " cases");
 		}
 
 		// en arrivant ici, on a un tableau de Cases, casesAcomparer qui

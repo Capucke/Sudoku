@@ -23,6 +23,44 @@ public class SudoSolveur {
 		}
 	}
 
+
+	public static Case solveOneCase(GrilleSudo grille) {
+
+		boolean caseSolvableTrouvee;
+		AtomicInteger myInt = new AtomicInteger(0);
+		HashSet<Case> casesVides = grille.getCasesVides();
+
+		Iterator<Case> iter;
+		Case curCase = null;
+
+		if (casesVides.isEmpty()) {
+			System.err.println("Erreur : pas de case vide dans le sudoku => "
+				+ "prière de retirer les chiffres incorrcts avant de demander "
+				+ "de l'aide");
+			return null;
+		}
+
+		caseSolvableTrouvee = false;
+		iter = casesVides.iterator();
+
+		while (iter.hasNext() & !caseSolvableTrouvee) {
+			curCase = iter.next();
+			caseSolvableTrouvee = SudoSolveur.solve(grille, curCase, myInt);
+		}
+
+		if (caseSolvableTrouvee) {
+			SudoSolveur.setCase(grille, curCase, myInt.intValue());
+			return curCase;
+		} else {
+			System.err.println("Erreur : grille non solvable => "
+				+ "certains chiffres entrés par l'utilisateur sont "
+				+ "incorrects");
+			return null;
+		}
+
+	}
+
+
 	/**
 	 * Méthode auxiliaire pour mettre à jour les listes d'hypothèses dans la
 	 * grille, suite à la modification de la valeur de la case stuée à la ligne

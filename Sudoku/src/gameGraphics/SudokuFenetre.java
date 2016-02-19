@@ -14,6 +14,9 @@ import sudokuController.SudokuGame;
 
 
 
+// JOptionPane.showMessageDialog(null, e.getKeyChar());
+
+
 public class SudokuFenetre extends JFrame {
 	private static final long serialVersionUID = 2L;
 	private SudokuGamePanel sudokuGamePanel;
@@ -54,7 +57,7 @@ public class SudokuFenetre extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 
 		// this.displayFrontMenu();
-		this.displayGame(9, Niveau.MOYEN);
+		this.displayGame(9, Niveau.FACILE);
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
