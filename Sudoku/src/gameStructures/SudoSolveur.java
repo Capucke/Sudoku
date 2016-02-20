@@ -61,6 +61,7 @@ public class SudoSolveur {
 
 		if (caseSolvableTrouvee) {
 			SudoSolveur.setCase(grille, curCase, myInt.intValue());
+			SudoValidator.fullVerifCase(grille, curCase.LIGNE, curCase.COL);
 			return curCase;
 		} else {
 			// System.err.println("Erreur : grille non solvable => "
@@ -100,9 +101,9 @@ public class SudoSolveur {
 			// newNum = 0
 			// on remet à jour les possibilités pour la case
 			c.fillPossibilites(grille.DIMENSION);
-			for (Case curCase : zone) {
-				if (curCase.getNum() != 0) {
-					c.supprPossible(curCase.getNum());
+			for (Case caseZone : zone) {
+				if (caseZone.getNum() != 0) {
+					c.supprPossible(caseZone.getNum());
 				}
 			}
 		}
@@ -111,15 +112,18 @@ public class SudoSolveur {
 			Case[] curZone;
 			boolean oldNumTrouve;
 			for (Case caseZone : zone) {
-				curZone = grille.getZonePrive(c);
-				oldNumTrouve = false;
-				for (Case caseInZoneZone : curZone) {
-					if (caseInZoneZone.getNum() == oldNum) {
-						oldNumTrouve = true;
+				if (caseZone.getNum() == 0) {
+					// sinon, on doit laisser le tableau de possibilités vide
+					curZone = grille.getZonePrive(caseZone);
+					oldNumTrouve = false;
+					for (Case caseInZoneZone : curZone) {
+						if (caseInZoneZone.getNum() == oldNum) {
+							oldNumTrouve = true;
+						}
 					}
-				}
-				if (!oldNumTrouve) {
-					caseZone.addPossible(oldNum);
+					if (!oldNumTrouve) {
+						caseZone.addPossible(oldNum);
+					}
 				}
 			}
 		}
