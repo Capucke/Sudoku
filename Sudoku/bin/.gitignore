@@ -1,6 +1,5 @@
-/gameStructures/
 /gameDisplayer/
-/sudokuController/
 /gameGraphics/
+/gameStructures/
 /main/
-/img/
+/sudokuController/
