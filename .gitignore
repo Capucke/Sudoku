@@ -15,6 +15,13 @@ hs_err_pid*
 Sokoban
 Exemple_TPL.git/
 
+
+# Images temporaires
+Sudoku/Ressources/img/*.png
+Sudoku/Ressources/img/*.png
+Sudoku/bin/img/
+
+
 # Organisation de projet Eclipse
 *.project
 *.settings

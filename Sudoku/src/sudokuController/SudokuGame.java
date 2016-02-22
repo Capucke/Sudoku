@@ -4,10 +4,10 @@ import java.util.HashSet;
 
 import gameStructures.Case;
 import gameStructures.GrilleSudo;
-import gameStructures.Niveau;
 import gameStructures.SudoInitializer;
 import gameStructures.SudoSolveur;
 import gameStructures.SudoValidator;
+import options.Niveau;
 
 
 

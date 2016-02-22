@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import options.Niveau;
+
 
 
 public class SudoSolveur {
