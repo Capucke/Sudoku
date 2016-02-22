@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import gameGraphics.SudokuFenetre;
 import gameStructures.Case;
+import options.Options;
 import sudokuController.SudokuGame;
 
 
@@ -48,32 +49,34 @@ public class SudokuDisplayer {
 	public void setGame(SudokuGame game) {
 		this.sudoku = game;
 		this.setTailleImg();
+		this.updateImages();
+	}
+
+	private void updateImages() {
+		int dimension = this.sudoku.getDimension();
 
 		this.invalidImg = ImageElement
 				.chargeImg(ImageElement.getInvalidPath(this.tailleImg));
 
-		int dimension = game.getDimension();
-
 		this.tabImagesDef = new Image[dimension + 1];
 		for (int k = 0; k <= dimension; k++) {
-			this.tabImagesDef[k] = this.chargeImgDef(k);
+			this.tabImagesDef[k] = this.chargeImg(k, false, false);
 		}
 
 		this.tabImagesModif = new Image[dimension + 1];
 		for (int k = 0; k <= dimension; k++) {
-			this.tabImagesModif[k] = this.chargeImgModif(k);
+			this.tabImagesModif[k] = this.chargeImg(k, true, false);
 		}
 
 		this.tabSelectImagesDef = new Image[dimension + 1];
 		for (int k = 0; k <= dimension; k++) {
-			this.tabSelectImagesDef[k] = this.chargeSelectedImgDef(k);
+			this.tabSelectImagesDef[k] = this.chargeImg(k, false, true);
 		}
 
 		this.tabSelectImagesModif = new Image[dimension + 1];
 		for (int k = 0; k <= dimension; k++) {
-			this.tabSelectImagesModif[k] = this.chargeSelectedImgModif(k);
+			this.tabSelectImagesModif[k] = this.chargeImg(k, true, true);
 		}
-
 	}
 
 	private void setTailleImg() {
@@ -208,20 +211,10 @@ public class SudokuDisplayer {
 				ImageElement.TXT_COMPLETE, this.fen.getSudokuGamePanel()));
 	}
 
-	private Image chargeImgDef(int chiffre) {
-		return ImageElement.chargeImgDef(chiffre, this.tailleImg);
-	}
-
-	private Image chargeSelectedImgDef(int chiffre) {
-		return ImageElement.chargeSelectedImgDef(chiffre, this.tailleImg);
-	}
-
-	private Image chargeImgModif(int chiffre) {
-		return ImageElement.chargeImgModif(chiffre, this.tailleImg);
-	}
-
-	private Image chargeSelectedImgModif(int chiffre) {
-		return ImageElement.chargeSelectedImgModif(chiffre, this.tailleImg);
+	private Image chargeImg(int chiffre, boolean isModifiable,
+			boolean isSelected) {
+		return ImageElement.chargeImg(chiffre, this.tailleImg,
+				Options.getAffichage(), isModifiable, isSelected);
 	}
 
 	public int getDimension() {

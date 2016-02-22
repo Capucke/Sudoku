@@ -7,6 +7,7 @@ import java.awt.image.ImageObserver;
 import java.net.URL;
 
 import gameStructures.GrilleSudo;
+import options.Affichage;
 
 
 
@@ -41,47 +42,19 @@ public class ImageElement {
 		return "chiffres_" + Integer.toString(size) + "px/";
 	}
 
-	public static String getChiffreDefPath(int chiffre, int size) {
+	public static String getChiffrePath(int chiffre, int size,
+			Affichage typeAffichage, boolean isModifiable, boolean isSelected) {
 		if (chiffre < 0 || chiffre >= GrilleSudo.MAX_DIMENSION) {
 			throw new IllegalArgumentException(
 					"Les chiffres à afficher doivent toujours être compris "
 						+ "entre 0 et " + (GrilleSudo.MAX_DIMENSION - 1));
 		}
-		String folder = ImageElement.IMG_FOLDER
-			+ ImageElement.getFolderChiffre(size) + "definitifs/";
-		return folder + Integer.toString(chiffre) + ".png";
-	}
+		String modifiabilite = isModifiable ? "/modifiable/" : "/definitif/";
+		String selection = isSelected ? "selected/" : "normal/";
 
-	public static String getSelectedChiffreDefPath(int chiffre, int size) {
-		if (chiffre < 0 || chiffre >= GrilleSudo.MAX_DIMENSION) {
-			throw new IllegalArgumentException(
-					"Les chiffres à afficher doivent toujours être compris "
-						+ "entre 0 et " + (GrilleSudo.MAX_DIMENSION - 1));
-		}
 		String folder = ImageElement.IMG_FOLDER
-			+ ImageElement.getFolderChiffre(size) + "definitifs/selected/";
-		return folder + Integer.toString(chiffre) + ".png";
-	}
-
-	public static String getChiffreModifPath(int chiffre, int size) {
-		if (chiffre < 0 || chiffre >= GrilleSudo.MAX_DIMENSION) {
-			throw new IllegalArgumentException(
-					"Les chiffres à afficher doivent toujours être compris "
-						+ "entre 0 et " + (GrilleSudo.MAX_DIMENSION - 1));
-		}
-		String folder = ImageElement.IMG_FOLDER
-			+ ImageElement.getFolderChiffre(size) + "modifiables/";
-		return folder + Integer.toString(chiffre) + ".png";
-	}
-
-	public static String getSelectedChiffreModifPath(int chiffre, int size) {
-		if (chiffre < 0 || chiffre >= GrilleSudo.MAX_DIMENSION) {
-			throw new IllegalArgumentException(
-					"Les chiffres à afficher doivent toujours être compris "
-						+ "entre 0 et " + (GrilleSudo.MAX_DIMENSION - 1));
-		}
-		String folder = ImageElement.IMG_FOLDER
-			+ ImageElement.getFolderChiffre(size) + "modifiables/selected/";
+			+ ImageElement.getFolderChiffre(size)
+			+ typeAffichage.imagePathString() + modifiabilite + selection;
 		return folder + Integer.toString(chiffre) + ".png";
 	}
 
@@ -104,21 +77,10 @@ public class ImageElement {
 		return img;
 	}
 
-	public static Image chargeImgDef(int chiffre, int size) {
-		return chargeImg(ImageElement.getChiffreDefPath(chiffre, size));
-	}
-
-	public static Image chargeSelectedImgDef(int chiffre, int size) {
-		return chargeImg(ImageElement.getSelectedChiffreDefPath(chiffre, size));
-	}
-
-	public static Image chargeImgModif(int chiffre, int size) {
-		return chargeImg(ImageElement.getChiffreModifPath(chiffre, size));
-	}
-
-	public static Image chargeSelectedImgModif(int chiffre, int size) {
-		return chargeImg(
-				ImageElement.getSelectedChiffreModifPath(chiffre, size));
+	public static Image chargeImg(int chiffre, int size,
+			Affichage typeAffichage, boolean isModifiable, boolean isSelected) {
+		return chargeImg(ImageElement.getChiffrePath(chiffre, size,
+				typeAffichage, isModifiable, isSelected));
 	}
 
 	public void paint(Graphics2D g2d) {
