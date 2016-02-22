@@ -139,8 +139,8 @@ public class SudokuDisplayer {
 	}
 
 	public void newGame() {
-		SudokuGame newSudoGame = new SudokuGame(this.sudoku.getDimension(),
-				this.sudoku.getNiveau());
+		SudokuGame newSudoGame =
+				new SudokuGame(this.sudoku.getDimension(), this.sudoku.NIVEAU);
 		this.setGame(newSudoGame);
 		this.display();
 	}

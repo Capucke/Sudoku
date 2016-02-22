@@ -21,12 +21,12 @@ public class SudoInitializer {
 	 */
 	public static GrilleSudo createGrille(int dimension, Niveau niveau) {
 		GrilleSudo grille = SudoInitializer
-				.grilleRandom(SudoInitializer.grilleVide(dimension, niveau));
+				.grilleRandom(SudoInitializer.grilleVide(dimension));
 
 		GrilleSudo grilleResolue = new GrilleSudo(grille);
 
-		SudoInitializer.retirerCases(grille);
-		SudoInitializer.ajouteCasesBonus(grille, grilleResolue);
+		SudoInitializer.retirerCases(grille, niveau);
+		SudoInitializer.ajouteCasesBonus(grille, grilleResolue, niveau);
 
 		GrilleSudo grilleInitialisee = new GrilleSudo(grille);
 
@@ -69,7 +69,8 @@ public class SudoInitializer {
 				colonnesNonTestees.remove(0);
 				if (grille.getNum(ligne, col) == 0) {
 					boolean caseResolvable = SudoSolveur.solve(grille,
-							grille.getCase(ligne, col), new AtomicInteger(0));
+							grille.getCase(ligne, col), new AtomicInteger(0),
+							Niveau.FACILE);
 					if (!caseResolvable) {
 						grille.setCase(ligne, col,
 								grilleResolue.getNum(ligne, col));
@@ -103,7 +104,8 @@ public class SudoInitializer {
 				lignesNonTestees.remove(0);
 				if (grille.getNum(ligne, col) == 0) {
 					boolean caseResolvable = SudoSolveur.solve(grille,
-							grille.getCase(ligne, col), new AtomicInteger(0));
+							grille.getCase(ligne, col), new AtomicInteger(0),
+							Niveau.FACILE);
 					if (!caseResolvable) {
 						grille.setCase(ligne, col,
 								grilleResolue.getNum(ligne, col));
@@ -135,7 +137,8 @@ public class SudoInitializer {
 				colonnesNonTestees.remove(0);
 				if (grille.getNum(ligne, col) == 0) {
 					boolean caseResolvable = SudoSolveur.solve(grille,
-							grille.getCase(ligne, col), new AtomicInteger(0));
+							grille.getCase(ligne, col), new AtomicInteger(0),
+							Niveau.MOYEN);
 					if (!caseResolvable) {
 						grille.setCase(ligne, col,
 								grilleResolue.getNum(ligne, col));
@@ -175,7 +178,8 @@ public class SudoInitializer {
 				lignesNonTestees.remove(0);
 				if (grille.getNum(ligne, col) == 0) {
 					boolean caseResolvable = SudoSolveur.solve(grille,
-							grille.getCase(ligne, col), new AtomicInteger(0));
+							grille.getCase(ligne, col), new AtomicInteger(0),
+							Niveau.DIFFICILE);
 					if (!caseResolvable) {
 						grille.setCase(ligne, col,
 								grilleResolue.getNum(ligne, col));
@@ -189,8 +193,8 @@ public class SudoInitializer {
 
 
 	public static void ajouteCasesBonus(GrilleSudo grille,
-			GrilleSudo grilleResolue) {
-		switch (grille.NIVEAU) {
+			GrilleSudo grilleResolue, Niveau niveauJeu) {
+		switch (niveauJeu) {
 			case FACILE:
 				SudoInitializer.ajouteCasesBonusFacile(grille, grilleResolue);
 				break;
@@ -217,7 +221,7 @@ public class SudoInitializer {
 		k++;
 
 		GrilleSudo grille = SudoInitializer
-				.grilleRandom(SudoInitializer.grilleVide(dimension, niveau));
+				.grilleRandom(SudoInitializer.grilleVide(dimension));
 		GrilleSudo grilleInitialisee = new GrilleSudo(grille);
 		grilleIncomplete = !grilleInitialisee.isComplete();
 
@@ -225,8 +229,8 @@ public class SudoInitializer {
 			System.out.println(k);
 			k++;
 
-			grille = SudoInitializer.grilleRandom(
-					SudoInitializer.grilleVide(dimension, niveau));
+			grille = SudoInitializer
+					.grilleRandom(SudoInitializer.grilleVide(dimension));
 			grilleInitialisee = new GrilleSudo(grille);
 			grilleIncomplete = !grilleInitialisee.isComplete();
 		}
@@ -236,7 +240,7 @@ public class SudoInitializer {
 	}
 
 
-	private static void retirerCases(GrilleSudo grille) {
+	private static void retirerCases(GrilleSudo grille, Niveau niveau) {
 
 		int taille = Math.round(grille.DIMENSION * grille.DIMENSION / 0.80f);
 		HashSet<Case> casesRempliesTestees = new HashSet<>(taille / 2, 0.85f);
@@ -253,8 +257,8 @@ public class SudoInitializer {
 		AtomicInteger essai = new AtomicInteger(0);
 
 		while (!casesATester.isEmpty()) {
-			SudoInitializer.essaiRetirerUneCase(grille, casesRempliesTestees,
-					casesVides, casesATester, essai);
+			SudoInitializer.essaiRetirerUneCase(grille, niveau,
+					casesRempliesTestees, casesVides, casesATester, essai);
 		}
 
 		if ((casesVides.size()
@@ -267,7 +271,7 @@ public class SudoInitializer {
 
 	}
 
-	private static void essaiRetirerUneCase(GrilleSudo grille,
+	private static void essaiRetirerUneCase(GrilleSudo grille, Niveau niveau,
 			HashSet<Case> casesRempliesTestees, HashSet<Case> casesVides,
 			ArrayList<Case> casesATester, AtomicInteger indexEssai) {
 		Case c = casesATester.get(0);
@@ -276,7 +280,7 @@ public class SudoInitializer {
 		int oldNum = c.getNum();
 		SudoSolveur.setCase(grille, c, 0);
 
-		if (SudoSolveur.isSolvable(grille)) {
+		if (SudoSolveur.isSolvable(grille, niveau)) {
 			casesVides.add(c);
 		} else {
 			casesRempliesTestees.add(c);
@@ -317,8 +321,8 @@ public class SudoInitializer {
 	}
 
 
-	private static GrilleSudo grilleVide(int dimension, Niveau niveau) {
-		GrilleSudo grille = new GrilleSudo(dimension, niveau);
+	private static GrilleSudo grilleVide(int dimension) {
+		GrilleSudo grille = new GrilleSudo(dimension);
 
 		for (int ligne = 0; ligne < dimension; ligne++) {
 			for (int col = 0; col < dimension; col++) {

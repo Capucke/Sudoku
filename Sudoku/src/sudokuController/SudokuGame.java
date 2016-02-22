@@ -18,13 +18,17 @@ public class SudokuGame {
 	private GrilleSudo grille;
 	private HashSet<Case> errorsToShow;
 
-	public SudokuGame(GrilleSudo sudoGrille) {
+	public final Niveau NIVEAU;
+
+	public SudokuGame(GrilleSudo sudoGrille, Niveau niveau) {
 		this.grille = sudoGrille;
+		this.NIVEAU = niveau;
 		this.errorsToShow = new HashSet<Case>();
 	}
 
 	public SudokuGame(int dimension, Niveau niveauJeu) {
 		this.grille = SudoInitializer.createGrille(dimension, niveauJeu);
+		this.NIVEAU = niveauJeu;
 		this.errorsToShow = new HashSet<Case>();
 	}
 
@@ -50,7 +54,7 @@ public class SudokuGame {
 	}
 
 	public Case solveOneCase() {
-		Case caseResolue = SudoSolveur.solveOneCase(this.grille);
+		Case caseResolue = SudoSolveur.solveOneCase(this.grille, this.NIVEAU);
 		if (caseResolue == null) {
 			this.errorsToShow = new HashSet<Case>(this.getCasesIncorrectes());
 		}
@@ -87,10 +91,6 @@ public class SudokuGame {
 
 	public int getDimUnit() {
 		return this.grille.DIM_UNIT;
-	}
-
-	public Niveau getNiveau() {
-		return this.grille.NIVEAU;
 	}
 
 }

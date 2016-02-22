@@ -24,7 +24,7 @@ public class SudoSolveur {
 	}
 
 
-	public static Case solveOneCase(GrilleSudo grille) {
+	public static Case solveOneCase(GrilleSudo grille, Niveau niveau) {
 
 		if (!grille.getCasesIncorrectes().isEmpty()) {
 			return null;
@@ -56,7 +56,8 @@ public class SudoSolveur {
 
 		while (iter.hasNext() & !caseSolvableTrouvee) {
 			curCase = iter.next();
-			caseSolvableTrouvee = SudoSolveur.solve(grille, curCase, myInt);
+			caseSolvableTrouvee =
+					SudoSolveur.solve(grille, curCase, myInt, niveau);
 		}
 
 		if (caseSolvableTrouvee) {
@@ -130,7 +131,7 @@ public class SudoSolveur {
 
 	}
 
-	static boolean isSolvable(GrilleSudo grille) {
+	static boolean isSolvable(GrilleSudo grille, Niveau niveau) {
 		GrilleSudo copieGrille = new GrilleSudo(grille);
 		SudoInitializer.initPossibilites(copieGrille);
 
@@ -149,7 +150,7 @@ public class SudoSolveur {
 			while (iter.hasNext() & !caseSolvableTrouvee) {
 				curCase = iter.next();
 				caseSolvableTrouvee =
-						SudoSolveur.solve(copieGrille, curCase, myInt);
+						SudoSolveur.solve(copieGrille, curCase, myInt, niveau);
 				if (caseSolvableTrouvee) {
 					SudoSolveur.setCase(copieGrille, curCase, myInt.intValue());
 				}
@@ -172,8 +173,9 @@ public class SudoSolveur {
 	 * @param niveau
 	 * @return
 	 */
-	static boolean solve(GrilleSudo grille, Case c, AtomicInteger result) {
-		switch (grille.NIVEAU) {
+	static boolean solve(GrilleSudo grille, Case c, AtomicInteger result,
+			Niveau niveau) {
+		switch (niveau) {
 			case FACILE:
 				return resoutFacile(grille, c, result);
 			case MOYEN:
