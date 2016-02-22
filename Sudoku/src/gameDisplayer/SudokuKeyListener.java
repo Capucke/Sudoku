@@ -107,6 +107,11 @@ public class SudokuKeyListener implements KeyListener {
 					case '9':
 						this.setCase(9);
 						return;
+
+					case 'n':
+					case 'N':
+						this.displayer.newGame();
+
 					default:
 						switch (key) {
 

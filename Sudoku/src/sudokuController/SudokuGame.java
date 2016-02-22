@@ -89,4 +89,8 @@ public class SudokuGame {
 		return this.grille.DIM_UNIT;
 	}
 
+	public Niveau getNiveau() {
+		return this.grille.NIVEAU;
+	}
+
 }
