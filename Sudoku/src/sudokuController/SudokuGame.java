@@ -8,6 +8,7 @@ import gameStructures.SudoInitializer;
 import gameStructures.SudoSolveur;
 import gameStructures.SudoValidator;
 import options.Niveau;
+import options.Options;
 
 
 
@@ -30,6 +31,10 @@ public class SudokuGame {
 		this.grille = SudoInitializer.createGrille(dimension, niveauJeu);
 		this.NIVEAU = niveauJeu;
 		this.errorsToShow = new HashSet<Case>();
+	}
+
+	public SudokuGame() {
+		this(Options.getDimension().getIntValue(), Options.getNiveau());
 	}
 
 	public void setCase(int ligne, int col, int newNum) {
