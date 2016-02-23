@@ -22,6 +22,7 @@ public class SudokuFenetre extends JFrame {
 	private OptionMenu optionMenu;
 
 	private SudokuDisplayer sudokuDisplayer;
+	private boolean focusedOnGame = false;
 
 	public SudokuFenetre() {
 		this(800, 800, Color.LIGHT_GRAY);
@@ -61,6 +62,7 @@ public class SudokuFenetre extends JFrame {
 		this.getContentPane().add(this.optionMenu, "Center");
 		this.optionMenu.setFocusable(true);
 		this.optionMenu.requestFocus();
+		this.focusedOnGame = false;
 
 		this.pack();
 		this.revalidate();
@@ -76,6 +78,7 @@ public class SudokuFenetre extends JFrame {
 
 		this.sudokuGamePanel.setFocusable(true);
 		this.sudokuGamePanel.requestFocus();
+		this.focusedOnGame = true;
 
 		this.sudokuDisplayer.display();
 		this.pack();
@@ -92,6 +95,7 @@ public class SudokuFenetre extends JFrame {
 
 		this.sudokuGamePanel.setFocusable(true);
 		this.sudokuGamePanel.requestFocus();
+		this.focusedOnGame = true;
 
 		this.sudokuDisplayer.display();
 		this.pack();
@@ -136,6 +140,14 @@ public class SudokuFenetre extends JFrame {
 
 	public void reset() {
 		this.sudokuGamePanel.reset();
+	}
+
+	@Override
+	public void validate() {
+		super.validate();
+		if (this.focusedOnGame) {
+			this.sudokuDisplayer.display();
+		}
 	}
 
 }

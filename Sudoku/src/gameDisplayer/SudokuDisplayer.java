@@ -203,8 +203,10 @@ public class SudokuDisplayer {
 		txtWidth = 612;
 		txtHeight = 85;
 
-		int panelWidth = this.fen.getSudokuGamePanel().getSudokuPanelWidth();
-		int panelHeight = this.fen.getSudokuGamePanel().getSudokuPanelHeight();
+		int panelWidth =
+				this.fen.getSudokuGamePanel().getBackgroundPanelWidth();
+		int panelHeight =
+				this.fen.getSudokuGamePanel().getBackgroundPanelHeight();
 
 		xTxt = panelWidth / 2 - (txtWidth / 2);
 		yTxt = panelHeight / 4 - (txtHeight / 4);

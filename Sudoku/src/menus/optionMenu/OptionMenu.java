@@ -8,12 +8,12 @@ import java.awt.RenderingHints;
 import java.util.ArrayList;
 
 import gameDisplayer.ImageElement;
+import gameGraphics.BackgroundPanel;
 import gameGraphics.SudokuFenetre;
-import gameGraphics.SudokuPanel;
 
 
 
-public class OptionMenu extends SudokuPanel {
+public class OptionMenu extends BackgroundPanel {
 
 	/**
 	 * 

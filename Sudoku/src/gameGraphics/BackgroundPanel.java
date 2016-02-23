@@ -9,13 +9,15 @@ import javax.swing.JPanel;
 
 import gameDisplayer.ImageElement;
 
-public class SudokuPanel extends JPanel {
+
+
+public class BackgroundPanel extends JPanel {
 	private static final long serialVersionUID = 3L;
 	private LinkedList<ImageElement> objets;
 	private int width;
 	private int height;
 
-	protected SudokuPanel(int w, int h, Color bgColor) {
+	protected BackgroundPanel(int w, int h, Color bgColor) {
 		this.setBackground(bgColor);
 		this.width = w;
 		this.height = h;
@@ -27,8 +29,8 @@ public class SudokuPanel extends JPanel {
 		this.clearImageList();
 		this.repaint();
 	}
-	
-	protected void clearImageList(){
+
+	protected void clearImageList() {
 		synchronized (this.objets) {
 			this.objets.clear();
 		}
@@ -40,8 +42,8 @@ public class SudokuPanel extends JPanel {
 		}
 		this.repaint();
 	}
-	
-	public void paintImgList(Graphics2D g2d){
+
+	public void paintImgList(Graphics2D g2d) {
 		synchronized (this.objets) {
 			for (ImageElement e : this.objets) {
 				e.paint(g2d);
@@ -49,11 +51,11 @@ public class SudokuPanel extends JPanel {
 		}
 	}
 
-	public int getSudokuPanelWidth() {
+	public int getBackgroundPanelWidth() {
 		return this.width;
 	}
 
-	public int getSudokuPanelHeight() {
+	public int getBackgroundPanelHeight() {
 		return this.height;
 	}
 }

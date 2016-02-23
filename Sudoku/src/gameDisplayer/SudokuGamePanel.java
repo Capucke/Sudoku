@@ -6,16 +6,17 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import gameGraphics.SudokuPanel;
+import gameGraphics.BackgroundPanel;
 
 
-public class SudokuGamePanel extends SudokuPanel {
+
+public class SudokuGamePanel extends BackgroundPanel {
 	private static final long serialVersionUID = 15L;
 
 	public SudokuGamePanel(int w, int h, Color bgColor) {
 		super(w, h, bgColor);
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -27,5 +28,5 @@ public class SudokuGamePanel extends SudokuPanel {
 		this.paintImgList(g2d);
 		g2d.dispose();
 	}
-	
+
 }
