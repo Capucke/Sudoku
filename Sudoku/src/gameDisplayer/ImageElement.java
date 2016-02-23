@@ -38,9 +38,9 @@ public class ImageElement {
 	}
 
 
-	public static String getGrillePath(int size) {
-		return ImageElement.IMG_FOLDER + "grille_" + Integer.toString(size)
-			+ "px.png";
+	public static String getGrillePath(int dimension, int size) {
+		return ImageElement.IMG_FOLDER + "grille_" + Integer.toString(dimension)
+			+ "_" + Integer.toString(size) + "px.png";
 	}
 
 	public static String getFolderChiffre(int size) {

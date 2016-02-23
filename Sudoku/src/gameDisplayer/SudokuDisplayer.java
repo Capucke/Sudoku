@@ -158,8 +158,8 @@ public class SudokuDisplayer {
 	}
 
 	private void addImgGrille() {
-		Image grilleImg = ImageElement
-				.chargeImg(ImageElement.getGrillePath(this.tailleImg));
+		Image grilleImg = ImageElement.chargeImg(ImageElement
+				.getGrillePath(this.sudoku.getDimension(), this.tailleImg));
 
 		this.fen.addImageElement(new ImageElement(this.xGrille, this.yGrille,
 				grilleImg, this.fen.getSudokuGamePanel()));
