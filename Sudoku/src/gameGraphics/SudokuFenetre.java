@@ -9,7 +9,8 @@ import javax.swing.UIManager;
 import gameDisplayer.ImageElement;
 import gameDisplayer.SudokuDisplayer;
 import gameDisplayer.SudokuGamePanel;
-import gameStructures.Niveau;
+import menus.optionMenu.OptionMenu;
+import options.Niveau;
 import sudokuController.SudokuGame;
 
 
@@ -17,6 +18,8 @@ import sudokuController.SudokuGame;
 public class SudokuFenetre extends JFrame {
 	private static final long serialVersionUID = 2L;
 	private SudokuGamePanel sudokuGamePanel;
+
+	private OptionMenu optionMenu;
 
 	private SudokuDisplayer sudokuDisplayer;
 
@@ -27,6 +30,8 @@ public class SudokuFenetre extends JFrame {
 	public SudokuFenetre(int width, int height, Color bgColor) {
 		super("Sudoku - Maman ;)");
 		this.setSize(width, height);
+
+		this.optionMenu = new OptionMenu(width, height, bgColor, this);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -39,7 +44,8 @@ public class SudokuFenetre extends JFrame {
 
 		this.getContentPane().setLayout(new BorderLayout());
 
-		this.displayGame(9, Niveau.FACILE);
+		this.displayOptionMenu();
+		// this.displayGame();
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -50,8 +56,34 @@ public class SudokuFenetre extends JFrame {
 		this.setVisible(true);
 	}
 
+	public void displayOptionMenu() {
+		this.getContentPane().removeAll();
+		this.getContentPane().add(this.optionMenu, "Center");
+		this.optionMenu.setFocusable(true);
+		this.optionMenu.requestFocus();
 
-	public void displayGame(int dimension, Niveau niveauJeu) {
+		this.pack();
+		this.revalidate();
+		this.repaint();
+	}
+
+	public void displayGame() {
+		this.setDisplayer();
+
+		this.getContentPane().removeAll();
+
+		this.getContentPane().add(this.sudokuGamePanel, "Center");
+
+		this.sudokuGamePanel.setFocusable(true);
+		this.sudokuGamePanel.requestFocus();
+
+		this.sudokuDisplayer.display();
+		this.pack();
+		this.revalidate();
+		this.repaint();
+	}
+
+	private void displayGame(int dimension, Niveau niveauJeu) {
 		this.setDisplayer(dimension, niveauJeu);
 
 		this.getContentPane().removeAll();
@@ -76,16 +108,21 @@ public class SudokuFenetre extends JFrame {
 		this.sudokuDisplayer.setGame(game);
 	}
 
-	public void setDisplayer(SudokuDisplayer sudokuDispl) {
+	private void setDisplayer(SudokuDisplayer sudokuDispl) {
 		this.sudokuDisplayer = sudokuDispl;
 	}
 
-	public void setDisplayer(SudokuGame sudoku) {
+	private void setDisplayer(SudokuGame sudoku) {
 		this.sudokuDisplayer = new SudokuDisplayer(sudoku, this);
 	}
 
-	public void setDisplayer(int dimension, Niveau niveauJeu) {
+	private void setDisplayer(int dimension, Niveau niveauJeu) {
 		SudokuGame game = new SudokuGame(dimension, niveauJeu);
+		this.setDisplayer(game);
+	}
+
+	private void setDisplayer() {
+		SudokuGame game = new SudokuGame();
 		this.setDisplayer(game);
 	}
 

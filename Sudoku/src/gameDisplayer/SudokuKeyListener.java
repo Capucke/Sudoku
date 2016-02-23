@@ -80,32 +80,40 @@ public class SudokuKeyListener implements KeyListener {
 
 				switch (keyChar) {
 
-					case '1':
-						this.setCase(1);
-						return;
-					case '2':
-						this.setCase(2);
-						return;
-					case '3':
-						this.setCase(3);
-						return;
-					case '4':
-						this.setCase(4);
-						return;
-					case '5':
-						this.setCase(5);
-						return;
-					case '6':
-						this.setCase(6);
-						return;
-					case '7':
-						this.setCase(7);
+					case '9':
+						this.setCase(9);
 						return;
 					case '8':
 						this.setCase(8);
 						return;
-					case '9':
-						this.setCase(9);
+					case '7':
+						this.setCase(7);
+						return;
+					case '6':
+						this.setCase(6);
+						return;
+					case '5':
+						this.setCase(5);
+						return;
+
+					default:
+						break;
+				}
+
+			case 4:
+
+				switch (keyChar) {
+					case '4':
+						this.setCase(4);
+						return;
+					case '3':
+						this.setCase(3);
+						return;
+					case '2':
+						this.setCase(2);
+						return;
+					case '1':
+						this.setCase(1);
 						return;
 
 					case 'n':

@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import gameGraphics.SudokuFenetre;
 import gameStructures.Case;
+import options.Affichage;
 import options.Options;
 import sudokuController.SudokuGame;
 
@@ -27,6 +28,7 @@ public class SudokuDisplayer {
 	private Image[] tabImagesModif;
 	private Image[] tabSelectImagesModif;
 	private Image invalidImg;
+	private Affichage typeAffichage;
 
 	private int ratioWidth = 1;
 	// on aura *ratioWidth* fois plus de place à gauche de la grille qu'à droite
@@ -41,6 +43,7 @@ public class SudokuDisplayer {
 
 	public SudokuDisplayer(SudokuGame sudokuJeu, SudokuFenetre sudokuFen) {
 		this.fen = sudokuFen;
+		this.typeAffichage = null;
 		this.setGame(sudokuJeu);
 		this.fen.getSudokuGamePanel()
 				.addKeyListener(new SudokuKeyListener(this));
@@ -52,30 +55,36 @@ public class SudokuDisplayer {
 		this.updateImages();
 	}
 
+
 	private void updateImages() {
-		int dimension = this.sudoku.getDimension();
+		if (this.typeAffichage != Options.getAffichage()) {
 
-		this.invalidImg = ImageElement
-				.chargeImg(ImageElement.getInvalidPath(this.tailleImg));
+			this.typeAffichage = Options.getAffichage();
 
-		this.tabImagesDef = new Image[dimension + 1];
-		for (int k = 0; k <= dimension; k++) {
-			this.tabImagesDef[k] = this.chargeImg(k, false, false);
-		}
+			int dimension = this.sudoku.getDimension();
 
-		this.tabImagesModif = new Image[dimension + 1];
-		for (int k = 0; k <= dimension; k++) {
-			this.tabImagesModif[k] = this.chargeImg(k, true, false);
-		}
+			this.invalidImg = ImageElement
+					.chargeImg(ImageElement.getInvalidPath(this.tailleImg));
 
-		this.tabSelectImagesDef = new Image[dimension + 1];
-		for (int k = 0; k <= dimension; k++) {
-			this.tabSelectImagesDef[k] = this.chargeImg(k, false, true);
-		}
+			this.tabImagesDef = new Image[dimension + 1];
+			for (int k = 0; k <= dimension; k++) {
+				this.tabImagesDef[k] = this.chargeImg(k, false, false);
+			}
 
-		this.tabSelectImagesModif = new Image[dimension + 1];
-		for (int k = 0; k <= dimension; k++) {
-			this.tabSelectImagesModif[k] = this.chargeImg(k, true, true);
+			this.tabImagesModif = new Image[dimension + 1];
+			for (int k = 0; k <= dimension; k++) {
+				this.tabImagesModif[k] = this.chargeImg(k, true, false);
+			}
+
+			this.tabSelectImagesDef = new Image[dimension + 1];
+			for (int k = 0; k <= dimension; k++) {
+				this.tabSelectImagesDef[k] = this.chargeImg(k, false, true);
+			}
+
+			this.tabSelectImagesModif = new Image[dimension + 1];
+			for (int k = 0; k <= dimension; k++) {
+				this.tabSelectImagesModif[k] = this.chargeImg(k, true, true);
+			}
 		}
 	}
 
@@ -214,7 +223,7 @@ public class SudokuDisplayer {
 	private Image chargeImg(int chiffre, boolean isModifiable,
 			boolean isSelected) {
 		return ImageElement.chargeImg(chiffre, this.tailleImg,
-				Options.getAffichage(), isModifiable, isSelected);
+				this.typeAffichage, isModifiable, isSelected);
 	}
 
 	public int getDimension() {
@@ -338,6 +347,7 @@ public class SudokuDisplayer {
 
 	private void drawGame(SudokuGame game, boolean jeuTermine) {
 		this.calculOffSet(game);
+		this.updateImages();
 
 		Case currCase;
 		int curNum;

@@ -1,6 +1,11 @@
 /filesManagement/
-/options/
-/main/
-/sudokuController/
 /gameDisplayer/
 /gameGraphics/
+/gameStructures/
+/main/
+/menus/
+/options/
+/sudokuController/
+/polices/
+/optionMenu/
+/items/
