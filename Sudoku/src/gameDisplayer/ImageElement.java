@@ -22,14 +22,19 @@ public class ImageElement {
 
 	public final static Image TXT_COMPLETE;
 	public final static Image FOND_ETOILE;
+	public final static Image KOALA_01;
 
 	private final static String IMG_FOLDER = "/img/";
+	private final static String ILLUSTRATIONS_FOLDER =
+			IMG_FOLDER + "illustrations/";
 
 	static {
-		TXT_COMPLETE = ImageElement
-				.chargeImg(ImageElement.IMG_FOLDER + "texte_complete.png");
-		FOND_ETOILE =
-				ImageElement.chargeImg(ImageElement.IMG_FOLDER + "etoiles.png");
+		TXT_COMPLETE = ImageElement.chargeImg(
+				ImageElement.ILLUSTRATIONS_FOLDER + "texte_complete.png");
+		FOND_ETOILE = ImageElement
+				.chargeImg(ImageElement.ILLUSTRATIONS_FOLDER + "etoiles.png");
+		KOALA_01 = ImageElement.chargeImg(
+				ImageElement.ILLUSTRATIONS_FOLDER + "dessinKoala.png");
 	}
 
 
@@ -44,7 +49,7 @@ public class ImageElement {
 
 	public static String getChiffrePath(int chiffre, int size,
 			Affichage typeAffichage, boolean isModifiable, boolean isSelected) {
-		if (chiffre < 0 || chiffre >= GrilleSudo.MAX_DIMENSION) {
+		if (chiffre < 0 || chiffre > GrilleSudo.MAX_DIMENSION) {
 			throw new IllegalArgumentException(
 					"Les chiffres à afficher doivent toujours être compris "
 						+ "entre 0 et " + (GrilleSudo.MAX_DIMENSION - 1));
