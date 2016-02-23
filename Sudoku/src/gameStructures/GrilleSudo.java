@@ -13,8 +13,6 @@ import java.util.HashSet;
  */
 public class GrilleSudo {
 
-	public final static int MAX_DIMENSION = 16;
-
 	public final int DIMENSION;
 	public final int DIM_UNIT;
 	// on doit avoir : DIM_UNIT = sqrt(DIMENSION)

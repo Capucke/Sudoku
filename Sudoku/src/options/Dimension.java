@@ -82,6 +82,18 @@ public enum Dimension implements OptionNavigable {
 		return this.value;
 	}
 
+	public static int maxDimensionIntValue() {
+		int max = 0;
+		int currValue;
+		for (Dimension dim : Dimension.class.getEnumConstants()) {
+			currValue = dim.getIntValue();
+			if (currValue > max) {
+				max = currValue;
+			}
+		}
+		return max;
+	}
+
 
 	@Override
 	public abstract Dimension next();

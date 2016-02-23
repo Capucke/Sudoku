@@ -2,6 +2,8 @@ package gameStructures;
 
 import java.util.HashSet;
 
+import options.Dimension;
+
 
 
 public class Case implements Comparable<Case> {
@@ -18,8 +20,8 @@ public class Case implements Comparable<Case> {
 	public final static Integer[] TAB_INT;
 
 	static {
-		TAB_INT = new Integer[GrilleSudo.MAX_DIMENSION + 1];
-		for (int k = 0; k <= GrilleSudo.MAX_DIMENSION; k++) {
+		TAB_INT = new Integer[Dimension.maxDimensionIntValue() + 1];
+		for (int k = 0; k <= Dimension.maxDimensionIntValue(); k++) {
 			TAB_INT[k] = new Integer(k);
 		}
 	}

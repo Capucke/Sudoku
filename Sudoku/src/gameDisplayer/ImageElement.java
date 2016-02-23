@@ -6,8 +6,8 @@ import java.awt.Toolkit;
 import java.awt.image.ImageObserver;
 import java.net.URL;
 
-import gameStructures.GrilleSudo;
 import options.Affichage;
+import options.Dimension;
 
 
 
@@ -49,10 +49,11 @@ public class ImageElement {
 
 	public static String getChiffrePath(int chiffre, int size,
 			Affichage typeAffichage, boolean isModifiable, boolean isSelected) {
-		if (chiffre < 0 || chiffre > GrilleSudo.MAX_DIMENSION) {
+		if (chiffre < 0 || chiffre > Dimension.maxDimensionIntValue()) {
 			throw new IllegalArgumentException(
 					"Les chiffres à afficher doivent toujours être compris "
-						+ "entre 0 et " + (GrilleSudo.MAX_DIMENSION - 1));
+						+ "entre 0 et "
+						+ (Dimension.maxDimensionIntValue() - 1));
 		}
 		String modifiabilite = isModifiable ? "/modifiable/" : "/definitif/";
 		String selection = isSelected ? "selected/" : "normal/";
