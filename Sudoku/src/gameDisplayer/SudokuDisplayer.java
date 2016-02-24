@@ -120,7 +120,8 @@ public class SudokuDisplayer {
 			newLine = this.getDimension() - 1;
 		}
 		this.setSelectedLine(newLine);
-		if (!this.getSelectedCase().canBeChanged()) {
+		if (!Options.getSelectionCasesDef().getBoolValue()
+			&& !this.getSelectedCase().canBeChanged()) {
 			this.moveUp();
 		}
 		this.display();
@@ -132,7 +133,8 @@ public class SudokuDisplayer {
 			newLine = 0;
 		}
 		this.setSelectedLine(newLine);
-		if (!this.getSelectedCase().canBeChanged()) {
+		if (!Options.getSelectionCasesDef().getBoolValue()
+			&& !this.getSelectedCase().canBeChanged()) {
 			this.moveDown();
 		}
 		this.display();
@@ -144,7 +146,8 @@ public class SudokuDisplayer {
 			newCol = this.getDimension() - 1;
 		}
 		this.setSelectedCol(newCol);
-		if (!this.getSelectedCase().canBeChanged()) {
+		if (!Options.getSelectionCasesDef().getBoolValue()
+			&& !this.getSelectedCase().canBeChanged()) {
 			this.moveLeft();
 		}
 		this.display();
@@ -156,7 +159,8 @@ public class SudokuDisplayer {
 			newCol = 0;
 		}
 		this.setSelectedCol(newCol);
-		if (!this.getSelectedCase().canBeChanged()) {
+		if (!Options.getSelectionCasesDef().getBoolValue()
+			&& !this.getSelectedCase().canBeChanged()) {
 			this.moveRight();
 		}
 		this.display();
