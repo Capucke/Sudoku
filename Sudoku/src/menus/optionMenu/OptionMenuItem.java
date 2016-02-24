@@ -90,9 +90,6 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 		}
 		this.policeInitialisee = initReussie;
 		this.finalFont = myFont;
-		System.err.println("Initialisation : "
-			+ (this.policeInitialisee ? "réussie !" : "échec !"));
-		System.err.println(myFont.getName());
 
 
 		this.setPreferredSize(
@@ -153,11 +150,11 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 	}
 
 	protected Color getColorIfSelected() {
-		return this.selectTxtColor;
+		return OptionMenuItem.selectTxtColor;
 	}
 
 	protected Color getColorIfNotSelected() {
-		return this.normalTxtColor;
+		return OptionMenuItem.normalTxtColor;
 	}
 
 	public void paintItem(Graphics2D g2d, int x, int y) {
