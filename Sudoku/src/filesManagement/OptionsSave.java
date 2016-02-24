@@ -154,7 +154,7 @@ public class OptionsSave {
 		if (saveFile.isFile()) {
 			return saveFile;
 		} else {
-			System.out.println(
+			System.err.println(
 					"ECHEC lors de la création du fichier de sauvegarde "
 						+ "pour l'option "
 						+ StaticOptionNavig.getOptionName(optionClass));
