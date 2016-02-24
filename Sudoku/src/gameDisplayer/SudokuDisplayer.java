@@ -1,5 +1,6 @@
 package gameDisplayer;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.util.Iterator;
 
@@ -22,6 +23,7 @@ public class SudokuDisplayer {
 	private int xGrille;
 	private int yGrille;
 	private int tailleImg;
+	private Carre fondGrille;
 
 	private Image[] tabImagesDef;
 	private Image[] tabSelectImagesDef;
@@ -96,13 +98,24 @@ public class SudokuDisplayer {
 		// int maxHeight = this.fen.getSudokuGamePanel().getHeight() /
 		// (this.sudoku.getDimension() + 4);
 		int maxTailleGrille = Math.min(maxGrilleWidth, maxGrilleHeight);
-		if (this.getTailleGrille(60) < maxTailleGrille) {
+		if (this.getTailleGrille(100) < maxTailleGrille) {
+			this.tailleImg = 100;
+		} else if (this.getTailleGrille(90) < maxTailleGrille) {
+			this.tailleImg = 90;
+		} else if (this.getTailleGrille(80) < maxTailleGrille) {
+			this.tailleImg = 80;
+		} else if (this.getTailleGrille(70) < maxTailleGrille) {
+			this.tailleImg = 70;
+		} else if (this.getTailleGrille(60) < maxTailleGrille) {
 			this.tailleImg = 60;
 		} else if (this.getTailleGrille(50) < maxTailleGrille) {
 			this.tailleImg = 50;
-		} else {
+		} else if (this.getTailleGrille(40) < maxTailleGrille) {
 			this.tailleImg = 40;
+		} else {
+			this.tailleImg = 30;
 		}
+		// this.tailleImg = 60;
 		// System.out.println("max grille Width : " + maxGrilleWidth);
 		// System.out.println("max grille Height : " + maxGrilleHeight);
 		// System.out.println("taile choisie : " + this.tailleImg);
@@ -120,17 +133,28 @@ public class SudokuDisplayer {
 		taille += ((this.sudoku.getDimUnit() - 1) * TRAIT_MOY);
 		taille += (this.sudoku.getDimUnit() * (this.sudoku.getDimUnit() - 1)
 			* TRAIT_FIN);
-		taille += (this.sudoku.getDimension() * this.tailleImg);
+		taille += (this.sudoku.getDimension() * tailleCase);
+		// System.err.println("IMAGE GRILLE :\n Dimension : "
+		// + this.getDimension() + "\n TailleImg : " + tailleCase
+		// + "\n TAILLE : " + taille);
 		return taille;
 	}
 
-	public void calculOffSet(SudokuGame game) {
+	public void calculOffSet() {
 		int tailleGrille = this.getTailleGrille(this.tailleImg);
 
 		this.xGrille = (this.fen.getWidth() - tailleGrille) * this.ratioWidth
 			/ (this.ratioWidth + 1);
 		this.yGrille = (this.fen.getHeight() - tailleGrille) * this.ratioHeight
 			/ (this.ratioHeight + 1);
+	}
+
+	/**
+	 * Prérequis : - avoir réglé tailleGrille - avoir calculé l'offSet
+	 */
+	private void makeGrille() {
+		this.fondGrille = new Carre(this.xGrille, this.yGrille, Color.BLACK,
+				this.getTailleGrille(this.tailleImg));
 	}
 
 	public void setCase(int ligne, int col, int newNum) {
@@ -142,7 +166,7 @@ public class SudokuDisplayer {
 
 	public void display() {
 		this.fen.reset();
-		this.drawGame(this.sudoku, this.sudoku.isComplete());
+		this.drawGame(this.sudoku.isComplete());
 	}
 
 	public void restart() {
@@ -158,11 +182,8 @@ public class SudokuDisplayer {
 	}
 
 	private void addImgGrille() {
-		Image grilleImg = ImageElement.chargeImg(ImageElement
-				.getGrillePath(this.sudoku.getDimension(), this.tailleImg));
-
-		this.fen.addImageElement(new ImageElement(this.xGrille, this.yGrille,
-				grilleImg, this.fen.getSudokuGamePanel()));
+		this.makeGrille();
+		this.fen.addGraphicalElement(this.fondGrille);
 	}
 
 	private void addImg(int i, int j, Image img) {
@@ -190,7 +211,7 @@ public class SudokuDisplayer {
 			yImg += diffTraitMoyFin;
 		}
 
-		this.fen.addImageElement(new ImageElement(xImg, yImg, img,
+		this.fen.addGraphicalElement(new ImageElement(xImg, yImg, img,
 				this.fen.getSudokuGamePanel()));
 	}
 
@@ -218,7 +239,7 @@ public class SudokuDisplayer {
 		// System.out.println("txtHeight : " + txtHeight);
 		// System.out.println("yTxt : " + yTxt);
 
-		this.fen.addImageElement(new ImageElement(xTxt, yTxt,
+		this.fen.addGraphicalElement(new ImageElement(xTxt, yTxt,
 				ImageElement.TXT_COMPLETE, this.fen.getSudokuGamePanel()));
 	}
 
@@ -347,8 +368,10 @@ public class SudokuDisplayer {
 	}
 
 
-	private void drawGame(SudokuGame game, boolean jeuTermine) {
-		this.calculOffSet(game);
+	private void drawGame(boolean jeuTermine) {
+		SudokuGame game = this.sudoku;
+
+		this.calculOffSet();
 		this.updateImages();
 
 		Case currCase;
@@ -380,7 +403,7 @@ public class SudokuDisplayer {
 		}
 
 		if (jeuTermine) {
-			this.fen.addImageElement(new ImageElement(0, 0,
+			this.fen.addGraphicalElement(new ImageElement(0, 0,
 					ImageElement.FOND_ETOILE, this.fen.getSudokuGamePanel()));
 			this.addTxtFin();
 		}

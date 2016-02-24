@@ -11,7 +11,7 @@ import options.Dimension;
 
 
 
-public class ImageElement {
+public class ImageElement extends GraphicalElement {
 
 	// LM ROMAN 12 - GRAS - TAILLE 28
 
@@ -24,9 +24,10 @@ public class ImageElement {
 	public final static Image FOND_ETOILE;
 	public final static Image KOALA_01;
 
-	private final static String IMG_FOLDER = "/img/";
+	public final static String IMG_FOLDER = "/img/";
 	private final static String ILLUSTRATIONS_FOLDER =
 			IMG_FOLDER + "illustrations/";
+	public final static String[] CHIFFRE_SPECIAL;
 
 	static {
 		TXT_COMPLETE = ImageElement.chargeImg(
@@ -35,6 +36,25 @@ public class ImageElement {
 				.chargeImg(ImageElement.ILLUSTRATIONS_FOLDER + "etoiles.png");
 		KOALA_01 = ImageElement.chargeImg(
 				ImageElement.ILLUSTRATIONS_FOLDER + "dessinKoala.png");
+
+		CHIFFRE_SPECIAL = new String[Dimension.maxDimensionIntValue() + 1];
+		CHIFFRE_SPECIAL[0] = "0";
+		CHIFFRE_SPECIAL[1] = "Koala";
+		CHIFFRE_SPECIAL[2] = "Abeille";
+		CHIFFRE_SPECIAL[3] = "Chat_bisou";
+		CHIFFRE_SPECIAL[4] = "Elephant";
+		CHIFFRE_SPECIAL[5] = "Dauphin";
+		CHIFFRE_SPECIAL[6] = "Panda";
+		CHIFFRE_SPECIAL[7] = "Poussin_oeuf";
+		CHIFFRE_SPECIAL[8] = "Pieuvre";
+		CHIFFRE_SPECIAL[9] = "Grenouille";
+		CHIFFRE_SPECIAL[10] = "Escargot";
+		CHIFFRE_SPECIAL[11] = "Singe_tete";
+		CHIFFRE_SPECIAL[12] = "Tortue";
+		CHIFFRE_SPECIAL[13] = "Tigre";
+		CHIFFRE_SPECIAL[14] = "Vache";
+		CHIFFRE_SPECIAL[15] = "Poisson_02";
+		CHIFFRE_SPECIAL[16] = "Cheval";
 	}
 
 
@@ -61,7 +81,12 @@ public class ImageElement {
 		String folder = ImageElement.IMG_FOLDER
 			+ ImageElement.getFolderChiffre(size)
 			+ typeAffichage.imagePathString() + modifiabilite + selection;
-		return folder + Integer.toString(chiffre) + ".png";
+
+		String result = folder
+			+ ((typeAffichage == Affichage.CLASSIQUE)
+					? Integer.toString(chiffre) : CHIFFRE_SPECIAL[chiffre])
+			+ ".png";
+		return result;
 	}
 
 	public static String getInvalidPath(int size) {
@@ -85,10 +110,12 @@ public class ImageElement {
 
 	public static Image chargeImg(int chiffre, int size,
 			Affichage typeAffichage, boolean isModifiable, boolean isSelected) {
-		return chargeImg(ImageElement.getChiffrePath(chiffre, size,
-				typeAffichage, isModifiable, isSelected));
+		String path = ImageElement.getChiffrePath(chiffre, size, typeAffichage,
+				isModifiable, isSelected);
+		return chargeImg(path);
 	}
 
+	@Override
 	public void paint(Graphics2D g2d) {
 		g2d.drawImage(this.image, this.x, this.y, this.observer);
 	}

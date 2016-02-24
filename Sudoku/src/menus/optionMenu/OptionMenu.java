@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 
+import gameDisplayer.GraphicalElement;
 import gameDisplayer.ImageElement;
 import gameGraphics.BackgroundPanel;
 import gameGraphics.SudokuFenetre;
@@ -58,9 +59,10 @@ public class OptionMenu extends BackgroundPanel {
 
 	private void reInitBackground() {
 		this.clearImageList();
-		ImageElement koalaElemt = new ImageElement(this.fen.getWidth() - 240,
-				150, ImageElement.KOALA_01, this.fen);
-		this.addImageElement(koalaElemt);
+		GraphicalElement koalaElemt =
+				new ImageElement(this.fen.getWidth() - 240, 150,
+						ImageElement.KOALA_01, this.fen);
+		this.addGraphicalElement(koalaElemt);
 	}
 
 	private void initItems() {

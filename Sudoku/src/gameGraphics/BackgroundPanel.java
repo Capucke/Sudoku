@@ -7,13 +7,13 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-import gameDisplayer.ImageElement;
+import gameDisplayer.GraphicalElement;
 
 
 
 public class BackgroundPanel extends JPanel {
 	private static final long serialVersionUID = 3L;
-	private LinkedList<ImageElement> objets;
+	private LinkedList<GraphicalElement> objets;
 	private int width;
 	private int height;
 
@@ -22,7 +22,7 @@ public class BackgroundPanel extends JPanel {
 		this.width = w;
 		this.height = h;
 		this.setPreferredSize(new Dimension(this.width, this.height));
-		this.objets = new LinkedList<ImageElement>();
+		this.objets = new LinkedList<GraphicalElement>();
 	}
 
 	protected void reset() {
@@ -36,7 +36,7 @@ public class BackgroundPanel extends JPanel {
 		}
 	}
 
-	protected void addImageElement(ImageElement e) {
+	protected void addGraphicalElement(GraphicalElement e) {
 		synchronized (this.objets) {
 			this.objets.add(e);
 		}
@@ -45,7 +45,7 @@ public class BackgroundPanel extends JPanel {
 
 	public void paintImgList(Graphics2D g2d) {
 		synchronized (this.objets) {
-			for (ImageElement e : this.objets) {
+			for (GraphicalElement e : this.objets) {
 				e.paint(g2d);
 			}
 		}

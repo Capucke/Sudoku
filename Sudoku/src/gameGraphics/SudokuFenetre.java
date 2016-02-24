@@ -6,7 +6,7 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import gameDisplayer.ImageElement;
+import gameDisplayer.GraphicalElement;
 import gameDisplayer.SudokuDisplayer;
 import gameDisplayer.SudokuGamePanel;
 import menus.optionMenu.OptionMenu;
@@ -134,8 +134,8 @@ public class SudokuFenetre extends JFrame {
 		return this.sudokuGamePanel;
 	}
 
-	public void addImageElement(ImageElement e) {
-		this.sudokuGamePanel.addImageElement(e);
+	public void addGraphicalElement(GraphicalElement e) {
+		this.sudokuGamePanel.addGraphicalElement(e);
 	}
 
 	public void reset() {
