@@ -22,13 +22,14 @@ public class Options {
 		Options.selectionCasesDefPossible =
 				OptionsSave.scanValue(SelectionCasesDef.class);
 
-		System.out.println(
-				"Option dimensions : " + Options.dimension.readableName());
-		System.out.println("Option niveau : " + Options.niveau.readableName());
-		System.out.println(
-				"Option affichage : " + Options.typeAffichage.readableName());
-		System.out.println("Option sélection cases definitives : "
-			+ Options.selectionCasesDefPossible.readableName());
+		// System.out.println(
+		// "Option dimensions : " + Options.dimension.readableName());
+		// System.out.println("Option niveau : " +
+		// Options.niveau.readableName());
+		// System.out.println(
+		// "Option affichage : " + Options.typeAffichage.readableName());
+		// System.out.println("Option sélection cases definitives : "
+		// + Options.selectionCasesDefPossible.readableName());
 
 	}
 
