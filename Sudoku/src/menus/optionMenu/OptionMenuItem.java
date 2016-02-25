@@ -30,7 +30,7 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 		extends JPanel {
 
 	public final boolean policeInitialisee;
-	public static final int optionTxtSize = 30;
+	public static final int optionTxtSize = 40;
 
 	public final Font finalFont;
 
