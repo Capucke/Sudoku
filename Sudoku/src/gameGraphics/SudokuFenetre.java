@@ -7,7 +7,6 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import gameDisplayer.SudokuDisplayer;
-import gameDisplayer.SudokuGamePanel;
 import graphicalElements.Dessinable;
 import menus.optionMenu.OptionMenu;
 import options.Niveau;
@@ -145,7 +144,9 @@ public class SudokuFenetre extends JFrame {
 	@Override
 	public void validate() {
 		super.validate();
+		this.sudokuGamePanel.setPreferredSize(this.getSize());
 		if (this.focusedOnGame) {
+			this.sudokuGamePanel.setTitleText();
 			this.sudokuDisplayer.display();
 		}
 	}
