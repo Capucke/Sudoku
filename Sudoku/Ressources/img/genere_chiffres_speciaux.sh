@@ -1,5 +1,5 @@
 #! /bin/bash
-set -x
+#set -x
 
 # f69137280
 
@@ -62,7 +62,7 @@ copieImgResize90(){
 	cd "$orig"
 	for image in $img_src
 	do
-	convert -resize 113s% "$src""$image" "$dest""$image"
+	convert -resize 113% "$src""$image" "$dest""$image"
 	done
 }
 
@@ -289,8 +289,8 @@ do
 		cur_dossier="${dossier[$var1]}""$modif""$selec"
 		copieImg "$dossier_src" "$cur_dossier"
 		cp "$fond_modif_select_100" "$cur_dossier""0.png"
-		eog "$fond_modif_select_100" &
-		eog "$cur_dossier""0.png" &
+		#eog "$fond_modif_select_100" &
+		#eog "$cur_dossier""0.png" &
 		traiteImgCopiees "$cur_dossier" "$images_src" "$chemin_base"
 		#
 	elif [ ${taille[$var1]} == 90 ]
