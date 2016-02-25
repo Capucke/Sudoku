@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import gameGraphics.SudokuFenetre;
 import gameStructures.Case;
+import graphicalElements.Carre;
+import graphicalElements.ImageElement;
 import options.Affichage;
 import options.Options;
 import sudokuController.SudokuGame;

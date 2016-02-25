@@ -1,4 +1,4 @@
-package gameDisplayer;
+package graphicalElements;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -7,7 +7,7 @@ import java.awt.Stroke;
 
 
 
-public class Carre extends GraphicalElement {
+public class Carre implements Dessinable {
 	private int x;
 	private int y;
 	private Color fillColor;

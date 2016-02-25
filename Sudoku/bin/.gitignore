@@ -2,12 +2,9 @@
 /gameDisplayer/
 /gameGraphics/
 /gameStructures/
+/graphicalElements/
 /main/
 /menus/
 /options/
-/sudokuController/
 /polices/
-/optionMenu/
-/items/
-/SAUVETAGE/
-/image_recup/
+/sudokuController/

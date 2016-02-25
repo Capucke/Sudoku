@@ -1,4 +1,4 @@
-package gameDisplayer;
+package graphicalElements;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -11,7 +11,7 @@ import options.Dimension;
 
 
 
-public class ImageElement extends GraphicalElement {
+public class ImageElement implements Dessinable {
 
 	// LM ROMAN 12 - GRAS - TAILLE 28
 
