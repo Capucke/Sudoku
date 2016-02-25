@@ -1,4 +1,4 @@
-package gameDisplayer;
+package gameGraphics;
 
 //import sudokuController.SudokuGame;
 import java.awt.Color;
@@ -25,7 +25,7 @@ public class SudokuGamePanel extends BackgroundPanel {
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setColor(this.getBackground());
 		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
-		this.paintImgList(g2d);
+		this.paintBackground(g2d);
 		g2d.dispose();
 	}
 

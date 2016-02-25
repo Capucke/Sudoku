@@ -11,6 +11,7 @@ import gameGraphics.BackgroundPanel;
 import gameGraphics.SudokuFenetre;
 import graphicalElements.Dessinable;
 import graphicalElements.ImageElement;
+import graphicalElements.TextElement;
 
 
 
@@ -23,21 +24,31 @@ public class OptionMenu extends BackgroundPanel {
 
 
 	private SudokuFenetre fen;
+	public static TextElement title;
 
 	private ArrayList<OptionMenuItem<?>> itemListe;
 	private int selectedItem;
 
-	private static final int HAUTEUR_OPTIONS = 450;
-	private int ratioHaut = 2;
+	private static final int MAX_HAUTEUR_OPTIONS = 450;
+	private static final int MIN_HAUTEUR_OPTIONS = 100;
+	private int hauteurOptions;
+	private int ratioHaut = 1;
 	private int ratioBas = 1;
-	// on aura *ratioHeight* fois plus de place en haut de la grille qu'en bas
-	// de la grille
+	// on aura *ratioHeight* fois plus de place entre le bas du titre et le haut
+	// du menu, qu'entre le bas du menu et le bas de la fenêtre
 
 	private int offSetY;
 
+	static {
+		OptionMenu.title = new TextElement("Options", 70);
+		OptionMenu.title.setInColor(Color.PINK);
+		OptionMenu.title.setOutColor(Color.BLACK);
+		OptionMenu.title.setThickness(4);
+	}
+
 
 	public OptionMenu(int w, int h, Color bgColor, SudokuFenetre window) {
-		super(w, h, bgColor);
+		super(w, h, bgColor, OptionMenu.title);
 		this.fen = window;
 
 		this.initItems();
@@ -123,8 +134,14 @@ public class OptionMenu extends BackgroundPanel {
 	}
 
 	private void calculOffSet() {
-		this.offSetY = (this.fen.getHeight() - OptionMenu.HAUTEUR_OPTIONS)
-			* this.ratioHaut / (this.ratioHaut + this.ratioBas);
+		this.hauteurOptions =
+				Math.min(this.fen.getHeight() - this.getYbasTitle(),
+						OptionMenu.MAX_HAUTEUR_OPTIONS);
+		this.hauteurOptions =
+				Math.max(this.hauteurOptions, OptionMenu.MIN_HAUTEUR_OPTIONS);
+		this.offSetY = this.getYbasTitle() + ((this.fen.getHeight()
+			- this.hauteurOptions - this.getYbasTitle()) * this.ratioHaut
+			/ (this.ratioHaut + this.ratioBas));
 	}
 
 	@Override
@@ -138,7 +155,7 @@ public class OptionMenu extends BackgroundPanel {
 				RenderingHints.VALUE_RENDER_QUALITY);
 
 		this.reInitBackground();
-		this.paintImgList(g2d);
+		this.paintBackground(g2d);
 
 		this.calculOffSet();
 		synchronized (this.itemListe) {
@@ -146,8 +163,7 @@ public class OptionMenu extends BackgroundPanel {
 			int yItem;
 			for (int i = 0; i < this.itemListe.size(); i++) {
 				item = this.itemListe.get(i);
-				yItem = this.wantedItemY(i, this.offSetY,
-						OptionMenu.HAUTEUR_OPTIONS);
+				yItem = this.wantedItemY(i, this.offSetY, this.hauteurOptions);
 				item.paintItem(g2d, this.wantedItemX(), yItem);
 			}
 		}
