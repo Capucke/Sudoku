@@ -161,7 +161,7 @@ public class TextElement extends JPanel implements Dessinable {
 	}
 
 
-	private Rectangle2D getTxtRect() {
+	protected Rectangle2D getTxtRect() {
 		TextLayout textLyt = new TextLayout(new String(this.text),
 				this.TXT_FONT, new FontRenderContext(null, false, false));
 		return textLyt.getBounds();
@@ -180,11 +180,11 @@ public class TextElement extends JPanel implements Dessinable {
 
 	@Override
 	public void paint(Graphics2D g2d) {
-		this.painttext(g2d, this.x, this.y);
+		this.paintItem(g2d, this.x, this.y);
 	}
 
 
-	private void painttext(Graphics2D g2d, int _x, int _y) {
+	protected void paintItem(Graphics2D g2d, int _x, int _y) {
 		Dimension dim = this.getSize();
 		int panelWidth = (int) dim.getWidth();
 		int panelHeight = (int) dim.getHeight();

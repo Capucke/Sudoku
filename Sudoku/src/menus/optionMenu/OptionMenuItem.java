@@ -1,33 +1,23 @@
 package menus.optionMenu;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.awt.Paint;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import javax.swing.JPanel;
-
 import gameGraphics.SudokuFenetre;
+import graphicalElements.TextElement;
 import options.OptionNavigable;
 
 
 
 public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & OptionNavigable>
-		extends JPanel {
+		extends TextElement {
 
 	public final boolean policeInitialisee;
 	public static final int optionTxtSize = 40;
@@ -61,7 +51,7 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 
 	public OptionMenuItem(SudokuFenetre sudokuFen, TypeOption optionValue,
 			boolean selected) {
-		super();
+		super("temp", OptionMenuItem.optionTxtSize);
 		this.fen = sudokuFen;
 		this.option = optionValue;
 		this.isSelected = selected;
@@ -91,6 +81,8 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 		this.policeInitialisee = initReussie;
 		this.finalFont = myFont;
 
+		this.setTxt(new String(this.option.getOptionName() + " :  < "
+			+ this.option.readableName() + " >"));
 
 		this.setPreferredSize(
 				new Dimension(this.getTxtWidth(), this.getTxtHeight()));
@@ -117,24 +109,6 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 	}
 
 
-	private Rectangle2D getTxtRect() {
-		TextLayout textLyt = new TextLayout(
-				new String(this.option.getOptionName() + " :  < "
-					+ this.option.getOptionName() + " >"),
-				this.finalFont, new FontRenderContext(null, false, false));
-		return textLyt.getBounds();
-	}
-
-	protected int realTxtWidth() {
-		double w = this.getTxtRect().getWidth();
-		return (int) w;
-	}
-
-	protected int realTxtHeight() {
-		double h = this.getTxtRect().getHeight();
-		return (int) h;
-	}
-
 	private int getTxtWidth() {
 		double w = this.getTxtRect().getWidth();
 		return (int) (3 * w / 2);
@@ -157,61 +131,16 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 		return OptionMenuItem.normalTxtColor;
 	}
 
-	public void paintItem(Graphics2D g2d, int x, int y) {
-		Dimension dim = this.getSize();
-		int w = (int) dim.getWidth();
-		int h = (int) dim.getHeight();
 
-		TextLayout textLyt = new TextLayout(
-				new String(this.option.getOptionName() + " :  < "
-					+ this.option.readableName() + " >"),
-				this.finalFont, new FontRenderContext(null, false, false));
-
-		AffineTransform textAt = new AffineTransform();
-		textAt.translate(0, (float) textLyt.getBounds().getHeight());
-
-		AffineTransform at = new AffineTransform();
-		at.setToIdentity();
-		at.translate(w / 2, h / 2);
-
-		// Sets the Stroke.
-		Stroke oldStroke = g2d.getStroke();
-
-		float thickness =
+	@Override
+	public void paintItem(Graphics2D g2d, int _x, int _y) {
+		this.setThickness(
 				(this.isSelected) ? (OptionMenuItem.optionTxtSize / 10)
-						: (OptionMenuItem.optionTxtSize / 12);
-		g2d.setStroke(new BasicStroke(thickness));
-
-		// Sets the Paint.
-		Paint oldPaint = g2d.getPaint();
-
-		// Sets the Shape.
-		Shape shape = textLyt.getOutline(textAt);
-		Rectangle r = shape.getBounds();
-
-		// Sets the selected Shape to the center of the Canvas.
-		AffineTransform saveXform = g2d.getTransform();
-		AffineTransform toCenterAt = new AffineTransform();
-		toCenterAt.concatenate(at);
-		toCenterAt.translate(x - ((int) r.getWidth() / 2),
-				y - ((int) r.getHeight() / 2));
-
-		g2d.transform(toCenterAt);
-
-		// Sets the rendering method.
-		Graphics2D tempg2d = g2d;
-		Color txtColor = (this.isSelected) ? this.getColorIfSelected()
-				: this.getColorIfNotSelected();
-		g2d.setColor(txtColor);
-		g2d.fill(shape);
-
-		g2d.setColor(Color.darkGray);
-		g2d.draw(shape);
-		g2d.setPaint(tempg2d.getPaint());
-
-		g2d.setStroke(oldStroke);
-		g2d.setPaint(oldPaint);
-		g2d.setTransform(saveXform);
+						: (OptionMenuItem.optionTxtSize / 12));
+		this.setOutColor(Color.darkGray);
+		this.setInColor((this.isSelected) ? this.getColorIfSelected()
+				: this.getColorIfNotSelected());
+		super.paintItem(g2d, _x, _y);
 	}
 
 
