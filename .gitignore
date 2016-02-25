@@ -19,7 +19,7 @@ Exemple_TPL.git/
 # Images temporaires
 Sudoku/Ressources/img/*.png
 Sudoku/Ressources/img/*.png
-Sudoku/bin/img/
+Sudoku/bin/
 Sudoku/SudokuMounette
 
 
