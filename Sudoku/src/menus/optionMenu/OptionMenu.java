@@ -1,43 +1,28 @@
 package menus.optionMenu;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.util.ArrayList;
 
-import gameGraphics.BackgroundPanel;
 import gameGraphics.SudokuFenetre;
 import graphicalElements.Dessinable;
 import graphicalElements.ImageElement;
 import graphicalElements.TextElement;
+import menus.Menu;
 
 
 
-public class OptionMenu extends BackgroundPanel {
+public class OptionMenu extends Menu<OptionMenuItem<?>> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1691705975452464507L;
 
+	private static TextElement title;
+	private static final int MAX_HAUTEUR = 450;
+	private static final int MIN_HAUTEUR = 100;
 
-	private SudokuFenetre fen;
-	public static TextElement title;
-
-	private ArrayList<OptionMenuItem<?>> itemListe;
-	private int selectedItem;
-
-	private static final int MAX_HAUTEUR_OPTIONS = 450;
-	private static final int MIN_HAUTEUR_OPTIONS = 100;
-	private int hauteurOptions;
-	private int ratioHaut = 1;
-	private int ratioBas = 1;
-	// on aura *ratioHeight* fois plus de place entre le bas du titre et le haut
-	// du menu, qu'entre le bas du menu et le bas de la fenêtre
-
-	private int offSetY;
+	private static int OptionRatioHaut = 1;
+	private static int OptionRatioBas = 1;
 
 	static {
 		OptionMenu.title = new TextElement("Options", 70);
@@ -46,129 +31,52 @@ public class OptionMenu extends BackgroundPanel {
 		OptionMenu.title.setThickness(4);
 	}
 
-
 	public OptionMenu(int w, int h, Color bgColor, SudokuFenetre window) {
-		super(w, h, bgColor, OptionMenu.title);
-		this.fen = window;
+		super(w, h, bgColor, window, OptionMenu.MAX_HAUTEUR,
+				OptionMenu.MIN_HAUTEUR, OptionMenu.title);
 
-		this.initItems();
+		this.setRatio(OptionMenu.OptionRatioHaut, OptionMenu.OptionRatioBas);
 
 		this.addKeyListener(new OptionMenuKeyListener(this));
-
-		this.setPreferredSize(
-				new Dimension(this.fen.getWidth(), this.fen.getHeight()));
-
 	}
 
 	public void saveOptionsAndQuit() {
-		for (OptionMenuItem<?> item : this.itemListe) {
+		for (OptionMenuItem<?> item : this.getItemListe()) {
 			item.saveOptionValue();
 		}
-		this.fen.displayGame();
+		this.getFen().displayGame();
 	}
 
 
-	private void reInitBackground() {
+	@Override
+	protected void reInitBackground() {
 		this.clearImageList();
-		Dessinable koalaElemt = new ImageElement(this.fen.getWidth() - 240, 150,
-				ImageElement.KOALA_01, this.fen);
+		Dessinable koalaElemt = new ImageElement(this.getFen().getWidth() - 240,
+				150, ImageElement.KOALA_01, this.getFen());
 		this.addGraphicalElement(koalaElemt);
 	}
 
-	private void initItems() {
-		this.itemListe = new ArrayList<OptionMenuItem<?>>(4);
-		this.selectedItem = 0;
+	@Override
+	protected void initItems() {
+		this.createItemList(4);
+		this.setSelectedItemNum(0);
 
 		OptionMenuItem<options.Dimension> dimension =
-				new DimensionItem(this.fen, true);
+				new DimensionItem(this.getFen(), true);
 
-		OptionMenuItem<options.Niveau> niveau = new NiveauItem(this.fen, false);
+		OptionMenuItem<options.Niveau> niveau =
+				new NiveauItem(this.getFen(), false);
 
 		OptionMenuItem<options.Affichage> affichage =
-				new AffichageItem(this.fen, false);
+				new AffichageItem(this.getFen(), false);
 
 		OptionMenuItem<options.SelectionCasesDef> select =
-				new SelectCasesDefItem(this.fen, false);
+				new SelectCasesDefItem(this.getFen(), false);
 
-		this.itemListe.add(dimension);
-		this.itemListe.add(niveau);
-		this.itemListe.add(affichage);
-		this.itemListe.add(select);
-	}
-
-	public OptionMenuItem<?> getItem(int numItem) {
-		int realNum = numItem % this.itemListe.size();
-		return this.itemListe.get(realNum);
-	}
-
-	public void setItemSelected(int numItem, boolean bool) {
-		if (numItem < 0 || numItem >= this.itemListe.size()) {
-			return;
-		}
-		this.itemListe.get(numItem).setSelected(bool);
-	}
-
-	public int getSelectedItemNum() {
-		return this.selectedItem;
-	}
-
-	public void setSelectedItemNum(int num) {
-		this.selectedItem = num;
-	}
-
-	public int getNbItems() {
-		return this.itemListe.size();
-	}
-
-	private int wantedItemX() {
-		return this.fen.getWidth() / 2;
-	}
-
-	private int wantedItemY(int numItem, int limiteHaut, int hauteurOptions) {
-		return limiteHaut + numItem * (this.unitHeight(hauteurOptions))
-			+ (this.unitHeight(hauteurOptions) / 2);
-	}
-
-	private int unitHeight(int hauteurOptions) {
-		return hauteurOptions / (this.itemListe.size());
-	}
-
-	private void calculOffSet() {
-		this.hauteurOptions =
-				Math.min(this.fen.getHeight() - this.getYbasTitle(),
-						OptionMenu.MAX_HAUTEUR_OPTIONS);
-		this.hauteurOptions =
-				Math.max(this.hauteurOptions, OptionMenu.MIN_HAUTEUR_OPTIONS);
-		this.offSetY = this.getYbasTitle() + ((this.fen.getHeight()
-			- this.hauteurOptions - this.getYbasTitle()) * this.ratioHaut
-			/ (this.ratioHaut + this.ratioBas));
-	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
-				RenderingHints.VALUE_RENDER_QUALITY);
-
-		this.reInitBackground();
-		this.paintBackground(g2d);
-
-		this.calculOffSet();
-		synchronized (this.itemListe) {
-			OptionMenuItem<?> item;
-			int yItem;
-			for (int i = 0; i < this.itemListe.size(); i++) {
-				item = this.itemListe.get(i);
-				yItem = this.wantedItemY(i, this.offSetY, this.hauteurOptions);
-				item.paintItem(g2d, this.wantedItemX(), yItem);
-			}
-		}
-
-		g2d.dispose();
+		this.addItem(dimension);
+		this.addItem(niveau);
+		this.addItem(affichage);
+		this.addItem(select);
 	}
 
 
