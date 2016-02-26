@@ -8,6 +8,7 @@ import javax.swing.UIManager;
 
 import gameDisplayer.SudokuDisplayer;
 import graphicalElements.Dessinable;
+import menus.frontMenu.FrontMenu;
 import menus.optionMenu.OptionMenu;
 import options.Niveau;
 import sudokuController.SudokuGame;
@@ -18,6 +19,7 @@ public class SudokuFenetre extends JFrame {
 	private static final long serialVersionUID = 2L;
 	private SudokuGamePanel sudokuGamePanel;
 
+	private FrontMenu frontMenu;
 	private OptionMenu optionMenu;
 
 	private SudokuDisplayer sudokuDisplayer;
@@ -31,6 +33,7 @@ public class SudokuFenetre extends JFrame {
 		super("Sudoku - Maman ;)");
 		this.setSize(width, height);
 
+		this.frontMenu = new FrontMenu(width, height, bgColor, this);
 		this.optionMenu = new OptionMenu(width, height, bgColor, this);
 
 		try {
@@ -41,19 +44,38 @@ public class SudokuFenetre extends JFrame {
 
 		this.sudokuGamePanel =
 				new SudokuGamePanel(width, height, Color.LIGHT_GRAY);
+		// this.scrollPane = new JScrollPane(this.sudokuGamePanel);
+		// this.scrollPane.setPreferredSize(new Dimension(Math.min(800, width),
+		// Math.min(600, height)));
 
 		this.getContentPane().setLayout(new BorderLayout());
 
-		this.displayOptionMenu();
+		this.displayFrontMenu();
+		// this.displayOptionMenu();
 		// this.displayGame();
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		this.setResizable(true);
 
+		// this.sudokuGamePanel.setSize(this.sudokuGamePanel.getWidth(),
+		// this.sudokuGamePanel.getHeight());
+
 		this.pack();
 		this.validate();
 		this.setVisible(true);
+	}
+
+	public void displayFrontMenu() {
+		this.getContentPane().removeAll();
+		this.getContentPane().add(this.frontMenu, "Center");
+		this.frontMenu.setFocusable(true);
+		this.frontMenu.requestFocus();
+		this.focusedOnGame = false;
+
+		this.pack();
+		this.revalidate();
+		this.repaint();
 	}
 
 	public void displayOptionMenu() {
@@ -133,6 +155,10 @@ public class SudokuFenetre extends JFrame {
 		return this.sudokuGamePanel;
 	}
 
+	public FrontMenu getFrontMenu() {
+		return this.frontMenu;
+	}
+
 	public void addGraphicalElement(Dessinable elem) {
 		this.sudokuGamePanel.addGraphicalElement(elem);
 	}
@@ -144,6 +170,8 @@ public class SudokuFenetre extends JFrame {
 	@Override
 	public void validate() {
 		super.validate();
+		this.frontMenu.setPreferredSize(this.getSize());
+		this.optionMenu.setPreferredSize(this.getSize());
 		this.sudokuGamePanel.setPreferredSize(this.getSize());
 		if (this.focusedOnGame) {
 			this.sudokuGamePanel.setTitleText();

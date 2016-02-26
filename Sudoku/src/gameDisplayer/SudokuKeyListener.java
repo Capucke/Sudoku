@@ -149,8 +149,7 @@ public class SudokuKeyListener implements KeyListener {
 								return;
 
 							case KeyEvent.VK_ESCAPE:
-								// this.displayer.getFenetre().displayLevelMenu();
-								this.displayer.getFenetre().dispose();
+								this.displayer.getFenetre().displayFrontMenu();
 								return;
 
 							default:
