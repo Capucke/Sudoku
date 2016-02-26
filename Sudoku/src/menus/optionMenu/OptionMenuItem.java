@@ -89,6 +89,11 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 
 	}
 
+	private void updateTxt() {
+		this.setTxt(new String(this.option.getOptionName() + " :  < "
+			+ this.option.readableName() + " >"));
+	}
+
 
 	public void setSelected(boolean selected) {
 		this.isSelected = selected;
@@ -96,10 +101,12 @@ public abstract class OptionMenuItem<TypeOption extends Enum<TypeOption> & Optio
 
 	public void next() {
 		this.option = this.option.next();
+		this.updateTxt();
 	}
 
 	public void prev() {
 		this.option = this.option.prev();
+		this.updateTxt();
 	}
 
 	public abstract void saveOptionValue();
