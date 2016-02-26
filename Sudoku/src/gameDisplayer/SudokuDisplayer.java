@@ -224,6 +224,10 @@ public class SudokuDisplayer {
 		this.display();
 	}
 
+	public boolean gameComplete() {
+		return this.sudoku.isComplete();
+	}
+
 
 	public void display() {
 		this.fen.reset();
@@ -378,8 +382,8 @@ public class SudokuDisplayer {
 	}
 
 	private void setTailleImg() {
-		int maxTailleGrille =
-				Math.min(this.fen.getWidth(), this.fen.getHeight());
+		int maxTailleGrille = Math.min(this.fen.getWidth(),
+				this.fen.getHeight() - this.fen.getSudoLimitTitle());
 
 		int tailleTestee;
 		int ind;

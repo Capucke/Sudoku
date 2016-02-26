@@ -31,6 +31,11 @@ public class SudokuKeyListener implements KeyListener {
 		int key = e.getKeyCode();
 		char keyChar = e.getKeyChar();
 
+		if (this.displayer.gameComplete()) {
+			this.displayer.newGame();
+			return;
+		}
+
 		switch (this.displayer.getDimension()) {
 
 			case 16:
