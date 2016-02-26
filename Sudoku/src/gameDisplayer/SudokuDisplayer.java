@@ -287,13 +287,14 @@ public class SudokuDisplayer {
 	}
 
 	public static int calculTraitMoy(int tailleCase) {
-		if (tailleCase > 60) {
-			return 5;
-		} else if (tailleCase > 40) {
-			return 4;
-		} else {
-			return 2;
-		}
+		// if (tailleCase > 60) {
+		// return 6;
+		// } else if (tailleCase > 40) {
+		// return 5;
+		// } else {
+		// return 3;
+		// }
+		return SudokuDisplayer.calculTraitGros(tailleCase) - 1;
 	}
 
 	public static int calculTraitGros(int tailleCase) {
