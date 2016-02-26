@@ -9,8 +9,8 @@ public class OptionMenuKeyListener implements KeyListener {
 
 	private OptionMenu menu;
 
-	public OptionMenuKeyListener(OptionMenu frontMenu) {
-		this.menu = frontMenu;
+	public OptionMenuKeyListener(OptionMenu optionMenu) {
+		this.menu = optionMenu;
 	}
 
 	private void switchSelectedItem(int verticalDiff) {
