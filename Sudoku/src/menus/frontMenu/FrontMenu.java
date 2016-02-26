@@ -36,8 +36,7 @@ public class FrontMenu extends Menu<FrontMenuItem> {
 
 		this.setRatio(FrontMenu.OptionRatioHaut, FrontMenu.OptionRatioBas);
 
-		// TODO
-		// this.addKeyListener(new FrontMenuKeyListener(this));
+		this.addKeyListener(new FrontMenuKeyListener(this));
 	}
 
 
