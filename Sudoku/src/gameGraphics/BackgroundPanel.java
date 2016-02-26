@@ -86,4 +86,42 @@ public class BackgroundPanel extends JPanel {
 	public int getBackgroundPanelHeight() {
 		return this.height;
 	}
+
+
+	// @Override
+	// public void repaint() {
+	// int time_to_sleep = (int) (BackgroundPanel.TIME_BTW_REFRESH
+	// - (System.currentTimeMillis() - this.lastRefreshTime));
+	// if (time_to_sleep >= 0) {
+	// try {
+	// Thread.sleep(time_to_sleep);
+	// this.repaintMyPanel();
+	// } catch (InterruptedException e) {
+	// e.printStackTrace();
+	// // Thread.currentThread().interrupt();
+	// }
+	// } else {
+	// // Refresh screen
+	// this.repaintMyPanel();
+	// }
+	// }
+
+	private void repaintMyPanel() {
+		super.repaint();
+		this.lastRefreshTime = System.currentTimeMillis();
+
+		System.err
+				.println("Peinture n°" + this.k + " : " + this.lastRefreshTime);
+		System.err.println();
+		this.k++;
+	}
+
+	static final int FRAMES_PER_SECOND = 25;
+	static final int TIME_BTW_REFRESH = 1000 / FRAMES_PER_SECOND;
+
+	double stime = System.currentTimeMillis();
+	private double lastRefreshTime = 0;
+
+	private int k;
+
 }
