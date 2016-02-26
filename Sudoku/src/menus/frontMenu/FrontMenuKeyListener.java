@@ -1,4 +1,4 @@
-package menus.optionMenu;
+package menus.frontMenu;
 
 import java.awt.event.KeyEvent;
 
@@ -6,11 +6,11 @@ import menus.MenuKeyListener;
 
 
 
-public class OptionMenuKeyListener
-		extends MenuKeyListener<OptionMenuItem<?>, OptionMenu> {
+public class FrontMenuKeyListener
+		extends MenuKeyListener<FrontMenuItem, FrontMenu> {
 
-	public OptionMenuKeyListener(OptionMenu optionMenu) {
-		super(optionMenu);
+	public FrontMenuKeyListener(FrontMenu frontMenu) {
+		super(frontMenu);
 	}
 
 	@Override
@@ -25,17 +25,12 @@ public class OptionMenuKeyListener
 				this.switchSelectedItem(1);
 				break;
 
-			case KeyEvent.VK_LEFT:
-				this.getSelectedItem().prev();
-				this.getMenu().repaint();
-				break;
-			case KeyEvent.VK_RIGHT:
-				this.getSelectedItem().next();
-				this.getMenu().repaint();
+			case KeyEvent.VK_ENTER:
+				this.getSelectedItem().actionIfSelected();
 				break;
 
 			case KeyEvent.VK_ESCAPE:
-				this.getMenu().saveOptionsAndQuit();
+				this.getMenu().getFen().dispose();
 				break;
 			default:
 				return;
