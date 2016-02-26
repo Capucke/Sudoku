@@ -8,6 +8,7 @@ import gameGraphics.SudokuFenetre;
 import gameStructures.Case;
 import graphicalElements.Carre;
 import graphicalElements.ImageElement;
+import graphicalElements.Rectangle;
 import options.Affichage;
 import options.Options;
 import sudokuController.SudokuGame;
@@ -24,9 +25,12 @@ public class SudokuDisplayer {
 
 	private int xGrille;
 	private int yGrille;
+	private int xRegle;
+	private int yRegle;
 	private int oldTailleImg = 0;
 	private int tailleImg;
 	private Carre fondGrille;
+	private Rectangle fondRegle;
 
 	private Image[] tabImagesDef;
 	private Image[] tabSelectImagesDef;
@@ -35,10 +39,14 @@ public class SudokuDisplayer {
 	private Image invalidImg;
 	private Affichage typeAffichage;
 
-	private int ratioWidth = 1;
+	private int ratioGauche = 1;
+	private int ratioDroite = 1;
 	// on aura *ratioWidth* fois plus de place à gauche de la grille qu'à droite
 	// de la grille
-	private int ratioHeight = 3;
+
+	private int ratioHaut = 1;
+	private int ratioMiddle = 1;
+	private int ratioBas = 1;
 	// on aura *ratioHeight* fois plus de place en haut de la grille qu'en bas
 	// de la grille
 
@@ -205,16 +213,21 @@ public class SudokuDisplayer {
 
 	public void display() {
 		this.fen.reset();
-		this.drawGame(this.sudoku.isComplete());
-	}
-
-
-	private void drawGame(boolean jeuTermine) {
-		SudokuGame game = this.sudoku;
 
 		this.setTailleImg();
 		this.calculOffSet();
 		this.updateImages();
+
+		this.drawGame();
+		this.drawRegle();
+		if (this.sudoku.isComplete()) {
+			this.drawEcranFin();
+		}
+	}
+
+
+	private void drawGame() {
+		SudokuGame game = this.sudoku;
 
 		Case currCase;
 		int curNum;
@@ -244,13 +257,24 @@ public class SudokuDisplayer {
 			this.addImg(invalidCase.LIGNE, invalidCase.COL, this.invalidImg);
 		}
 
-		if (jeuTermine) {
-			this.fen.addGraphicalElement(new ImageElement(0, 0,
-					ImageElement.FOND_ETOILE, this.fen.getSudokuGamePanel()));
-			this.addTxtFin();
-		}
-
 	}
+
+	private void drawRegle() {
+		int dimension = this.sudoku.getDimension();
+
+		this.addImgRegle();
+		for (int i = 1; i <= dimension; i++) {
+			this.addImg(i - 1, this.tabImagesDef[i]);
+		}
+	}
+
+
+	private void drawEcranFin() {
+		this.fen.addGraphicalElement(new ImageElement(0, 0,
+				ImageElement.FOND_ETOILE, this.fen.getSudokuGamePanel()));
+		this.addTxtFin();
+	}
+
 
 	private void updateTraits() {
 		this.traitFin = SudokuDisplayer.calculTraitFin(this.tailleImg);
@@ -360,10 +384,22 @@ public class SudokuDisplayer {
 	public void calculOffSet() {
 		int tailleGrille = this.getTailleGrille(this.tailleImg);
 
-		this.xGrille = (this.fen.getWidth() - tailleGrille) * this.ratioWidth
-			/ (this.ratioWidth + 1);
-		this.yGrille = (this.fen.getHeight() - tailleGrille) * this.ratioHeight
-			/ (this.ratioHeight + 1);
+		this.xGrille = (this.fen.getWidth() - tailleGrille) * this.ratioGauche
+			/ (this.ratioGauche + this.ratioDroite);
+		this.xRegle = this.xGrille;
+
+
+		int baseOffSet = this.fen.getSudoLimitTitle();
+		int hauteurLibre = this.fen.getHeight() - tailleGrille
+			- this.getHauteurRegle() - baseOffSet;
+
+		int hautLibre = hauteurLibre * this.ratioHaut
+			/ (this.ratioHaut + this.ratioMiddle + this.ratioBas);
+		int middleLibre = hauteurLibre * this.ratioMiddle
+			/ (this.ratioHaut + this.ratioMiddle + this.ratioBas);
+
+		this.yGrille = baseOffSet + hautLibre;
+		this.yRegle = this.yGrille + tailleGrille + middleLibre;
 	}
 
 	/**
@@ -380,8 +416,27 @@ public class SudokuDisplayer {
 	}
 
 	/**
+	 * Prérequis : - avoir réglé tailleGrille - avoir calculé l'offSet
+	 */
+	private void makeRegle() {
+		this.fondRegle = new Rectangle(this.xRegle, this.yRegle,
+				this.getTailleGrille(this.tailleImg), this.getHauteurRegle(),
+				Color.BLACK);
+	}
+
+	private int getHauteurRegle() {
+		return (2 * this.traitGros + this.tailleImg);
+	}
+
+	private void addImgRegle() {
+		this.makeRegle();
+		this.fen.addGraphicalElement(this.fondRegle);
+	}
+
+	/**
 	 * Prérequis : avoir mis à jour l'épaisseur des traits avant d'appeler cette
-	 * fonction
+	 * fonction. Cette fonction prends 2 paramètres entiers => elle doit donc
+	 * ajouter une image dans la grille
 	 * 
 	 * @param i
 	 * @param j
@@ -409,6 +464,37 @@ public class SudokuDisplayer {
 		}
 		for (int k = 1; k <= (i / dimUnit); k++) {
 			yImg += diffTraitMoyFin;
+		}
+
+		this.fen.addGraphicalElement(new ImageElement(xImg, yImg, img,
+				this.fen.getSudokuGamePanel()));
+	}
+
+
+	/**
+	 * Prérequis : avoir mis à jour l'épaisseur des traits avant d'appeler cette
+	 * fonction. Cette fonction prends 1 seul paramètre entier => elle doit donc
+	 * ajouter une image dans la règle
+	 * 
+	 * @param i
+	 * @param j
+	 * @param img
+	 */
+	private void addImg(int i, Image img) {
+		int diffTraitMoyFin = this.traitMoy - this.traitFin;
+		int dimUnit = this.sudoku.getDimUnit();
+		int xImg;
+		int yImg;
+
+		yImg = this.yRegle + this.traitGros;
+
+		xImg = this.xRegle + this.traitGros;
+		for (int k = 0; k < i; k++) {
+			xImg += this.tailleImg;
+			xImg += this.traitFin;
+		}
+		for (int k = 1; k <= (i / dimUnit); k++) {
+			xImg += diffTraitMoyFin;
 		}
 
 		this.fen.addGraphicalElement(new ImageElement(xImg, yImg, img,

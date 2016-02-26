@@ -151,4 +151,8 @@ public class SudokuFenetre extends JFrame {
 		}
 	}
 
+	public int getSudoLimitTitle() {
+		return this.sudokuGamePanel.getYbasTitle();
+	}
+
 }
