@@ -54,6 +54,20 @@ public class SudokuDisplayer {
 	private int traitMoy;
 	private int traitGros;
 
+	public static final int[] TAILLES_DISPO = new int[8];
+
+	static {
+		SudokuDisplayer.TAILLES_DISPO[0] = 100;
+		SudokuDisplayer.TAILLES_DISPO[1] = 90;
+		SudokuDisplayer.TAILLES_DISPO[2] = 80;
+		SudokuDisplayer.TAILLES_DISPO[3] = 70;
+		SudokuDisplayer.TAILLES_DISPO[4] = 60;
+		SudokuDisplayer.TAILLES_DISPO[5] = 50;
+		SudokuDisplayer.TAILLES_DISPO[6] = 40;
+		SudokuDisplayer.TAILLES_DISPO[7] = 30;
+	}
+
+
 	public SudokuDisplayer(SudokuGame sudokuJeu, SudokuFenetre sudokuFen) {
 		this.fen = sudokuFen;
 		this.typeAffichage = null;
@@ -366,23 +380,18 @@ public class SudokuDisplayer {
 	private void setTailleImg() {
 		int maxTailleGrille =
 				Math.min(this.fen.getWidth(), this.fen.getHeight());
-		if (this.testTailleGrille(100) < maxTailleGrille) {
-			this.tailleImg = 100;
-		} else if (this.testTailleGrille(90) < maxTailleGrille) {
-			this.tailleImg = 90;
-		} else if (this.testTailleGrille(80) < maxTailleGrille) {
-			this.tailleImg = 80;
-		} else if (this.testTailleGrille(70) < maxTailleGrille) {
-			this.tailleImg = 70;
-		} else if (this.testTailleGrille(60) < maxTailleGrille) {
-			this.tailleImg = 60;
-		} else if (this.testTailleGrille(50) < maxTailleGrille) {
-			this.tailleImg = 50;
-		} else if (this.testTailleGrille(40) < maxTailleGrille) {
-			this.tailleImg = 40;
-		} else {
-			this.tailleImg = 30;
+
+		int tailleTestee;
+		int ind;
+		for (ind = 0; ind < SudokuDisplayer.TAILLES_DISPO.length - 1; ind++) {
+			tailleTestee = SudokuDisplayer.TAILLES_DISPO[ind];
+			if (this.testTailleGrille(tailleTestee) < maxTailleGrille) {
+				this.tailleImg = tailleTestee;
+				return;
+			}
 		}
+		this.tailleImg = SudokuDisplayer.TAILLES_DISPO[ind];
+
 	}
 
 	public void calculOffSet() {
