@@ -276,52 +276,6 @@ public class SudokuDisplayer {
 	}
 
 
-	private void updateTraits() {
-		this.traitFin = SudokuDisplayer.calculTraitFin(this.tailleImg);
-		this.traitMoy = SudokuDisplayer.calculTraitMoy(this.tailleImg);
-		this.traitGros = SudokuDisplayer.calculTraitGros(this.tailleImg);
-	}
-
-	public static int calculTraitFin(int tailleCase) {
-		return (tailleCase > 40) ? 2 : 1;
-	}
-
-	public static int calculTraitMoy(int tailleCase) {
-		// if (tailleCase > 60) {
-		// return 6;
-		// } else if (tailleCase > 40) {
-		// return 5;
-		// } else {
-		// return 3;
-		// }
-		return SudokuDisplayer.calculTraitGros(tailleCase) - 1;
-	}
-
-	public static int calculTraitGros(int tailleCase) {
-		if (tailleCase > 60) {
-			return 7;
-		} else if (tailleCase > 50) {
-			return 6;
-		} else if (tailleCase > 40) {
-			return 5;
-		} else {
-			return 3;
-		}
-	}
-
-
-	public int getTailleGrille(int tailleCase) {
-		int taille = 0;
-		taille += (2 * SudokuDisplayer.calculTraitGros(tailleCase));
-		taille += ((this.sudoku.getDimUnit() - 1)
-			* SudokuDisplayer.calculTraitMoy(tailleCase));
-		taille += (this.sudoku.getDimUnit() * (this.sudoku.getDimUnit() - 1)
-			* SudokuDisplayer.calculTraitFin(tailleCase));
-		taille += (this.sudoku.getDimension() * tailleCase);
-		return taille;
-	}
-
-
 	private void updateImages() {
 		if (this.typeAffichage != Options.getAffichage()
 			|| this.tailleImg != this.oldTailleImg) {
@@ -359,23 +313,72 @@ public class SudokuDisplayer {
 		}
 	}
 
+
+	private void updateTraits() {
+		this.traitFin = SudokuDisplayer.calculTraitFin(this.tailleImg);
+		this.traitMoy = SudokuDisplayer.calculTraitMoy(this.tailleImg);
+		this.traitGros = SudokuDisplayer.calculTraitGros(this.tailleImg);
+	}
+
+	public static int calculTraitFin(int tailleCase) {
+		return (tailleCase > 40) ? 2 : 1;
+	}
+
+	public static int calculTraitMoy(int tailleCase) {
+		// if (tailleCase > 60) {
+		// return 6;
+		// } else if (tailleCase > 40) {
+		// return 5;
+		// } else {
+		// return 3;
+		// }
+		return SudokuDisplayer.calculTraitGros(tailleCase) - 1;
+	}
+
+	public static int calculTraitGros(int tailleCase) {
+		if (tailleCase > 60) {
+			return 7;
+		} else if (tailleCase > 50) {
+			return 6;
+		} else if (tailleCase > 40) {
+			return 5;
+		} else {
+			return 4;
+		}
+	}
+
+
+	public int getTailleGrille(int tailleCase) {
+		int taille = 0;
+		taille += (2 * SudokuDisplayer.calculTraitGros(tailleCase));
+		taille += ((this.sudoku.getDimUnit() - 1)
+			* SudokuDisplayer.calculTraitMoy(tailleCase));
+		taille += (this.sudoku.getDimUnit() * (this.sudoku.getDimUnit() - 1)
+			* SudokuDisplayer.calculTraitFin(tailleCase));
+		taille += (this.sudoku.getDimension() * tailleCase);
+		return taille;
+	}
+
+	private int testTailleGrille(int tailleCase) {
+		return (2 * tailleCase + this.getTailleGrille(tailleCase));
+	}
+
 	private void setTailleImg() {
-		int maxGrilleWidth = this.fen.getWidth() - 50;
-		int maxGrilleHeight = this.fen.getHeight() - 200;
-		int maxTailleGrille = Math.min(maxGrilleWidth, maxGrilleHeight);
-		if (this.getTailleGrille(100) < maxTailleGrille) {
+		int maxTailleGrille =
+				Math.min(this.fen.getWidth(), this.fen.getHeight());
+		if (this.testTailleGrille(100) < maxTailleGrille) {
 			this.tailleImg = 100;
-		} else if (this.getTailleGrille(90) < maxTailleGrille) {
+		} else if (this.testTailleGrille(90) < maxTailleGrille) {
 			this.tailleImg = 90;
-		} else if (this.getTailleGrille(80) < maxTailleGrille) {
+		} else if (this.testTailleGrille(80) < maxTailleGrille) {
 			this.tailleImg = 80;
-		} else if (this.getTailleGrille(70) < maxTailleGrille) {
+		} else if (this.testTailleGrille(70) < maxTailleGrille) {
 			this.tailleImg = 70;
-		} else if (this.getTailleGrille(60) < maxTailleGrille) {
+		} else if (this.testTailleGrille(60) < maxTailleGrille) {
 			this.tailleImg = 60;
-		} else if (this.getTailleGrille(50) < maxTailleGrille) {
+		} else if (this.testTailleGrille(50) < maxTailleGrille) {
 			this.tailleImg = 50;
-		} else if (this.getTailleGrille(40) < maxTailleGrille) {
+		} else if (this.testTailleGrille(40) < maxTailleGrille) {
 			this.tailleImg = 40;
 		} else {
 			this.tailleImg = 30;
