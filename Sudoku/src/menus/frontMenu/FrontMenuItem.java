@@ -9,7 +9,7 @@ import menus.MenuItem;
 
 public abstract class FrontMenuItem extends MenuItem {
 
-	public static final int frontTxtSize = 40;
+	public static final int frontTxtSize = 50;
 
 	private static final Color frontNormalTxtColor = Color.BLUE;
 	private static final Color frontSelectTxtColor = Color.GREEN;
