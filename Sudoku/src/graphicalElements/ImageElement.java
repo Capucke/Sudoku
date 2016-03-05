@@ -34,8 +34,8 @@ public class ImageElement implements Dessinable {
 				ImageElement.ILLUSTRATIONS_FOLDER + "texte_complete.png");
 		FOND_ETOILE = ImageElement
 				.chargeImg(ImageElement.ILLUSTRATIONS_FOLDER + "etoiles.png");
-		KOALA_01 = ImageElement.chargeImg(
-				ImageElement.ILLUSTRATIONS_FOLDER + "dessinKoala.png");
+		KOALA_01 = ImageElement.chargeImg(ImageElement.ILLUSTRATIONS_FOLDER
+			+ "dessinKoalaNettoye_02.png");
 
 		CHIFFRE_SPECIAL = new String[Dimension.maxDimensionIntValue() + 1];
 		CHIFFRE_SPECIAL[0] = "0";
