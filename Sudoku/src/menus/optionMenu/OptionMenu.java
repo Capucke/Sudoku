@@ -7,6 +7,7 @@ import graphicalElements.Dessinable;
 import graphicalElements.ImageElement;
 import graphicalElements.TextElement;
 import menus.Menu;
+import options.Options;
 
 
 
@@ -24,6 +25,11 @@ public class OptionMenu extends Menu<OptionMenuItem<?>> {
 	private static int OptionRatioHaut = 1;
 	private static int OptionRatioBas = 1;
 
+	private OptionMenuItem<options.Dimension> dimensionItem;
+	private OptionMenuItem<options.Niveau> niveauItem;
+	private OptionMenuItem<options.Affichage> affichageItem;
+	private OptionMenuItem<options.SelectionCasesDef> selectDefItem;
+
 	static {
 		OptionMenu.title = new TextElement("Options", 70);
 		OptionMenu.title.setInColor(Color.PINK);
@@ -40,11 +46,37 @@ public class OptionMenu extends Menu<OptionMenuItem<?>> {
 		this.addKeyListener(new OptionMenuKeyListener(this));
 	}
 
-	public void saveOptionsAndQuit() {
+	private void saveOptions() {
 		for (OptionMenuItem<?> item : this.getItemListe()) {
 			item.saveOptionValue();
 		}
+	}
+
+	public void backToFrontMenu() {
+		this.saveOptions();
 		this.getFen().displayFrontMenu();
+	}
+
+	private boolean resumeGamePossible() {
+		return (this.getFen().partieEnCours()
+			&& this.niveauItem.getOptionValue() == Options.getNiveau()
+			// getOptionValue() : valeur courante
+			// Options.getNiveau() : valeur enregistrée sur le disque
+			&& this.dimensionItem.getOptionValue() == Options.getDimension());
+	}
+
+	public void resumeGame() throws Exception {
+		if (!this.resumeGamePossible()) {
+			throw new Exception("Aucune partie en cours : impossible de "
+				+ "\"reprendre la partie\"");
+		}
+		this.saveOptions();
+		this.getFen().displayGame();
+	}
+
+	public void newGame() {
+		this.saveOptions();
+		this.getFen().displayNewGame();
 	}
 
 
@@ -61,22 +93,15 @@ public class OptionMenu extends Menu<OptionMenuItem<?>> {
 		this.createItemList(4);
 		this.setSelectedItemNum(0);
 
-		OptionMenuItem<options.Dimension> dimension =
-				new DimensionItem(this.getFen(), true);
+		this.dimensionItem = new DimensionItem(this.getFen(), true);
+		this.niveauItem = new NiveauItem(this.getFen(), false);
+		this.affichageItem = new AffichageItem(this.getFen(), false);
+		this.selectDefItem = new SelectCasesDefItem(this.getFen(), false);
 
-		OptionMenuItem<options.Niveau> niveau =
-				new NiveauItem(this.getFen(), false);
-
-		OptionMenuItem<options.Affichage> affichage =
-				new AffichageItem(this.getFen(), false);
-
-		OptionMenuItem<options.SelectionCasesDef> select =
-				new SelectCasesDefItem(this.getFen(), false);
-
-		this.addItem(dimension);
-		this.addItem(niveau);
-		this.addItem(affichage);
-		this.addItem(select);
+		this.addItem(this.dimensionItem);
+		this.addItem(this.niveauItem);
+		this.addItem(this.affichageItem);
+		this.addItem(this.selectDefItem);
 	}
 
 

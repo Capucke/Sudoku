@@ -22,7 +22,7 @@ public class NewGameItem extends FrontMenuItem {
 
 	@Override
 	public void actionIfSelected() {
-		this.getFenetre().displayGame();
+		this.getFenetre().displayNewGame();
 	}
 
 }

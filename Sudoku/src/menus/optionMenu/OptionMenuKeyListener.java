@@ -34,8 +34,20 @@ public class OptionMenuKeyListener
 				this.getMenu().repaint();
 				break;
 
+			case KeyEvent.VK_N:
+				this.getMenu().newGame();
+				break;
+
+			case KeyEvent.VK_R:
+				try {
+					this.getMenu().resumeGame();
+				} catch (Exception exp) {
+					exp.printStackTrace();
+				}
+				break;
+
 			case KeyEvent.VK_ESCAPE:
-				this.getMenu().saveOptionsAndQuit();
+				this.getMenu().backToFrontMenu();
 				break;
 			default:
 				return;

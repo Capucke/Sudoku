@@ -10,19 +10,18 @@ import gameDisplayer.SudokuDisplayer;
 import graphicalElements.Dessinable;
 import menus.frontMenu.FrontMenu;
 import menus.optionMenu.OptionMenu;
-import options.Niveau;
 import sudokuController.SudokuGame;
 
 
 
 public class SudokuFenetre extends JFrame {
 	private static final long serialVersionUID = 2L;
-	private SudokuGamePanel sudokuGamePanel;
 
-	private FrontMenu frontMenu;
-	private OptionMenu optionMenu;
+	public final SudokuGamePanel SUDOKU_GAME_PANEL;
+	public final FrontMenu FRONT_MENU;
+	public final OptionMenu OPTION_MENU;
+	public final SudokuDisplayer SUDOKU_DISPLAYER;
 
-	private SudokuDisplayer sudokuDisplayer;
 	private boolean focusedOnGame = false;
 
 	public SudokuFenetre() {
@@ -33,8 +32,11 @@ public class SudokuFenetre extends JFrame {
 		super("Sudoku - Maman ;)");
 		this.setSize(width, height);
 
-		this.frontMenu = new FrontMenu(width, height, bgColor, this);
-		this.optionMenu = new OptionMenu(width, height, bgColor, this);
+		this.SUDOKU_GAME_PANEL =
+				new SudokuGamePanel(width, height, Color.LIGHT_GRAY);
+		this.FRONT_MENU = new FrontMenu(width, height, bgColor, this);
+		this.OPTION_MENU = new OptionMenu(width, height, bgColor, this);
+		this.SUDOKU_DISPLAYER = new SudokuDisplayer(null, this);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -42,17 +44,9 @@ public class SudokuFenetre extends JFrame {
 			var7.printStackTrace();
 		}
 
-		this.sudokuGamePanel =
-				new SudokuGamePanel(width, height, Color.LIGHT_GRAY);
-		// this.scrollPane = new JScrollPane(this.sudokuGamePanel);
-		// this.scrollPane.setPreferredSize(new Dimension(Math.min(800, width),
-		// Math.min(600, height)));
-
 		this.getContentPane().setLayout(new BorderLayout());
 
 		this.displayFrontMenu();
-		// this.displayOptionMenu();
-		// this.displayGame();
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -68,9 +62,9 @@ public class SudokuFenetre extends JFrame {
 
 	public void displayFrontMenu() {
 		this.getContentPane().removeAll();
-		this.getContentPane().add(this.frontMenu, "Center");
-		this.frontMenu.setFocusable(true);
-		this.frontMenu.requestFocus();
+		this.getContentPane().add(this.FRONT_MENU, "Center");
+		this.FRONT_MENU.setFocusable(true);
+		this.FRONT_MENU.requestFocus();
 		this.focusedOnGame = false;
 
 		this.pack();
@@ -80,9 +74,9 @@ public class SudokuFenetre extends JFrame {
 
 	public void displayOptionMenu() {
 		this.getContentPane().removeAll();
-		this.getContentPane().add(this.optionMenu, "Center");
-		this.optionMenu.setFocusable(true);
-		this.optionMenu.requestFocus();
+		this.getContentPane().add(this.OPTION_MENU, "Center");
+		this.OPTION_MENU.setFocusable(true);
+		this.OPTION_MENU.requestFocus();
 		this.focusedOnGame = false;
 
 		this.pack();
@@ -90,97 +84,52 @@ public class SudokuFenetre extends JFrame {
 		this.repaint();
 	}
 
+	public void displayNewGame() {
+		this.SUDOKU_DISPLAYER.setGame(new SudokuGame());
+		this.displayGame();
+	}
+
 	public void displayGame() {
-		this.setDisplayer();
-
 		this.getContentPane().removeAll();
 
-		this.getContentPane().add(this.sudokuGamePanel, "Center");
+		this.getContentPane().add(this.SUDOKU_GAME_PANEL, "Center");
 
-		this.sudokuGamePanel.setFocusable(true);
-		this.sudokuGamePanel.requestFocus();
+		this.SUDOKU_GAME_PANEL.setFocusable(true);
+		this.SUDOKU_GAME_PANEL.requestFocus();
 		this.focusedOnGame = true;
 
-		this.sudokuDisplayer.display();
+		this.SUDOKU_DISPLAYER.display();
 		this.pack();
 		this.revalidate();
 		this.repaint();
 	}
 
-	private void displayGame(int dimension, Niveau niveauJeu) {
-		this.setDisplayer(dimension, niveauJeu);
-
-		this.getContentPane().removeAll();
-
-		this.getContentPane().add(this.sudokuGamePanel, "Center");
-
-		this.sudokuGamePanel.setFocusable(true);
-		this.sudokuGamePanel.requestFocus();
-		this.focusedOnGame = true;
-
-		this.sudokuDisplayer.display();
-		this.pack();
-		this.revalidate();
-		this.repaint();
-	}
-
-	public void setGame(int dimension, Niveau niveauJeu) {
-		SudokuGame game = new SudokuGame(dimension, niveauJeu);
-		this.sudokuDisplayer.setGame(game);
-	}
-
-	public void setGame(SudokuGame game) {
-		this.sudokuDisplayer.setGame(game);
-	}
-
-	private void setDisplayer(SudokuDisplayer sudokuDispl) {
-		this.sudokuDisplayer = sudokuDispl;
-	}
-
-	private void setDisplayer(SudokuGame sudoku) {
-		this.sudokuDisplayer = new SudokuDisplayer(sudoku, this);
-	}
-
-	private void setDisplayer(int dimension, Niveau niveauJeu) {
-		SudokuGame game = new SudokuGame(dimension, niveauJeu);
-		this.setDisplayer(game);
-	}
-
-	private void setDisplayer() {
-		SudokuGame game = new SudokuGame();
-		this.setDisplayer(game);
-	}
-
-	public SudokuGamePanel getSudokuGamePanel() {
-		return this.sudokuGamePanel;
-	}
-
-	public FrontMenu getFrontMenu() {
-		return this.frontMenu;
+	public boolean partieEnCours() {
+		return this.SUDOKU_DISPLAYER.partieEnCours();
 	}
 
 	public void addGraphicalElement(Dessinable elem) {
-		this.sudokuGamePanel.addGraphicalElement(elem);
+		this.SUDOKU_GAME_PANEL.addGraphicalElement(elem);
 	}
 
 	public void reset() {
-		this.sudokuGamePanel.reset();
+		this.SUDOKU_GAME_PANEL.reset();
 	}
 
 	@Override
 	public void validate() {
 		super.validate();
-		this.frontMenu.setPreferredSize(this.getSize());
-		this.optionMenu.setPreferredSize(this.getSize());
-		this.sudokuGamePanel.setPreferredSize(this.getSize());
+		this.FRONT_MENU.setPreferredSize(this.getSize());
+		this.OPTION_MENU.setPreferredSize(this.getSize());
+		this.SUDOKU_GAME_PANEL.setPreferredSize(this.getSize());
 		if (this.focusedOnGame) {
-			this.sudokuGamePanel.setTitleText();
-			this.sudokuDisplayer.display();
+			this.SUDOKU_GAME_PANEL.setTitleText();
+			this.SUDOKU_DISPLAYER.display();
 		}
 	}
 
 	public int getSudoLimitTitle() {
-		return this.sudokuGamePanel.getYbasTitle();
+		return this.SUDOKU_GAME_PANEL.getYbasTitle();
 	}
 
 }

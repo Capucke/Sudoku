@@ -72,14 +72,19 @@ public class SudokuDisplayer {
 		this.fen = sudokuFen;
 		this.typeAffichage = null;
 		this.setGame(sudokuJeu);
-		this.fen.getSudokuGamePanel()
-				.addKeyListener(new SudokuKeyListener(this));
+		this.fen.SUDOKU_GAME_PANEL.addKeyListener(new SudokuKeyListener(this));
 	}
 
 	public void setGame(SudokuGame game) {
 		this.sudoku = game;
-		this.setTailleImg();
-		this.updateImages();
+		if (game != null) {
+			this.setTailleImg();
+			this.updateImages();
+		}
+	}
+
+	public boolean partieEnCours() {
+		return (this.sudoku != null && !this.gameComplete());
 	}
 
 	public SudokuFenetre getFenetre() {
@@ -289,7 +294,7 @@ public class SudokuDisplayer {
 
 	private void drawEcranFin() {
 		this.fen.addGraphicalElement(new ImageElement(0, 0,
-				ImageElement.FOND_ETOILE, this.fen.getSudokuGamePanel()));
+				ImageElement.FOND_ETOILE, this.fen.SUDOKU_GAME_PANEL));
 		this.addTxtFin();
 	}
 
@@ -483,8 +488,8 @@ public class SudokuDisplayer {
 			yImg += diffTraitMoyFin;
 		}
 
-		this.fen.addGraphicalElement(new ImageElement(xImg, yImg, img,
-				this.fen.getSudokuGamePanel()));
+		this.fen.addGraphicalElement(
+				new ImageElement(xImg, yImg, img, this.fen.SUDOKU_GAME_PANEL));
 	}
 
 
@@ -514,8 +519,8 @@ public class SudokuDisplayer {
 			xImg += diffTraitMoyFin;
 		}
 
-		this.fen.addGraphicalElement(new ImageElement(xImg, yImg, img,
-				this.fen.getSudokuGamePanel()));
+		this.fen.addGraphicalElement(
+				new ImageElement(xImg, yImg, img, this.fen.SUDOKU_GAME_PANEL));
 	}
 
 	private Image chargeImg(int chiffre, boolean isModifiable,
@@ -534,10 +539,8 @@ public class SudokuDisplayer {
 		txtWidth = 612;
 		txtHeight = 85;
 
-		int panelWidth =
-				this.fen.getSudokuGamePanel().getBackgroundPanelWidth();
-		int panelHeight =
-				this.fen.getSudokuGamePanel().getBackgroundPanelHeight();
+		int panelWidth = this.fen.SUDOKU_GAME_PANEL.getBackgroundPanelWidth();
+		int panelHeight = this.fen.SUDOKU_GAME_PANEL.getBackgroundPanelHeight();
 
 		xTxt = panelWidth / 2 - (txtWidth / 2);
 		yTxt = panelHeight / 4 - (txtHeight / 4);
@@ -550,7 +553,7 @@ public class SudokuDisplayer {
 		// System.out.println("yTxt : " + yTxt);
 
 		this.fen.addGraphicalElement(new ImageElement(xTxt, yTxt,
-				ImageElement.TXT_COMPLETE, this.fen.getSudokuGamePanel()));
+				ImageElement.TXT_COMPLETE, this.fen.SUDOKU_GAME_PANEL));
 	}
 
 }
