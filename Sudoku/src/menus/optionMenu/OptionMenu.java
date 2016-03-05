@@ -44,7 +44,7 @@ public class OptionMenu extends Menu<OptionMenuItem<?>> {
 		for (OptionMenuItem<?> item : this.getItemListe()) {
 			item.saveOptionValue();
 		}
-		this.getFen().displayGame();
+		this.getFen().displayFrontMenu();
 	}
 
 
