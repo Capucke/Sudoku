@@ -56,7 +56,7 @@ public class BackgroundPanel extends JPanel {
 		synchronized (this.objets) {
 			this.objets.add(elem);
 		}
-		this.repaint();
+		// this.repaint();
 	}
 
 	private void paintImgList(Graphics2D g2d) {
