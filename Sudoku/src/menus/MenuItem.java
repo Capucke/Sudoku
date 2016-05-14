@@ -6,9 +6,8 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 
 import gameGraphics.SudokuFenetre;
 import graphicalElements.TextElement;
@@ -46,17 +45,19 @@ public class MenuItem extends TextElement {
 			// InputStream inputStreamFont =
 			// this.getClass().getClassLoader().getResourceAsStream(
 			// "/polices/queen_of_camelot/Queen of Camelot.otf");
-			File fontFile = new File(this.getClass()
-					.getResource(
-							"/polices/queen_of_camelot/Queen of Camelot.otf")
-					.toURI());
+			// File fontFile = new File(this.getClass()
+			// .getResource(
+			// "/polices/queen_of_camelot/Queen_of_Camelot.otf")
+			// .toURI());
+			InputStream fontFile = this.getClass().getResourceAsStream(
+					"/polices/queen_of_camelot/Queen_of_Camelot.otf");
 
 			GraphicsEnvironment ge =
 					GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fontFile));
 			myFont = new Font(("Queen of Camelot"), Font.BOLD, size);
 
-		} catch (IOException | FontFormatException | URISyntaxException e) {
+		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 		}
 		this.finalFont = myFont;

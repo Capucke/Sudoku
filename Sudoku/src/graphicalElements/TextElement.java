@@ -15,9 +15,8 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 
 import javax.swing.JPanel;
 
@@ -53,16 +52,18 @@ public class TextElement extends JPanel implements Dessinable {
 			// InputStream inputStreamFont =
 			// this.getClass().getClassLoader().getResourceAsStream(
 			// "/polices/queen_of_camelot/Queen of Camelot.otf");
-			File fontFile = new File(this.getClass()
-					.getResource(
-							"/polices/queen_of_camelot/Queen of Camelot.otf")
-					.toURI());
+			// File fontFile = new File(this.getClass()
+			// .getResource(
+			// "/polices/queen_of_camelot/Queen_of_Camelot.otf")
+			// .toURI());
+			InputStream fontFile = this.getClass().getResourceAsStream(
+					"/polices/queen_of_camelot/Queen_of_Camelot.otf");
 
 			GraphicsEnvironment ge =
 					GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fontFile));
 			myFont = new Font(("Queen of Camelot"), Font.BOLD, this.FONT_SIZE);
-		} catch (IOException | FontFormatException | URISyntaxException e) {
+		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 		}
 		this.TXT_FONT = myFont;
