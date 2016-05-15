@@ -31,6 +31,20 @@ public class SudokuKeyListener implements KeyListener {
 		int key = e.getKeyCode();
 		char keyChar = e.getKeyChar();
 
+
+		switch (key) {
+			case KeyEvent.VK_R:
+				this.displayer.restart();
+				return;
+
+			case KeyEvent.VK_ESCAPE:
+				this.displayer.getFenetre().displayFrontMenu();
+				return;
+
+			default:
+				break;
+		}
+
 		if (this.displayer.gameComplete()) {
 			this.displayer.newGame();
 			return;
@@ -136,10 +150,6 @@ public class SudokuKeyListener implements KeyListener {
 								this.displayer.solveOneCase();
 								return;
 
-							case KeyEvent.VK_R:
-								this.displayer.restart();
-								return;
-
 							case KeyEvent.VK_UP:
 								this.displayer.moveUp();
 								return;
@@ -151,10 +161,6 @@ public class SudokuKeyListener implements KeyListener {
 								return;
 							case KeyEvent.VK_RIGHT:
 								this.displayer.moveRight();
-								return;
-
-							case KeyEvent.VK_ESCAPE:
-								this.displayer.getFenetre().displayFrontMenu();
 								return;
 
 							default:
