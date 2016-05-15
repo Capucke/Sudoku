@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 public class SudokuKeyListener implements KeyListener {
 
 	private SudokuDisplayer displayer;
+	private boolean dizaine1 = false;
 
 	public SudokuKeyListener(SudokuDisplayer disp) {
 		this.displayer = disp;
@@ -59,40 +60,135 @@ public class SudokuKeyListener implements KeyListener {
 					case 'a':
 					case 'A':
 						this.setCase(10);
+						this.dizaine1 = false;
 						return;
 
 					case 'b':
 					case 'B':
 						this.setCase(11);
+						this.dizaine1 = false;
 						return;
 
 					case 'c':
 					case 'C':
 						this.setCase(12);
+						this.dizaine1 = false;
 						return;
 
 					case 'd':
 					case 'D':
 						this.setCase(13);
+						this.dizaine1 = false;
 						return;
 
 					case 'e':
 					case 'E':
 						this.setCase(14);
+						this.dizaine1 = false;
 						return;
 
 					case 'f':
 					case 'F':
 						this.setCase(15);
+						this.dizaine1 = false;
 						return;
 
 					case 'g':
 					case 'G':
 						this.setCase(16);
+						this.dizaine1 = false;
+						return;
+
+					case '9':
+						this.setCase(9);
+						this.dizaine1 = false;
+						return;
+
+					case '8':
+						this.setCase(8);
+						this.dizaine1 = false;
+						return;
+
+					case '7':
+						this.setCase(7);
+						this.dizaine1 = false;
+						return;
+
+					case '6':
+						this.setCase(this.dizaine1 ? 16 : 6);
+						this.dizaine1 = false;
+						return;
+
+					case '5':
+						this.setCase(this.dizaine1 ? 15 : 5);
+						this.dizaine1 = false;
+						return;
+
+					case '4':
+						this.setCase(this.dizaine1 ? 14 : 4);
+						this.dizaine1 = false;
+						return;
+
+					case '3':
+						this.setCase(this.dizaine1 ? 13 : 3);
+						this.dizaine1 = false;
+						return;
+
+					case '2':
+						this.setCase(this.dizaine1 ? 12 : 2);
+						this.dizaine1 = false;
+						return;
+
+					case '1':
+						this.setCase(this.dizaine1 ? 11 : 1);
+						this.dizaine1 = !this.dizaine1;
+						return;
+
+					case '0':
+						this.setCase(this.dizaine1 ? 10 : 0);
+						this.dizaine1 = false;
+						return;
+
+					case 'n':
+					case 'N':
+						this.displayer.newGame();
 						return;
 
 					default:
-						break;
+						switch (key) {
+
+							case KeyEvent.VK_DELETE:
+								this.setCase(0);
+								this.dizaine1 = false;
+								return;
+
+							case KeyEvent.VK_H:
+								this.displayer.solveOneCase();
+								this.dizaine1 = false;
+								return;
+
+							case KeyEvent.VK_UP:
+								this.displayer.moveUp();
+								this.dizaine1 = false;
+								return;
+							case KeyEvent.VK_DOWN:
+								this.displayer.moveDown();
+								this.dizaine1 = false;
+								return;
+							case KeyEvent.VK_LEFT:
+								this.displayer.moveLeft();
+								this.dizaine1 = false;
+								return;
+							case KeyEvent.VK_RIGHT:
+								this.displayer.moveRight();
+								this.dizaine1 = false;
+								return;
+
+							default:
+								return;
+						}
+						// Le cas 16 est le seul où on gère le chiffre des
+						// dizaines
 				}
 
 			case 9:
