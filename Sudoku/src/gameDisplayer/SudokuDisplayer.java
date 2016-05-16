@@ -2,6 +2,8 @@ package gameDisplayer;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -74,9 +76,20 @@ public class SudokuDisplayer {
 		this.fen = sudokuFen;
 		this.typeAffichage = null;
 		this.setGame(sudokuJeu);
+
+		for (KeyListener keyListen : this.fen.SUDOKU_GAME_PANEL
+				.getKeyListeners()) {
+			this.fen.SUDOKU_GAME_PANEL.removeKeyListener(keyListen);
+		}
 		this.fen.SUDOKU_GAME_PANEL.addKeyListener(new SudokuKeyListener(this));
+
+		for (MouseListener mouseListen : this.fen.SUDOKU_GAME_PANEL
+				.getMouseListeners()) {
+			this.fen.SUDOKU_GAME_PANEL.removeMouseListener(mouseListen);
+		}
 		this.fen.SUDOKU_GAME_PANEL
 				.addMouseListener(new SudokuMouseListener(this));
+
 	}
 
 	public void setGame(SudokuGame game) {
@@ -152,6 +165,10 @@ public class SudokuDisplayer {
 				: this.tabSelectImagesDef[selectedCase.getNum()];
 		return wantedImg;
 	}
+
+	// void simpleSetCase(int ligne, int col, int newNum) {
+	// this.sudoku.setCase(ligne, col, newNum);
+	// }
 
 	public void setCase(int ligne, int col, int newNum) {
 		if (!this.sudoku.isComplete()) {
@@ -662,42 +679,6 @@ public class SudokuDisplayer {
 			return false;
 		}
 
-	}
-
-	void selectCaseFromCoord(int x, int y) {
-		AtomicInteger line = new AtomicInteger(0);
-		AtomicInteger col = new AtomicInteger(0);
-		boolean caseSelected = this.getCaseFromCoord(x, y, line, col);
-		if (!caseSelected) {
-			return;
-		}
-
-		if (line.intValue() == -1) {
-			// Les coord sélectionnées sont sur la règle
-			if (!this.sudoku.isComplete()) {
-				this.setSelectedNumRegle(col.intValue() + 1);
-				/*
-				 * TODO: LIGNE SUIVANTE A DECOMMENTER POUR QUE QUAND ON CLIQUE
-				 * SUR LA REGLE, ÇA CHANGE LA VALEUR DE LA CASE SELECTIONNÉE
-				 * DANS LA GRILLE
-				 */
-				// this.sudoku.setCase(this.getSelectedLine(),
-				// this.getSelectedCol(), this.getSelectedNumRegle());
-				this.display();
-			}
-
-		} else {
-			// Les coord sélectionnées sont sur la grille
-
-			if (!this.sudoku.isComplete()) {
-				this.setSelectedLine(line.intValue());
-				this.setSelectedCol(col.intValue());
-				this.sudoku.setCase(line.intValue(), col.intValue(),
-						this.getSelectedNumRegle());
-				this.display();
-			}
-
-		}
 	}
 
 

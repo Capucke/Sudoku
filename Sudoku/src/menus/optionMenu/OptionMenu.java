@@ -1,6 +1,9 @@
 package menus.optionMenu;
 
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import gameGraphics.SudokuFenetre;
 import graphicalElements.Dessinable;
@@ -43,7 +46,22 @@ public class OptionMenu extends Menu<OptionMenuItem<?>> {
 
 		this.setRatio(OptionMenu.OptionRatioHaut, OptionMenu.OptionRatioBas);
 
+
+		for (KeyListener keyListen : this.getKeyListeners()) {
+			this.removeKeyListener(keyListen);
+		}
 		this.addKeyListener(new OptionMenuKeyListener(this));
+
+		for (MouseListener mouseListen : this.getMouseListeners()) {
+			this.removeMouseListener(mouseListen);
+		}
+		this.addMouseListener(new OptionMenuMouseInputListener(this));
+
+
+		for (MouseMotionListener mouseListen : this.getMouseMotionListeners()) {
+			this.removeMouseMotionListener(mouseListen);
+		}
+		this.addMouseMotionListener(new OptionMenuMouseInputListener(this));
 	}
 
 	private void saveOptions() {

@@ -1,6 +1,9 @@
 package menus.frontMenu;
 
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import gameGraphics.SudokuFenetre;
 import graphicalElements.TextElement;
@@ -36,7 +39,22 @@ public class FrontMenu extends Menu<FrontMenuItem> {
 
 		this.setRatio(FrontMenu.OptionRatioHaut, FrontMenu.OptionRatioBas);
 
+
+		for (KeyListener keyListen : this.getKeyListeners()) {
+			this.removeKeyListener(keyListen);
+		}
 		this.addKeyListener(new FrontMenuKeyListener(this));
+
+		for (MouseListener mouseListen : this.getMouseListeners()) {
+			this.removeMouseListener(mouseListen);
+		}
+		this.addMouseListener(new FrontMenuMouseInputListener(this));
+
+
+		for (MouseMotionListener mouseListen : this.getMouseMotionListeners()) {
+			this.removeMouseMotionListener(mouseListen);
+		}
+		this.addMouseMotionListener(new FrontMenuMouseInputListener(this));
 	}
 
 

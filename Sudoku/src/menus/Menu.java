@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import gameGraphics.BackgroundPanel;
 import gameGraphics.SudokuFenetre;
@@ -118,6 +119,43 @@ public abstract class Menu<TypeItem extends MenuItem> extends BackgroundPanel {
 
 	protected int wantedItemX() {
 		return this.fen.getWidth() / 2;
+	}
+
+	/**
+	 * Cherche le numero du MenuItem qui correspond à l'endroit où est la souris
+	 * 
+	 * @param y
+	 * @param numItem
+	 * @return true si l'emplacement de la souris correspond à un item, false
+	 *         sinon
+	 */
+	boolean getNumItemFromOrdo(int x, int y, AtomicInteger numItem) {
+		int yItem;
+		int demiUnitHeight = this.unitHeight(this.hauteurMenu) / 2;
+		int demiHeight;
+
+		int xItem = this.wantedItemX();
+		int demiWidth;
+
+		for (int indItem = 0; indItem < this.getNbItems(); indItem++) {
+			yItem = this.wantedItemY(indItem, this.offSetY, this.hauteurMenu);
+			demiHeight =
+					(this.getItem(indItem).realTxtHeight() / 2 + demiUnitHeight)
+						/ 2;
+			if (y >= yItem - demiHeight && y <= yItem + demiHeight) {
+				// y correspon à un certain item
+				// si le x correspond à cet item, alors cet item est OK, sinon
+				// aucun item n'est OK
+				demiWidth = (this.getItem(indItem).realTxtWidth() / 2) * 3 / 2;
+				if (x >= xItem - demiWidth && x <= xItem + demiWidth) {
+					numItem.set(indItem);
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 
 	protected int wantedItemY(int numItem, int limiteHaut, int hauteurOptions) {
