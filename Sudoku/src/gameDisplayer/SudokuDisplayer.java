@@ -255,11 +255,17 @@ public class SudokuDisplayer {
 	}
 
 	public void restart() {
+		this.selectedLine = 0;
+		this.selectedCol = 0;
+		this.selectedNumRegle = 0;
 		this.sudoku.restart();
 		this.display();
 	}
 
 	public void newGame() {
+		this.selectedLine = 0;
+		this.selectedCol = 0;
+		this.selectedNumRegle = 0;
 		SudokuGame newSudoGame =
 				new SudokuGame(this.sudoku.getDimension(), this.sudoku.NIVEAU);
 		this.setGame(newSudoGame);
