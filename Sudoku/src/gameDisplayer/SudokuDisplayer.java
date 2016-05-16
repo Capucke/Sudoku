@@ -22,6 +22,7 @@ public class SudokuDisplayer {
 
 	private int selectedLine = 0;
 	private int selectedCol = 0;
+	private int selectedNumRegle = 0;
 
 	private int xGrille;
 	private int yGrille;
@@ -104,6 +105,10 @@ public class SudokuDisplayer {
 		return this.selectedCol;
 	}
 
+	public int getSelectedNumRegle() {
+		return this.selectedNumRegle;
+	}
+
 	public Case getSelectedCase() {
 		return this.sudoku.getCase(this.getSelectedLine(),
 				this.getSelectedCol());
@@ -127,6 +132,15 @@ public class SudokuDisplayer {
 		this.selectedCol = col;
 	}
 
+	public void setSelectedNumRegle(int num) {
+		if (num <= 0 || num > this.getDimension()) {
+			throw new InternalError(
+					"Essai de sélectionner un numéro inexistant sur la règle (num = "
+						+ num);
+		}
+		this.selectedNumRegle = num;
+	}
+
 	private Image getSelectedImg() {
 		Case selectedCase =
 				this.sudoku.getCase(this.selectedLine, this.selectedCol);
@@ -139,6 +153,7 @@ public class SudokuDisplayer {
 	public void setCase(int ligne, int col, int newNum) {
 		if (!this.sudoku.isComplete()) {
 			this.sudoku.setCase(ligne, col, newNum);
+			this.setSelectedNumRegle(newNum);
 			this.display();
 		}
 	}
@@ -287,7 +302,8 @@ public class SudokuDisplayer {
 
 		this.addImgRegle();
 		for (int i = 1; i <= dimension; i++) {
-			this.addImg(i - 1, this.tabImagesDef[i]);
+			this.addImg(i - 1, (i == this.getSelectedNumRegle())
+					? this.tabSelectImagesDef[i] : this.tabImagesDef[i]);
 		}
 	}
 

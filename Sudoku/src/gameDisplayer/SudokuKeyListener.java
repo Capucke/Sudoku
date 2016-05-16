@@ -27,6 +27,7 @@ public class SudokuKeyListener implements KeyListener {
 				newNum);
 	}
 
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
@@ -56,48 +57,6 @@ public class SudokuKeyListener implements KeyListener {
 			case 16:
 
 				switch (keyChar) {
-
-					case 'a':
-					case 'A':
-						this.setCase(10);
-						this.dizaine1 = false;
-						return;
-
-					case 'b':
-					case 'B':
-						this.setCase(11);
-						this.dizaine1 = false;
-						return;
-
-					case 'c':
-					case 'C':
-						this.setCase(12);
-						this.dizaine1 = false;
-						return;
-
-					case 'd':
-					case 'D':
-						this.setCase(13);
-						this.dizaine1 = false;
-						return;
-
-					case 'e':
-					case 'E':
-						this.setCase(14);
-						this.dizaine1 = false;
-						return;
-
-					case 'f':
-					case 'F':
-						this.setCase(15);
-						this.dizaine1 = false;
-						return;
-
-					case 'g':
-					case 'G':
-						this.setCase(16);
-						this.dizaine1 = false;
-						return;
 
 					case '9':
 						this.setCase(9);
@@ -184,6 +143,12 @@ public class SudokuKeyListener implements KeyListener {
 								this.dizaine1 = false;
 								return;
 
+							case KeyEvent.VK_ENTER:
+								this.setCase(
+										this.displayer.getSelectedNumRegle());
+								this.dizaine1 = false;
+								return;
+
 							default:
 								return;
 						}
@@ -257,6 +222,11 @@ public class SudokuKeyListener implements KeyListener {
 								return;
 							case KeyEvent.VK_RIGHT:
 								this.displayer.moveRight();
+								return;
+
+							case KeyEvent.VK_ENTER:
+								this.setCase(
+										this.displayer.getSelectedNumRegle());
 								return;
 
 							default:
