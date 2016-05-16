@@ -3,6 +3,7 @@ package gameDisplayer;
 import java.awt.Color;
 import java.awt.Image;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import gameGraphics.SudokuFenetre;
 import gameStructures.Case;
@@ -74,6 +75,8 @@ public class SudokuDisplayer {
 		this.typeAffichage = null;
 		this.setGame(sudokuJeu);
 		this.fen.SUDOKU_GAME_PANEL.addKeyListener(new SudokuKeyListener(this));
+		this.fen.SUDOKU_GAME_PANEL
+				.addMouseListener(new SudokuMouseListener(this));
 	}
 
 	public void setGame(SudokuGame game) {
@@ -153,7 +156,9 @@ public class SudokuDisplayer {
 	public void setCase(int ligne, int col, int newNum) {
 		if (!this.sudoku.isComplete()) {
 			this.sudoku.setCase(ligne, col, newNum);
-			this.setSelectedNumRegle(newNum);
+			if (newNum != 0) {
+				this.setSelectedNumRegle(newNum);
+			}
 			this.display();
 		}
 	}
@@ -471,73 +476,230 @@ public class SudokuDisplayer {
 		this.fen.addGraphicalElement(this.fondRegle);
 	}
 
+
 	/**
-	 * Prérequis : avoir mis à jour l'épaisseur des traits avant d'appeler cette
-	 * fonction. Cette fonction prends 2 paramètres entiers => elle doit donc
-	 * ajouter une image dans la grille
+	 * Cette fonction prends 2 paramètres entiers => elle doit donc ajouter une
+	 * image dans la grille /!\ Prérequis : avoir mis à jour l'épaisseur des
+	 * traits avant d'appeler cette fonction, car cette fonction appelle
+	 * getCoordCaseGrille
 	 * 
 	 * @param i
 	 * @param j
 	 * @param img
 	 */
 	private void addImg(int i, int j, Image img) {
+		AtomicInteger xImg = new AtomicInteger(0);
+		AtomicInteger yImg = new AtomicInteger(0);
+		this.getCoordCaseGrille(i, j, xImg, yImg);
+
+		this.fen.addGraphicalElement(new ImageElement(xImg.intValue(),
+				yImg.intValue(), img, this.fen.SUDOKU_GAME_PANEL));
+	}
+
+	/**
+	 * Prérequis : avoir mis à jour l'épaisseur des traits avant d'appeler cette
+	 * fonction.
+	 * 
+	 * @param i
+	 * @param j
+	 * @param coordX
+	 * @param coordY
+	 */
+	private void getCoordCaseGrille(int i, int j, AtomicInteger coordX,
+			AtomicInteger coordY) {
 		int diffTraitMoyFin = this.traitMoy - this.traitFin;
 		int dimUnit = this.sudoku.getDimUnit();
-		int xImg;
-		int yImg;
 
-		xImg = this.xGrille + this.traitGros;
+		coordX.set(this.xGrille + this.traitGros);
 		for (int k = 0; k < j; k++) {
-			xImg += this.tailleImg;
-			xImg += this.traitFin;
+			coordX.getAndAdd(this.tailleImg);
+			coordX.getAndAdd(this.traitFin);
 		}
 		for (int k = 1; k <= (j / dimUnit); k++) {
-			xImg += diffTraitMoyFin;
+			coordX.getAndAdd(diffTraitMoyFin);
 		}
 
-		yImg = this.yGrille + this.traitGros;
+		coordY.set(this.yGrille + this.traitGros);
 		for (int k = 0; k < i; k++) {
-			yImg += this.tailleImg;
-			yImg += this.traitFin;
+			coordY.getAndAdd(this.tailleImg);
+			coordY.getAndAdd(this.traitFin);
 		}
 		for (int k = 1; k <= (i / dimUnit); k++) {
-			yImg += diffTraitMoyFin;
+			coordY.getAndAdd(diffTraitMoyFin);
 		}
+	}
 
-		this.fen.addGraphicalElement(
-				new ImageElement(xImg, yImg, img, this.fen.SUDOKU_GAME_PANEL));
+
+	/**
+	 * Cette fonction prends 1 seul paramètre entier => elle doit donc ajouter
+	 * une image dans la règle /!\ Prérequis : avoir mis à jour l'épaisseur des
+	 * traits avant d'appeler cette fonction, car elle appelle la fonction
+	 * getCoordCaseRegle
+	 * 
+	 * @param i
+	 * @param img
+	 */
+	private void addImg(int i, Image img) {
+		AtomicInteger xImg = new AtomicInteger(0);
+		AtomicInteger yImg = new AtomicInteger(0);
+
+		this.getCoordCaseRegle(i, xImg, yImg);
+
+		this.fen.addGraphicalElement(new ImageElement(xImg.intValue(),
+				yImg.intValue(), img, this.fen.SUDOKU_GAME_PANEL));
 	}
 
 
 	/**
 	 * Prérequis : avoir mis à jour l'épaisseur des traits avant d'appeler cette
-	 * fonction. Cette fonction prends 1 seul paramètre entier => elle doit donc
-	 * ajouter une image dans la règle
+	 * fonction.
 	 * 
-	 * @param i
 	 * @param j
-	 * @param img
+	 * @param coordX
+	 * @param coordY
 	 */
-	private void addImg(int i, Image img) {
+	private void getCoordCaseRegle(int j, AtomicInteger coordX,
+			AtomicInteger coordY) {
 		int diffTraitMoyFin = this.traitMoy - this.traitFin;
 		int dimUnit = this.sudoku.getDimUnit();
-		int xImg;
-		int yImg;
 
-		yImg = this.yRegle + this.traitGros;
-
-		xImg = this.xRegle + this.traitGros;
-		for (int k = 0; k < i; k++) {
-			xImg += this.tailleImg;
-			xImg += this.traitFin;
+		coordX.set(this.xRegle + this.traitGros);
+		for (int k = 0; k < j; k++) {
+			coordX.getAndAdd(this.tailleImg);
+			coordX.getAndAdd(this.traitFin);
 		}
-		for (int k = 1; k <= (i / dimUnit); k++) {
-			xImg += diffTraitMoyFin;
+		for (int k = 1; k <= (j / dimUnit); k++) {
+			coordX.getAndAdd(diffTraitMoyFin);
 		}
 
-		this.fen.addGraphicalElement(
-				new ImageElement(xImg, yImg, img, this.fen.SUDOKU_GAME_PANEL));
+		coordY.set(this.yRegle + this.traitGros);
 	}
+
+	/**
+	 * Méthode pour obtenir l'indice de la case de la grille ou de la règle, en
+	 * fonction des coordonnées (x, y) sur la fenêtre
+	 * 
+	 * @param x
+	 * @param y
+	 * @param i
+	 * @param j
+	 * @return true si une case (grille ou règle) a été ciquée, false sinon
+	 */
+	boolean getCaseFromCoord(int x, int y, AtomicInteger i, AtomicInteger j) {
+		int curI = -1, curJ = -1, curX = 0, curY = 0, prochainDepassDimUnit = 1;
+		int diffTraitMoyFin = this.traitMoy - this.traitFin;
+		int dimUnit = this.sudoku.getDimUnit();
+
+		if (y >= this.yGrille
+			&& y <= (this.yGrille + this.getTailleGrille(this.tailleImg))) {
+			// Cas : d'après ordonnée Y, on est dans la grille
+			if (x < this.xGrille
+				|| x > this.xGrille + this.getTailleGrille(this.tailleImg)) {
+				return false;
+			}
+			// Cas : d'après abscisse X, on est dans la grille
+
+			prochainDepassDimUnit = 1;
+			curX = this.xGrille + this.traitGros;
+			while (curX < x && curJ < this.getDimension()) {
+				curX += this.tailleImg;
+				curX += this.traitFin;
+				curJ++;
+				if (curJ >= (prochainDepassDimUnit * dimUnit)) {
+					curX += diffTraitMoyFin;
+					prochainDepassDimUnit++;
+				}
+			}
+			if (curJ < this.getDimension()) {
+				j.set(curJ);
+			} else {
+				return false;
+			}
+
+			prochainDepassDimUnit = 1;
+			curY = this.yGrille + this.traitGros;
+			while (curY < y && curI < this.getDimension()) {
+				curY += this.tailleImg;
+				curY += this.traitFin;
+				curI++;
+				if (curI >= (prochainDepassDimUnit * dimUnit)) {
+					curY += diffTraitMoyFin;
+					prochainDepassDimUnit++;
+				}
+			}
+			if (curI < this.getDimension()) {
+				i.set(curI);
+			} else {
+				return false;
+			}
+
+			return true;
+
+		} else if (y >= this.yRegle
+			&& y <= this.yRegle + this.getHauteurRegle()) {
+			// Cas : d'après ordonnée Y, on est dans la règle
+
+			prochainDepassDimUnit = 1;
+			curX = this.xGrille + this.traitGros;
+			while (curX < x && curJ < this.getDimension()) {
+				curX += this.tailleImg;
+				curX += this.traitFin;
+				curJ++;
+				if (curJ >= (prochainDepassDimUnit * dimUnit)) {
+					curX += diffTraitMoyFin;
+					prochainDepassDimUnit++;
+				}
+			}
+			if (curJ < this.getDimension()) {
+				i.set(-1);
+				j.set(curJ);
+				return true;
+			} else {
+				return false;
+			}
+
+		} else {
+			return false;
+		}
+
+	}
+
+	void selectCaseFromCoord(int x, int y) {
+		AtomicInteger line = new AtomicInteger(0);
+		AtomicInteger col = new AtomicInteger(0);
+		boolean caseSelected = this.getCaseFromCoord(x, y, line, col);
+		if (!caseSelected) {
+			return;
+		}
+
+		if (line.intValue() == -1) {
+			// Les coord sélectionnées sont sur la règle
+			if (!this.sudoku.isComplete()) {
+				this.setSelectedNumRegle(col.intValue() + 1);
+				/*
+				 * TODO: LIGNE SUIVANTE A DECOMMENTER POUR QUE QUAND ON CLIQUE
+				 * SUR LA REGLE, ÇA CHANGE LA VALEUR DE LA CASE SELECTIONNÉE
+				 * DANS LA GRILLE
+				 */
+				// this.sudoku.setCase(this.getSelectedLine(),
+				// this.getSelectedCol(), this.getSelectedNumRegle());
+				this.display();
+			}
+
+		} else {
+			// Les coord sélectionnées sont sur la grille
+
+			if (!this.sudoku.isComplete()) {
+				this.setSelectedLine(line.intValue());
+				this.setSelectedCol(col.intValue());
+				this.sudoku.setCase(line.intValue(), col.intValue(),
+						this.getSelectedNumRegle());
+				this.display();
+			}
+
+		}
+	}
+
 
 	private Image chargeImg(int chiffre, boolean isModifiable,
 			boolean isSelected) {
