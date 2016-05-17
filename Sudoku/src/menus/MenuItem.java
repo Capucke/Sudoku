@@ -33,12 +33,13 @@ public class MenuItem extends TextElement {
 
 
 	public MenuItem(SudokuFenetre sudokuFen, String txt, int size, Color normal,
-			Color selected, boolean isSelec) {
+			Color selected, Color outColor, boolean isSelec) {
 		super(txt, size);
 		this.fen = sudokuFen;
 		this.normalColor = normal;
 		this.selectColor = selected;
 		this.setSelected(isSelec);
+		this.setOutColor(outColor);
 
 		Font myFont = new Font("Helvetica", 1, size);
 		try {
@@ -87,12 +88,6 @@ public class MenuItem extends TextElement {
 	}
 
 	public MenuItem(SudokuFenetre sudokuFen, String txt, int size, Color normal,
-			Color selected, Color outsideCol, boolean isSelec) {
-		this(sudokuFen, txt, size, normal, selected, isSelec);
-		this.setOutColor(outsideCol);
-	}
-
-	public MenuItem(SudokuFenetre sudokuFen, String txt, int size, Color normal,
 			Color selected, float thick, Color outsideCol, boolean isSelec) {
 		this(sudokuFen, txt, size, normal, selected, outsideCol, isSelec);
 		this.setThickness(thick);
@@ -109,6 +104,13 @@ public class MenuItem extends TextElement {
 			boolean isSelec) {
 		this(sudokuFen, txt, size, normal, selected, thick, _x, _y, isSelec);
 		this.setOutColor(outsideCol);
+	}
+
+
+	public MenuItem(SudokuFenetre sudokuFen, String itemTxt, int txtSize,
+			Color specNormalCol, Color specSelectCol, boolean selected) {
+		this(sudokuFen, itemTxt, txtSize, specNormalCol, specSelectCol,
+				Color.DARK_GRAY, selected);
 	}
 
 
@@ -141,7 +143,7 @@ public class MenuItem extends TextElement {
 				: (this.FONT_SIZE / 12));
 	}
 
-	protected void updateColor() {
+	public void updateColor() {
 		this.setInColor(
 				(this.isSelected()) ? this.selectColor : this.normalColor);
 	}

@@ -1,12 +1,13 @@
 package gameDisplayer;
 
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.event.MouseInputListener;
 
 
-public class SudokuMouseListener implements MouseListener {
+
+public class SudokuMouseListener implements MouseInputListener {
 
 	private SudokuDisplayer displayer;
 
@@ -16,7 +17,32 @@ public class SudokuMouseListener implements MouseListener {
 
 
 	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		int x = arg0.getX();
+		int y = arg0.getY();
+		if (x >= this.displayer.X_DEBUT_RETOUR_ITEM
+			&& x <= this.displayer.X_FIN_RETOUR_ITEM
+			&& y >= this.displayer.Y_DEBUT_RETOUR_ITEM
+			&& y <= this.displayer.Y_FIN_RETOUR_ITEM) {
+			this.displayer.RETOUR_ITEM.setSelected(true);
+		} else {
+			this.displayer.RETOUR_ITEM.setSelected(false);
+		}
+		this.displayer.display();
+	}
+
+
+	@Override
 	public void mouseClicked(MouseEvent arg0) {
+		int x = arg0.getX();
+		int y = arg0.getY();
+		if (x >= this.displayer.X_DEBUT_RETOUR_ITEM
+			&& x <= this.displayer.X_FIN_RETOUR_ITEM
+			&& y >= this.displayer.Y_DEBUT_RETOUR_ITEM
+			&& y <= this.displayer.Y_FIN_RETOUR_ITEM) {
+			this.displayer.RETOUR_ITEM.backToMenu();
+			return;
+		}
 
 		if (this.displayer.gameComplete()) {
 			this.displayer.newGame();
@@ -25,8 +51,7 @@ public class SudokuMouseListener implements MouseListener {
 
 		AtomicInteger line = new AtomicInteger(0);
 		AtomicInteger col = new AtomicInteger(0);
-		boolean caseSelected = this.displayer.getCaseFromCoord(arg0.getX(),
-				arg0.getY(), line, col);
+		boolean caseSelected = this.displayer.getCaseFromCoord(x, y, line, col);
 		if (!caseSelected) {
 			return;
 		}
@@ -81,5 +106,13 @@ public class SudokuMouseListener implements MouseListener {
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 	}
+
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
 
 }

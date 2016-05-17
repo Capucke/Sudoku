@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,6 +13,7 @@ import gameStructures.Case;
 import graphicalElements.Carre;
 import graphicalElements.ImageElement;
 import graphicalElements.Rectangle;
+import menus.RetourItem;
 import options.Affichage;
 import options.Options;
 import sudokuController.SudokuGame;
@@ -22,6 +24,12 @@ public class SudokuDisplayer {
 
 	private SudokuGame sudoku;
 	private SudokuFenetre fen;
+
+	public final RetourItem RETOUR_ITEM;
+	public final int X_DEBUT_RETOUR_ITEM;
+	public final int X_FIN_RETOUR_ITEM;
+	public final int Y_DEBUT_RETOUR_ITEM;
+	public final int Y_FIN_RETOUR_ITEM;
 
 	private int selectedLine = 0;
 	private int selectedCol = 0;
@@ -77,6 +85,14 @@ public class SudokuDisplayer {
 		this.typeAffichage = null;
 		this.setGame(sudokuJeu);
 
+		int offsetX = 10;
+		int offsetY = 10;
+		this.RETOUR_ITEM = new RetourItem(sudokuFen, offsetX, offsetY, false);
+		this.X_DEBUT_RETOUR_ITEM = offsetX;
+		this.X_FIN_RETOUR_ITEM = offsetX + this.RETOUR_ITEM.realTxtWidth();
+		this.Y_DEBUT_RETOUR_ITEM = offsetY;
+		this.Y_FIN_RETOUR_ITEM = offsetY + this.RETOUR_ITEM.realTxtHeight();
+
 		for (KeyListener keyListen : this.fen.SUDOKU_GAME_PANEL
 				.getKeyListeners()) {
 			this.fen.SUDOKU_GAME_PANEL.removeKeyListener(keyListen);
@@ -89,6 +105,13 @@ public class SudokuDisplayer {
 		}
 		this.fen.SUDOKU_GAME_PANEL
 				.addMouseListener(new SudokuMouseListener(this));
+
+		for (MouseMotionListener mouseListen : this.fen.SUDOKU_GAME_PANEL
+				.getMouseMotionListeners()) {
+			this.fen.SUDOKU_GAME_PANEL.removeMouseMotionListener(mouseListen);
+		}
+		this.fen.SUDOKU_GAME_PANEL
+				.addMouseMotionListener(new SudokuMouseListener(this));
 
 	}
 
@@ -286,6 +309,7 @@ public class SudokuDisplayer {
 
 		this.drawGame();
 		this.drawRegle();
+		this.drawRetourItem();
 		if (this.sudoku.isComplete()) {
 			this.drawEcranFin();
 		}
@@ -333,6 +357,12 @@ public class SudokuDisplayer {
 			this.addImg(i - 1, (i == this.getSelectedNumRegle())
 					? this.tabSelectImagesDef[i] : this.tabImagesDef[i]);
 		}
+	}
+
+
+	private void drawRetourItem() {
+		this.RETOUR_ITEM.updateColor();
+		this.fen.addGraphicalElement(this.RETOUR_ITEM);
 	}
 
 

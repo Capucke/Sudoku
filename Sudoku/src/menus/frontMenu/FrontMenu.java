@@ -35,7 +35,7 @@ public class FrontMenu extends Menu<FrontMenuItem> {
 
 	public FrontMenu(int w, int h, Color bgColor, SudokuFenetre window) {
 		super(w, h, bgColor, window, FrontMenu.MAX_HAUTEUR,
-				FrontMenu.MIN_HAUTEUR, FrontMenu.title);
+				FrontMenu.MIN_HAUTEUR, FrontMenu.title, false);
 
 		this.setRatio(FrontMenu.OptionRatioHaut, FrontMenu.OptionRatioBas);
 

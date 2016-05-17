@@ -28,7 +28,7 @@ public abstract class MenuMouseInputListener<TypeItem extends MenuItem, TypeMenu
 
 	protected void switchSelectedItem(int x, int y) {
 
-		AtomicInteger newAtomicNum = new AtomicInteger(-1);
+		AtomicInteger newAtomicNum = new AtomicInteger();
 
 		boolean coordOnItem = this.menu.getNumItemFromOrdo(x, y, newAtomicNum);
 
@@ -36,11 +36,8 @@ public abstract class MenuMouseInputListener<TypeItem extends MenuItem, TypeMenu
 			return;
 		}
 
-		int newSelectedItemNum;
-		int oldSelectedItemNum;
-
-		oldSelectedItemNum = this.menu.getSelectedItemNum();
-		newSelectedItemNum = newAtomicNum.intValue();
+		int newSelectedItemNum = newAtomicNum.intValue();
+		int oldSelectedItemNum = this.menu.getSelectedItemNum();
 
 		this.menu.setItemSelected(oldSelectedItemNum, false);
 		this.menu.setItemSelected(newSelectedItemNum, true);
@@ -52,6 +49,16 @@ public abstract class MenuMouseInputListener<TypeItem extends MenuItem, TypeMenu
 
 	protected TypeItem getSelectedItem() {
 		return this.menu.getItem(this.menu.getSelectedItemNum());
+	}
+
+	protected int getSelectedItemNum() {
+		return this.menu.getSelectedItemNum();
+	}
+
+	protected void retourAction() {
+		if (this.menu.HAS_RETOUR_ITEM) {
+			this.menu.RETOUR_ITEM.backToMenu();
+		}
 	}
 
 	protected TypeMenu getMenu() {

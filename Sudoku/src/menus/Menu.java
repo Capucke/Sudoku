@@ -28,6 +28,11 @@ public abstract class Menu<TypeItem extends MenuItem> extends BackgroundPanel {
 	private ArrayList<TypeItem> itemListe;
 	private int selectedItem;
 
+	public final RetourItem RETOUR_ITEM;
+	public final boolean HAS_RETOUR_ITEM;
+	public final int X_RETOUR_ITEM;
+	public final int Y_RETOUR_ITEM;
+
 	private final int MAX_HAUTEUR_MENU;
 	private final int MIN_HAUTEUR_MENU;
 	private int hauteurMenu;
@@ -41,11 +46,16 @@ public abstract class Menu<TypeItem extends MenuItem> extends BackgroundPanel {
 
 
 	public Menu(int w, int h, Color bgColor, SudokuFenetre window, int maxHaut,
-			int minHaut, TextElement title) {
+			int minHaut, TextElement title, boolean hasRetour) {
 		super(w, h, bgColor, title);
 		this.fen = window;
 		this.MAX_HAUTEUR_MENU = maxHaut;
 		this.MIN_HAUTEUR_MENU = minHaut;
+
+		this.HAS_RETOUR_ITEM = hasRetour;
+		this.RETOUR_ITEM = new RetourItem(window);
+		this.X_RETOUR_ITEM = this.RETOUR_ITEM.realTxtWidth() / 2 + 20;
+		this.Y_RETOUR_ITEM = this.RETOUR_ITEM.realTxtHeight() / 2 + 20;
 
 		this.initItems();
 
@@ -84,6 +94,10 @@ public abstract class Menu<TypeItem extends MenuItem> extends BackgroundPanel {
 	}
 
 	public void setItemSelected(int numItem, boolean bool) {
+		if (numItem == -1 && this.HAS_RETOUR_ITEM) {
+			this.RETOUR_ITEM.setSelected(bool);
+			return;
+		}
 		if (numItem < 0 || numItem >= this.itemListe.size()) {
 			return;
 		}
@@ -91,6 +105,9 @@ public abstract class Menu<TypeItem extends MenuItem> extends BackgroundPanel {
 	}
 
 	public int getSelectedItemNum() {
+		if (this.HAS_RETOUR_ITEM && this.RETOUR_ITEM.isSelected()) {
+			return -1;
+		}
 		return this.selectedItem;
 	}
 
@@ -126,10 +143,26 @@ public abstract class Menu<TypeItem extends MenuItem> extends BackgroundPanel {
 	 * 
 	 * @param y
 	 * @param numItem
+	 *            sera mis à -1 si l'item en question est le retourItem
 	 * @return true si l'emplacement de la souris correspond à un item, false
 	 *         sinon
 	 */
 	boolean getNumItemFromOrdo(int x, int y, AtomicInteger numItem) {
+		// Retour Item
+		if (this.HAS_RETOUR_ITEM) {
+			int demiWidth = this.RETOUR_ITEM.realTxtWidth() / 2;
+			int demiHeight = this.RETOUR_ITEM.realTxtHeight() / 2;
+			if (x >= this.X_RETOUR_ITEM - demiWidth
+				&& x <= this.X_RETOUR_ITEM + demiWidth
+				&& y >= this.Y_RETOUR_ITEM - demiHeight
+				&& y <= this.Y_RETOUR_ITEM + demiHeight) {
+				numItem.set(-1);
+				return true;
+			}
+		}
+
+		// Items normaux
+
 		int yItem;
 		int demiUnitHeight = this.unitHeight(this.hauteurMenu) / 2;
 		int demiHeight;
@@ -155,7 +188,9 @@ public abstract class Menu<TypeItem extends MenuItem> extends BackgroundPanel {
 				}
 			}
 		}
+
 		return false;
+
 	}
 
 	protected int wantedItemY(int numItem, int limiteHaut, int hauteurOptions) {
@@ -197,6 +232,13 @@ public abstract class Menu<TypeItem extends MenuItem> extends BackgroundPanel {
 				item = this.itemListe.get(i);
 				yItem = this.wantedItemY(i, this.offSetY, this.hauteurMenu);
 				item.paintItem(g2d, this.wantedItemX(), yItem);
+			}
+		}
+
+		if (this.HAS_RETOUR_ITEM) {
+			synchronized (this.RETOUR_ITEM) {
+				this.RETOUR_ITEM.paintItem(g2d, this.X_RETOUR_ITEM,
+						this.Y_RETOUR_ITEM);
 			}
 		}
 

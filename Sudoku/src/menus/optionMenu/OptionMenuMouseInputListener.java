@@ -16,7 +16,11 @@ public class OptionMenuMouseInputListener
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		if (this.mouseOnItem(arg0)) {
-			this.getSelectedItem().next();
+			if (this.getSelectedItemNum() == -1) {
+				this.retourAction();
+			} else {
+				this.getSelectedItem().next();
+			}
 			this.getMenu().repaint();
 		}
 	}

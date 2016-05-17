@@ -42,7 +42,7 @@ public class OptionMenu extends Menu<OptionMenuItem<?>> {
 
 	public OptionMenu(int w, int h, Color bgColor, SudokuFenetre window) {
 		super(w, h, bgColor, window, OptionMenu.MAX_HAUTEUR,
-				OptionMenu.MIN_HAUTEUR, OptionMenu.title);
+				OptionMenu.MIN_HAUTEUR, OptionMenu.title, true);
 
 		this.setRatio(OptionMenu.OptionRatioHaut, OptionMenu.OptionRatioBas);
 
