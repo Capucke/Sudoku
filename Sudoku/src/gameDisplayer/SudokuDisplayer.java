@@ -34,6 +34,7 @@ public class SudokuDisplayer {
 	private long lastAddedBallTime = 0;
 	private int periodeAjoutBall = 1350;
 	private int maxNbBalls = 20;
+	private int periodeAnimation = 25;
 
 	private Timer animTimer;
 	private TimerTask animTimerTask;
@@ -144,9 +145,7 @@ public class SudokuDisplayer {
 	public void setGame(SudokuGame game) {
 		this.sudoku = game;
 		this.animationBalls = new SeveralMovingBalls(this.getFenetre(), 10, 10);
-		this.animTimerTask.cancel();
-		this.animTimer.purge();
-		this.animTimer.cancel();
+		this.cancelTimers();
 		if (game != null) {
 			this.setTailleImg();
 			this.updateImages();
@@ -318,9 +317,7 @@ public class SudokuDisplayer {
 		this.selectedNumRegle = 0;
 		this.sudoku.restart();
 		this.animationBalls.clear();
-		this.animTimerTask.cancel();
-		this.animTimer.purge();
-		this.animTimer.cancel();
+		this.cancelTimers();
 		this.display();
 	}
 
@@ -332,9 +329,8 @@ public class SudokuDisplayer {
 				new SudokuGame(this.sudoku.getDimension(), this.sudoku.NIVEAU);
 		this.setGame(newSudoGame);
 		this.animationBalls.clear();
-		this.animTimerTask.cancel();
-		this.animTimer.purge();
-		this.animTimer.cancel();
+		this.cancelTimers();
+		System.err.println("APRES_CANCEL");
 		this.display();
 	}
 
@@ -342,6 +338,27 @@ public class SudokuDisplayer {
 		return this.sudoku.isComplete();
 	}
 
+	void cancelTimers() {
+		this.animTimerTask.cancel();
+		this.animTimer.purge();
+		this.animTimer.cancel();
+		this.finitionTime = 0;
+		this.lastTimeChecked = 0;
+		this.lastAddedBallTime = 0;
+	}
+
+	void restartTimers() {
+		this.animTimer = new Timer();
+		this.animTimerTask = new TimerTask() {
+			@Override
+			public void run() {
+				SudokuDisplayer.this.drawAnimationFin();
+				SudokuDisplayer.this.getFenetre().repaint();
+			}
+		};
+		this.animTimer.schedule(this.animTimerTask, this.finitionTime,
+				this.periodeAnimation);
+	}
 
 	public void display() {
 		this.fen.reset();
@@ -356,30 +373,39 @@ public class SudokuDisplayer {
 
 		if (this.sudoku.isComplete()) {
 			// this.drawAnimationFin();
-
-			this.animTimer = new Timer();
-			this.animTimerTask = new TimerTask() {
-				@Override
-				public void run() {
-					SudokuDisplayer.this.drawAnimationFin();
-					SudokuDisplayer.this.getFenetre().repaint();
-				}
-			};
-			this.animTimer.schedule(this.animTimerTask, this.finitionTime, 20);
+			this.restartTimers();
 		}
 	}
 
 	private void drawAnimationFin() {
+		if (this.lastTimeChecked == 0) {
+			this.finitionTime = System.currentTimeMillis();
+			this.lastTimeChecked = this.finitionTime;
+			this.lastAddedBallTime = this.lastTimeChecked;
+		}
+
+		long curTime = System.currentTimeMillis();
+		int diffTime = Integer
+				.valueOf((new Long(curTime - this.lastTimeChecked)).intValue());
+		int nbPeriodes = diffTime / this.periodeAnimation;
+		System.err.println();
+		System.err.println("curTime : " + curTime);
+		System.err.println("lastTime : " + this.lastTimeChecked);
+		System.err.println("diffTime : " + diffTime);
+		System.err.println("nbPeriodes : " + nbPeriodes);
+		System.err.println();
+		System.err.println();
+		if (nbPeriodes <= 0) {
+			return;
+		}
 		synchronized (this.animationBalls) {
-			long curTime = System.currentTimeMillis();
 			if (this.animationBalls.getNbBalls() < this.maxNbBalls
 				&& curTime - this.lastAddedBallTime >= this.periodeAjoutBall) {
 				this.animationBalls.addRandomBall();
 				this.lastAddedBallTime = curTime;
 			}
-			this.animationBalls
-					.translate((curTime - this.lastTimeChecked) / 10);
-			this.lastTimeChecked = curTime;
+			this.animationBalls.translate(nbPeriodes);
+			this.lastTimeChecked += nbPeriodes * this.periodeAnimation;
 			this.animationBalls.addToFenetre();
 		}
 	}

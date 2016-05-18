@@ -37,6 +37,22 @@ public class Rond implements Dessinable {
 		return this.y;
 	}
 
+	public void incrX(int dx) {
+		this.x += dx;
+	}
+
+	public void incrY(int dy) {
+		this.y += dy;
+	}
+
+	public void setX(int newX) {
+		this.x = newX;
+	}
+
+	public void setY(int newY) {
+		this.y = newY;
+	}
+
 	public int getRayon() {
 		return this.rayon;
 	}

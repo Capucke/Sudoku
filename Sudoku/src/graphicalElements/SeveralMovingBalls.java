@@ -73,9 +73,9 @@ public class SeveralMovingBalls implements Dessinable {
 	 * Méthode pour translater tous les objets du tableau selon leur vecteur de
 	 * mouvement en prenant en compte les éventuels rebonds
 	 */
-	public void translate(long dt) {
+	public void translate(int nbMvt) {
 		for (MovingBall ball : this.tabBalls) {
-			ball.translate(dt);
+			ball.translate(nbMvt);
 		}
 	}
 
