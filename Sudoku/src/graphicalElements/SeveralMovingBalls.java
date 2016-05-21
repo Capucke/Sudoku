@@ -51,7 +51,7 @@ public class SeveralMovingBalls implements Dessinable {
 		return this.tabBalls.size();
 	}
 
-	public void addRandomBall() {
+	public MovingBall addRandomBall() {
 		int fenWidth = this.fen.getWidth();
 		int fenHeight = this.fen.getHeight();
 
@@ -65,8 +65,12 @@ public class SeveralMovingBalls implements Dessinable {
 			* Math.round((float) Math.sqrt(16 - vitX * vitX));
 		int indiceCoul = r.nextInt(TAB_COLOR.length);
 
-		this.tabBalls.add(new MovingBall(this.fen, xBall, yBall,
-				TAB_COLOR[indiceCoul], this.RAYON_BALLS, vitX, vitY));
+		MovingBall newBall = new MovingBall(this.fen, xBall, yBall,
+				TAB_COLOR[indiceCoul], this.RAYON_BALLS, vitX, vitY);
+
+		this.tabBalls.add(newBall);
+
+		return newBall;
 	}
 
 	/**

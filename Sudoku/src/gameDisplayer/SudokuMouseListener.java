@@ -28,7 +28,7 @@ public class SudokuMouseListener implements MouseInputListener {
 		} else {
 			this.displayer.RETOUR_ITEM.setSelected(false);
 		}
-		this.displayer.display();
+		this.displayer.getFenetre().repaint();
 	}
 
 
