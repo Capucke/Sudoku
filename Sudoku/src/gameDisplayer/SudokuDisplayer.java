@@ -2,12 +2,14 @@ package gameDisplayer;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
+//import java.util.Timer;
+//import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import gameGraphics.SudokuFenetre;
@@ -23,7 +25,7 @@ import sudokuController.SudokuGame;
 
 
 
-public class SudokuDisplayer {
+public class SudokuDisplayer implements ActionListener {
 
 	private SudokuGame sudoku;
 	private SudokuFenetre fen;
@@ -36,8 +38,13 @@ public class SudokuDisplayer {
 	private int maxNbBalls = 20;
 	private int periodeAnimation = 25;
 
-	private Timer animTimer;
-	private TimerTask animTimerTask;
+	// private Timer animTimer;
+	// private TimerTask animTimerTask;
+
+	private javax.swing.Timer tm =
+			new javax.swing.Timer(this.periodeAnimation, this);
+
+	private boolean animLancee = false;
 
 	public final RetourItem RETOUR_ITEM;
 	public final int X_DEBUT_RETOUR_ITEM;
@@ -100,14 +107,14 @@ public class SudokuDisplayer {
 
 		this.animationBalls = new SeveralMovingBalls(sudokuFen, 10, 10);
 
-		this.animTimer = new Timer();
-		this.animTimerTask = new TimerTask() {
-			@Override
-			public void run() {
-				SudokuDisplayer.this.drawAnimationFin();
-				SudokuDisplayer.this.getFenetre().repaint();
-			}
-		};
+		// this.animTimer = new Timer();
+		// this.animTimerTask = new TimerTask() {
+		// @Override
+		// public void run() {
+		// SudokuDisplayer.this.drawAnimationFin();
+		// SudokuDisplayer.this.getFenetre().repaint();
+		// }
+		// };
 
 
 		this.setGame(sudokuJeu);
@@ -150,6 +157,13 @@ public class SudokuDisplayer {
 			this.setTailleImg();
 			this.updateImages();
 		}
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		this.drawAnimationFin();
+		this.getFenetre().repaint();
 	}
 
 	public boolean partieEnCours() {
@@ -338,26 +352,41 @@ public class SudokuDisplayer {
 		return this.sudoku.isComplete();
 	}
 
+	// void cancelTimers() {
+	// this.animTimerTask.cancel();
+	// this.animTimer.purge();
+	// this.animTimer.cancel();
+	// this.finitionTime = 0;
+	// this.lastTimeChecked = 0;
+	// this.lastAddedBallTime = 0;
+	// this.animLancee = false;
+	// }
+	//
+	// void restartTimers() {
+	// this.animLancee = true;
+	// this.animTimer = new Timer();
+	// this.animTimerTask = new TimerTask() {
+	// @Override
+	// public void run() {
+	// SudokuDisplayer.this.drawAnimationFin();
+	// SudokuDisplayer.this.getFenetre().repaint();
+	// }
+	// };
+	// this.animTimer.schedule(this.animTimerTask, this.finitionTime,
+	// this.periodeAnimation);
+	// }
+
 	void cancelTimers() {
-		this.animTimerTask.cancel();
-		this.animTimer.purge();
-		this.animTimer.cancel();
 		this.finitionTime = 0;
 		this.lastTimeChecked = 0;
 		this.lastAddedBallTime = 0;
+		this.animLancee = false;
+		this.tm.stop();
 	}
 
 	void restartTimers() {
-		this.animTimer = new Timer();
-		this.animTimerTask = new TimerTask() {
-			@Override
-			public void run() {
-				SudokuDisplayer.this.drawAnimationFin();
-				SudokuDisplayer.this.getFenetre().repaint();
-			}
-		};
-		this.animTimer.schedule(this.animTimerTask, this.finitionTime,
-				this.periodeAnimation);
+		this.animLancee = true;
+		this.tm.restart();
 	}
 
 	public void display() {
@@ -373,7 +402,9 @@ public class SudokuDisplayer {
 
 		if (this.sudoku.isComplete()) {
 			// this.drawAnimationFin();
-			this.restartTimers();
+			if (!this.animLancee) {
+				this.restartTimers();
+			}
 		}
 	}
 
