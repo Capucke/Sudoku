@@ -8,9 +8,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
-//import java.util.Timer;
-//import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.swing.Timer;
 
 import gameGraphics.SudokuFenetre;
 import gameStructures.Case;
@@ -39,13 +39,10 @@ public class SudokuDisplayer implements ActionListener {
 	private int maxNbBalls = 100;
 	private int initNbBalls = 10;
 	private int rayonBalls = 10;
-	private int periodeAnimation = 25;
+	private int periodeAnimation = 20;
+	private int periodeRefreshAnim = 15;
 
-	// private Timer animTimer;
-	// private TimerTask animTimerTask;
-
-	private javax.swing.Timer tm =
-			new javax.swing.Timer(this.periodeAnimation, this);
+	private Timer tm = new Timer(this.periodeRefreshAnim, this);
 
 	private boolean animLancee = false;
 
@@ -110,16 +107,6 @@ public class SudokuDisplayer implements ActionListener {
 
 		this.animationBalls = new SeveralMovingBalls(sudokuFen, this.rayonBalls,
 				this.initNbBalls);
-
-		// this.animTimer = new Timer();
-		// this.animTimerTask = new TimerTask() {
-		// @Override
-		// public void run() {
-		// SudokuDisplayer.this.drawAnimationFin();
-		// SudokuDisplayer.this.getFenetre().repaint();
-		// }
-		// };
-
 
 		this.setGame(sudokuJeu);
 
@@ -237,9 +224,6 @@ public class SudokuDisplayer implements ActionListener {
 		return wantedImg;
 	}
 
-	// void simpleSetCase(int ligne, int col, int newNum) {
-	// this.sudoku.setCase(ligne, col, newNum);
-	// }
 
 	public void setCase(int ligne, int col, int newNum) {
 		if (!this.sudoku.isComplete()) {
@@ -384,7 +368,7 @@ public class SudokuDisplayer implements ActionListener {
 		this.drawRetourItem();
 
 		if (this.sudoku.isComplete()) {
-			// this.drawAnimationFin();
+
 			this.animationBalls.addToFenetre();
 			if (!this.animLancee) {
 				this.restartTimers();
@@ -817,31 +801,5 @@ public class SudokuDisplayer implements ActionListener {
 				this.typeAffichage, isModifiable, isSelected);
 	}
 
-
-	private void addTxtFin() {
-		int xTxt;
-		int yTxt;
-		int txtWidth = ImageElement.TXT_COMPLETE.getWidth(this.fen);
-		int txtHeight = ImageElement.TXT_COMPLETE.getHeight(this.fen);
-
-		txtWidth = 612;
-		txtHeight = 85;
-
-		int panelWidth = this.fen.SUDOKU_GAME_PANEL.getBackgroundPanelWidth();
-		int panelHeight = this.fen.SUDOKU_GAME_PANEL.getBackgroundPanelHeight();
-
-		xTxt = panelWidth / 2 - (txtWidth / 2);
-		yTxt = panelHeight / 4 - (txtHeight / 4);
-
-		// System.out.println("panelWidth : " + panelWidth);
-		// System.out.println("txtWidth : " + txtWidth);
-		// System.out.println("xTxt : " + xTxt);
-		// System.out.println("panelHeight : " + panelHeight);
-		// System.out.println("txtHeight : " + txtHeight);
-		// System.out.println("yTxt : " + yTxt);
-
-		this.fen.addGraphicalElement(new ImageElement(xTxt, yTxt,
-				ImageElement.TXT_COMPLETE, this.fen.SUDOKU_GAME_PANEL));
-	}
 
 }
