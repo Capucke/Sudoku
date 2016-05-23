@@ -17,7 +17,7 @@ public class OptionMenuMouseInputListener
 	public void mouseClicked(MouseEvent arg0) {
 		if (this.mouseOnItem(arg0)) {
 			if (this.getSelectedItemNum() == -1) {
-				this.retourAction();
+				this.getMenu().backToFrontMenu();
 			} else {
 				this.getSelectedItem().next();
 			}
