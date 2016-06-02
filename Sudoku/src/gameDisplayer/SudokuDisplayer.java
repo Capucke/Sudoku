@@ -38,8 +38,8 @@ public class SudokuDisplayer implements ActionListener {
 	private int periodeAjoutBall = 1350;
 	private int maxNbBalls = 100;
 	private int initNbBalls = 10;
-	private int rayonBalls = 10;
-	private int periodeAnimation = 20;
+	private int rayonBalls = 11;
+	private int periodeAnimation = 17;
 	private int periodeRefreshAnim = 15;
 
 	private Timer tm = new Timer(this.periodeRefreshAnim, this);

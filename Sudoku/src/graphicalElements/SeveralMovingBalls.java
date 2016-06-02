@@ -20,12 +20,19 @@ public class SeveralMovingBalls implements Dessinable {
 	private ArrayList<MovingBall> tabBalls;
 
 	static {
-		TAB_COLOR = new Color[5];
-		TAB_COLOR[0] = Color.RED;
-		TAB_COLOR[1] = Color.BLUE;
-		TAB_COLOR[2] = Color.PINK;
-		TAB_COLOR[3] = Color.GREEN;
-		TAB_COLOR[4] = new Color(155, 0, 155);
+		TAB_COLOR = new Color[12];
+		TAB_COLOR[0] = new Color(200, 0, 0);
+		TAB_COLOR[1] = new Color(200, 0, 94);
+		TAB_COLOR[2] = new Color(200, 0, 155);
+		TAB_COLOR[3] = new Color(140, 0, 171);
+		TAB_COLOR[4] = new Color(133, 0, 106);
+		TAB_COLOR[5] = new Color(76, 0, 146);
+		TAB_COLOR[6] = new Color(0, 26, 184);
+		TAB_COLOR[7] = new Color(0, 104, 42);
+		TAB_COLOR[8] = new Color(0, 164, 66);
+		TAB_COLOR[9] = new Color(0, 175, 175);
+		TAB_COLOR[10] = new Color(208, 71, 0);
+		TAB_COLOR[11] = new Color(68, 186, 0);
 	}
 
 	public SeveralMovingBalls(SudokuFenetre _fen, int rayon, int nbInitBalls) {
