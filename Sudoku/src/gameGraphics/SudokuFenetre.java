@@ -14,6 +14,9 @@ import sudokuController.SudokuGame;
 
 
 
+// JOptionPane.showMessageDialog(null, e.getKeyChar());
+
+
 public class SudokuFenetre extends JFrame {
 	private static final long serialVersionUID = 2L;
 

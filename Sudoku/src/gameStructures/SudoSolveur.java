@@ -358,7 +358,7 @@ public class SudoSolveur {
 
 		int valeurPossible;
 		boolean aValeurCommune;
-		boolean succesfulRemoval;
+//		boolean succesfulRemoval;
 
 
 		// Traitement du carré :

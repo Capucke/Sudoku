@@ -29,13 +29,13 @@ public class MovingBall extends Rond {
 		return this.mvtY;
 	}
 
-	private void setMvt(int newVitesseX) {
-		this.mvtX = newVitesseX;
-	}
-
-	private void setMvtY(int newVitesseY) {
-		this.mvtY = newVitesseY;
-	}
+//	private void setMvt(int newVitesseX) {
+//		this.mvtX = newVitesseX;
+//	}
+//
+//	private void setMvtY(int newVitesseY) {
+//		this.mvtY = newVitesseY;
+//	}
 
 	private void opposeMvtX() {
 		this.mvtX *= -1;
